@@ -1,0 +1,48 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+dist/
+*.egg-info/
+
+# Virtual environment
+venv/
+.venv/
+env/
+ENV/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Logs
+logs/
+*.log
+
+# Databases
+*.db
+*.sqlite
+*.sqlite3
+users.db
+
+# Playwright
+.playwright/
+
+# Secrets
+.env
+secrets.json
+accounts.json
+config_secret.json
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Test files with cookies/tokens
+test_bet.py
+test_betcity.py
