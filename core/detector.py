@@ -246,10 +246,11 @@ class Detector:
                 "sub_score": [consensus_score[2], consensus_score[3]],
                 "delay": round(delay, 1),
                 "fast_bk": fast_bks[0],
+                "fast_odds": [fast_match.odds1, fast_match.odds2],   # <-- НОВОЕ
                 "slow_bk": slow_bk,
                 "slow_odds": [self.states[key][slow_bk].odds1, self.states[key][slow_bk].odds2] if slow_bk in self.states[key] else [0, 0],
                 "match_id": match_id_for_slow,
-                "match_url": match_url,   # <-- теперь реальный URL
+                "match_url": match_url,
                 "is_new": is_first,
                 "tournament": fast_match.tournament,
             }
