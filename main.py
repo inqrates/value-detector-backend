@@ -20,6 +20,11 @@ from core.aggregator import OddsAggregator
 from core.browser_manager import browser_manager
 from api import app, set_aggregator, broadcast_message
 
+from config import (
+    PAGE_RELOAD_ENABLED, PAGE_RELOAD_STAGGER,
+    PAGE_KEEP_FRONT, PAGE_KEEP_FRONT_INTERVAL,
+)
+
 # ---- Настройка логирования ----
 LOG_LEVEL = os.getenv("LOG_LEVEL", "INFO")
 DEBUG_PARSERS = os.getenv("DEBUG_PARSERS", "0") == "1"
@@ -143,6 +148,16 @@ async def main():
     ]
 
     logger.info(f"✅ Создано {len(parsers)} парсеров")
+    if PAGE_RELOAD_ENABLED:
+        logger.info(
+            f"🔄 Watchdog залипаний: проверка раз в 20с, "
+            f"порог 45с без данных (сдвиг {PAGE_RELOAD_STAGGER}с)"
+        )
+    if PAGE_KEEP_FRONT:
+        logger.info(
+            f"👁 Keep-alive для: {', '.join(PAGE_KEEP_FRONT)} "
+            f"(раз в {PAGE_KEEP_FRONT_INTERVAL}с)"
+        )
 
     asyncio.create_task(print_stats(aggregator))
     tasks = [asyncio.create_task(p.run()) for p in parsers]

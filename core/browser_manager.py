@@ -44,6 +44,12 @@ class BrowserManager:
                         '--no-sandbox',
                         '--disable-dev-shm-usage',
                         '--start-maximized',
+                        # ---- АНТИСОН: отключаем троттлинг фоновых вкладок ----
+                        '--disable-background-timer-throttling',
+                        '--disable-backgrounding-occluded-windows',
+                        '--disable-renderer-backgrounding',
+                        '--disable-features=CalculateNativeWinOcclusion,IntensiveWakeUpThrottling',
+                        '--disable-ipc-flooding-protection',
                     ]
                 )
                 self._context = await self._browser.new_context(

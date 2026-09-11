@@ -31,3 +31,10 @@ ZOOM = 0.5
 # Логирование – меняем на INFO, чтобы не было DEBUG-шума
 LOG_LEVEL = "INFO"          # <-- изменено с "DEBUG"
 LOG_FILE = "logs/backend.log"
+
+# ---- Антисон для вкладок ----
+PAGE_RELOAD_ENABLED = True       # Включить watchdog залипаний
+PAGE_RELOAD_STAGGER = 60         # Сдвиг стартовой проверки между БК (сек)
+
+PAGE_KEEP_FRONT = ['betcity']    # Какие БК «пинать» для пробуждения
+PAGE_KEEP_FRONT_INTERVAL = 120   # Как часто (сек)
