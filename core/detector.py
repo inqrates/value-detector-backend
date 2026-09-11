@@ -240,15 +240,25 @@ class Detector:
                 match_url = getattr(fast_match, 'match_url', '') or \
                             self._get_match_url(fast_bks[0], match_id_for_slow)
 
+            slow_match = self.states[key].get(slow_bk)
+
             signal_data = {
                 "match_teams": [fast_match.player1, fast_match.player2],
+                # Консенсус (используется для сравнения)
                 "score": [consensus_score[0], consensus_score[1]],
                 "sub_score": [consensus_score[2], consensus_score[3]],
-                "delay": round(delay, 1),
+                # Быстрая БК — счёт и кэфы
                 "fast_bk": fast_bks[0],
-                "fast_odds": [fast_match.odds1, fast_match.odds2],   # <-- НОВОЕ
+                "fast_score": [fast_match.score1, fast_match.score2],
+                "fast_sub_score": [fast_match.sub_score1, fast_match.sub_score2],
+                "fast_odds": [fast_match.odds1, fast_match.odds2],
+                # Медленная БК — счёт и кэфы
                 "slow_bk": slow_bk,
-                "slow_odds": [self.states[key][slow_bk].odds1, self.states[key][slow_bk].odds2] if slow_bk in self.states[key] else [0, 0],
+                "slow_score": [slow_match.score1, slow_match.score2] if slow_match else [0, 0],
+                "slow_sub_score": [slow_match.sub_score1, slow_match.sub_score2] if slow_match else [0, 0],
+                "slow_odds": [slow_match.odds1, slow_match.odds2] if slow_match else [0, 0],
+                # Прочее
+                "delay": round(delay, 1),
                 "match_id": match_id_for_slow,
                 "match_url": match_url,
                 "is_new": is_first,
