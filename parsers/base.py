@@ -10,6 +10,8 @@ from config import (
     PAGE_LOAD_TIMEOUT, PAGE_STABILIZE_TIME, ZOOM, PARSE_INTERVAL,
     PAGE_RELOAD_ENABLED, PAGE_RELOAD_STAGGER,
     PAGE_KEEP_FRONT, PAGE_KEEP_FRONT_INTERVAL,
+    PAGE_STUCK_TIMEOUT_BY_BK, PAGE_STUCK_TIMEOUT_DEFAULT,
+    PAGE_PERIODIC_RELOAD_BY_BK,
 )
 
 logger = logging.getLogger(__name__)
@@ -23,9 +25,9 @@ class BaseParser(ABC):
         self.url = TABLE_TENNIS_URLS[bk_id]
         self.page: Page = None
         self.is_running = False
-        self._verbose = verbose  # если True – будут логи уровня DEBUG
+        self._verbose = verbose
 
-        # ---- Антисон: задачи ротации ----
+        # ---- Антисон: задачи ----
         self._reload_task: asyncio.Task = None
         self._keep_front_task: asyncio.Task = None
 
@@ -34,13 +36,12 @@ class BaseParser(ABC):
         self._last_log_time = 0
         self._log_interval = 30
 
-        # Защита от зависаний (оставляем)
+        # Защита от зависаний
         self._stuck_counter = 0
         self._stuck_threshold = 30
         self._last_reload_time = 0
 
     def _log_matches_collected(self, count):
-        """Логирует количество найденных матчей не чаще _log_interval секунд."""
         now = time.time()
         if count != self._last_match_count or (now - self._last_log_time) > self._log_interval:
             logger.info(f"[{self.bk_id}] 🟢 Найдено матчей: {count}")
@@ -48,20 +49,12 @@ class BaseParser(ABC):
             self._last_log_time = now
 
     async def _ensure_page(self):
-        """Открывает страницу, если она ещё не открыта."""
         if self.page is None or self.page.is_closed():
             self.page = await browser_manager.new_page()
             logger.info(f"[{self.bk_id}] Открыта вкладка")
 
             await self.page.goto(self.url, wait_until='load', timeout=PAGE_LOAD_TIMEOUT)
             await self.page.wait_for_timeout(PAGE_STABILIZE_TIME)
-
-            # Ожидание селектора (если парсеру это нужно) – оставляем для обратной совместимости
-            try:
-                # Можно убрать или оставить пустой заглушкой
-                pass
-            except Exception:
-                pass
 
             await self.page.evaluate(f"document.body.style.zoom = '{int(ZOOM * 100)}%'")
             await self.page.wait_for_timeout(500)
@@ -71,8 +64,8 @@ class BaseParser(ABC):
         await self._ensure_page()
         self._start_keeper_tasks()
 
+    # ---------- Антисон: задачи ----------
     def _start_keeper_tasks(self):
-        """Запускает фоновые задачи watchdog и keep-alive."""
         if PAGE_RELOAD_ENABLED:
             if self._reload_task is None or self._reload_task.done():
                 self._reload_task = asyncio.create_task(self._reload_loop())
@@ -82,7 +75,6 @@ class BaseParser(ABC):
                 self._keep_front_task = asyncio.create_task(self._keep_front_loop())
 
     def _stop_keeper_tasks(self):
-        """Останавливает фоновые задачи."""
         for task in (self._reload_task, self._keep_front_task):
             if task and not task.done():
                 try:
@@ -94,14 +86,21 @@ class BaseParser(ABC):
 
     async def _reload_loop(self):
         """
-        Watchdog: перезагружаем страницу только если БК давно
-        не отдавала данные (залипла).
+        Комбинированный watchdog:
+        - Периодический reload (для БК из PAGE_PERIODIC_RELOAD_BY_BK) —
+          чтобы подтягивались новые матчи.
+        - Watchdog залипаний — reload, если БК давно не отдавала данные.
         """
-        STUCK_TIMEOUT = 45          # сек без данных = залипла
-        CHECK_INTERVAL = 20         # сек между проверками
-        MIN_UPTIME = 90             # первые 1.5 мин после старта не трогаем
-        MAX_SILENT_RELOADS = 3      # больше N reload подряд без успеха — пауза
+        STUCK_TIMEOUT = PAGE_STUCK_TIMEOUT_BY_BK.get(
+            self.bk_id, PAGE_STUCK_TIMEOUT_DEFAULT
+        )
+        # Периодический интервал (для Sportbet и подобных), может быть None
+        PERIODIC_INTERVAL = PAGE_PERIODIC_RELOAD_BY_BK.get(self.bk_id)
+        CHECK_INTERVAL = 15
+        MIN_UPTIME = 30 if self.bk_id in PAGE_KEEP_FRONT else 60
+        MAX_SILENT_RELOADS = 3
 
+        # Сдвиг старта, чтобы БК не перезагружались одновременно
         bk_order = [
             'fonbet', 'winline', 'ligastavok', 'leon', 'olimp',
             'betcity', 'marathon', 'zenit', 'sportbet',
@@ -110,15 +109,20 @@ class BaseParser(ABC):
             idx = bk_order.index(self.bk_id)
         except ValueError:
             idx = 0
-
         initial_delay = PAGE_RELOAD_STAGGER * idx
+
+        mode_desc = []
+        if PERIODIC_INTERVAL:
+            mode_desc.append(f"период {PERIODIC_INTERVAL}с")
+        mode_desc.append(f"залипание {STUCK_TIMEOUT}с")
         logger.info(
             f"[{self.bk_id}] 🔄 Watchdog: проверка раз в {CHECK_INTERVAL}с "
-            f"(порог {STUCK_TIMEOUT}с, сдвиг {initial_delay}с)"
+            f"({', '.join(mode_desc)}, сдвиг {initial_delay}с)"
         )
         await asyncio.sleep(initial_delay)
 
         started_at = time.time()
+        last_reload_at = started_at
         silent_reloads = 0
 
         while self.is_running:
@@ -131,20 +135,30 @@ class BaseParser(ABC):
                 if not self.page or self.page.is_closed():
                     continue
 
-                last_send = getattr(self, '_last_sent_time', None)
-                if not last_send:
-                    continue
+                now = time.time()
+                need_reload = False
+                reason = ""
 
-                most_recent = max(last_send.values()) if last_send else 0
-                silence = time.time() - most_recent
+                # --- Проверка 1: периодический reload ---
+                if PERIODIC_INTERVAL and (now - last_reload_at) >= PERIODIC_INTERVAL:
+                    need_reload = True
+                    reason = f"периодический ({int(now - last_reload_at)}с)"
 
-                if silence < STUCK_TIMEOUT:
+                # --- Проверка 2: залипание ---
+                if not need_reload:
+                    last_send = getattr(self, '_last_sent_time', None)
+                    if last_send:
+                        most_recent = max(last_send.values()) if last_send else 0
+                        silence = now - most_recent
+                        if silence >= STUCK_TIMEOUT:
+                            need_reload = True
+                            reason = f"залипание ({int(silence)}с)"
+
+                if not need_reload:
                     silent_reloads = 0
                     continue
 
-                logger.warning(
-                    f"[{self.bk_id}] ⏸ Залипание: {int(silence)}с без данных, reload"
-                )
+                logger.warning(f"[{self.bk_id}] 🔄 Reload — {reason}")
                 try:
                     await self.page.reload(
                         wait_until='domcontentloaded',
@@ -152,7 +166,9 @@ class BaseParser(ABC):
                     )
                     await asyncio.sleep(PAGE_STABILIZE_TIME / 1000)
                     logger.info(f"[{self.bk_id}] ✅ Перезагрузка завершена")
-                    silent_reloads += 1
+                    last_reload_at = time.time()
+                    silent_reloads = 0
+                    # Сбрасываем счётчик "нет данных" для новой страницы
                     started_at = time.time()
                 except asyncio.CancelledError:
                     break
@@ -162,8 +178,8 @@ class BaseParser(ABC):
 
                 if silent_reloads >= MAX_SILENT_RELOADS:
                     logger.error(
-                        f"[{self.bk_id}] ❌ {MAX_SILENT_RELOADS} reload подряд без "
-                        f"результата, пауза 5 мин"
+                        f"[{self.bk_id}] ❌ {MAX_SILENT_RELOADS} reload подряд "
+                        f"без результата, пауза 5 мин"
                     )
                     await asyncio.sleep(300)
                     silent_reloads = 0
@@ -175,26 +191,38 @@ class BaseParser(ABC):
                 await asyncio.sleep(30)
 
     async def _keep_front_loop(self):
-        """Мягкий пинг вкладки — не переключает активную вкладку."""
+        """Мягкий пинг + активная вкладка внутри Chromium (для Betcity)."""
         logger.info(
-            f"[{self.bk_id}] 👁 Keep-alive включён (раз в {PAGE_KEEP_FRONT_INTERVAL}с)"
+            f"[{self.bk_id}] 👁 Keep-alive: активная вкладка + пинг раз в "
+            f"{PAGE_KEEP_FRONT_INTERVAL}с"
         )
         while self.is_running:
             try:
                 await asyncio.sleep(PAGE_KEEP_FRONT_INTERVAL)
-                if self.page and not self.page.is_closed():
-                    try:
-                        await self.page.evaluate("() => document.title.length")
-                    except Exception:
-                        try:
-                            await self.page.bring_to_front()
-                        except Exception:
-                            pass
+                if not self.page or self.page.is_closed():
+                    continue
+
+                try:
+                    await self.page.bring_to_front()
+                except Exception:
+                    pass
+
+                try:
+                    await self.page.evaluate(
+                        "() => { window.__keepalive = (window.__keepalive || 0) + 1; "
+                        "return window.__keepalive; }"
+                    )
+                except Exception:
+                    pass
+
+                logger.debug(f"[{self.bk_id}] keep-alive ping")
+
             except asyncio.CancelledError:
                 break
             except Exception as e:
                 logger.debug(f"[{self.bk_id}] keep-alive: {e}")
 
+    # ---------- Остановка ----------
     async def stop(self):
         self._stop_keeper_tasks()
         if self.page and not self.page.is_closed():
@@ -202,6 +230,7 @@ class BaseParser(ABC):
             logger.info(f"[{self.bk_id}] Вкладка закрыта")
         self.page = None
 
+    # ---------- Основной цикл ----------
     async def run(self):
         logger.info(f"[{self.bk_id}] 🚀 Парсер запущен")
         while True:
@@ -220,7 +249,6 @@ class BaseParser(ABC):
                         count = len(matches)
                         self._log_matches_collected(count)
 
-                        # Защита от зависаний (перезагрузка, если матчей не меняется)
                         if self._last_match_count == count:
                             self._stuck_counter += 1
                         else:
@@ -238,7 +266,6 @@ class BaseParser(ABC):
                                 self._last_reload_time = now
                                 continue
 
-                        # Отправка в детектор и агрегатор
                         if self.detector:
                             try:
                                 await asyncio.gather(*[self.detector.process(m) for m in matches])
@@ -251,7 +278,6 @@ class BaseParser(ABC):
                             except Exception as agg_err:
                                 logger.error(f"[{self.bk_id}] Ошибка агрегатора: {agg_err}", exc_info=True)
                     else:
-                        # Если матчей нет, сбрасываем счётчик зависания
                         self._stuck_counter = 0
                         self._last_match_count = None
                         await asyncio.sleep(1)

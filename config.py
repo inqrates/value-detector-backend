@@ -33,8 +33,20 @@ LOG_LEVEL = "INFO"          # <-- изменено с "DEBUG"
 LOG_FILE = "logs/backend.log"
 
 # ---- Антисон для вкладок ----
-PAGE_RELOAD_ENABLED = True       # Включить watchdog залипаний
-PAGE_RELOAD_STAGGER = 60         # Сдвиг стартовой проверки между БК (сек)
+PAGE_RELOAD_ENABLED = True
+PAGE_RELOAD_STAGGER = 60
 
-PAGE_KEEP_FRONT = ['betcity']    # Какие БК «пинать» для пробуждения
-PAGE_KEEP_FRONT_INTERVAL = 120   # Как часто (сек)
+PAGE_KEEP_FRONT = ['betcity']
+PAGE_KEEP_FRONT_INTERVAL = 45
+
+# Индивидуальные пороги для конкретных БК
+PAGE_STUCK_TIMEOUT_BY_BK = {
+    'betcity': 25,
+}
+PAGE_STUCK_TIMEOUT_DEFAULT = 45
+
+# Периодический reload — для БК, где список матчей подгружается
+# только при загрузке страницы (новые матчи не видны без reload)
+PAGE_PERIODIC_RELOAD_BY_BK = {
+    'sportbet': 300,   # перезагрузка каждые 5 минут
+}
