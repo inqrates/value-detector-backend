@@ -2,6 +2,7 @@
 import asyncio
 import logging
 import sys
+import os
 import uvicorn
 
 from parsers.fonbet_api import FonbetApiParser
@@ -20,7 +21,9 @@ from core.browser_manager import browser_manager
 from api import app, set_aggregator, broadcast_message
 
 # ---- Настройка логирования ----
-LOG_LEVEL = logging.INFO      # <-- установлен INFO
+LOG_LEVEL = os.getenv("LOG_LEVEL", "INFO")
+DEBUG_PARSERS = os.getenv("DEBUG_PARSERS", "0") == "1"
+
 LOG_FORMAT = '%(asctime)s | %(levelname)-8s | %(message)s'
 
 logging.basicConfig(
@@ -29,28 +32,41 @@ logging.basicConfig(
     handlers=[logging.StreamHandler(sys.stdout)]
 )
 
-# Отключаем шумные библиотеки
+# Отключаем шумные библиотеки (всегда)
 for lib in ['playwright', 'httpx', 'urllib3', 'asyncio']:
     logging.getLogger(lib).setLevel(logging.WARNING)
 
-# --- ОТКЛЮЧАЕМ ИНФОРМАЦИОННЫЕ ЛОГИ ПАРСЕРОВ (оставляем только ошибки) ---
+# Уровень логов парсеров: WARNING по умолчанию, INFO если DEBUG_PARSERS=1
+_parser_level = logging.INFO if DEBUG_PARSERS else logging.WARNING
 for name in ['parsers', 'parsers.fonbet_api', 'parsers.winline_api', 'parsers.ligastavok_api',
              'parsers.leon_api', 'parsers.olimp_api', 'parsers.betcity_api', 'parsers.marathon_api',
              'parsers.zenit_api', 'parsers.sportbet_api']:
-    logging.getLogger(name).setLevel(logging.WARNING)
-
-# Также можно отключить api и core – но оставим их на INFO
-# logging.getLogger('api').setLevel(logging.WARNING)
-# logging.getLogger('core').setLevel(logging.WARNING)
+    logging.getLogger(name).setLevel(_parser_level)
 
 logger = logging.getLogger(__name__)
 
 
+# ============================================================
+# Дедупликация: не отправляем один и тот же объект повторно
+# ============================================================
+_sent_forks: set = set()
+_sent_values: set = set()
+_sent_corridors: set = set()
+
+
+def _hash_obj(obj: dict) -> tuple:
+    """Стабильный хеш объекта для дедупликации."""
+    return tuple(sorted(
+        (k, str(v)[:64]) for k, v in obj.items()
+        if k in ('key', 'match_id', 'match_id_p1', 'match_id_p2',
+                 'bk', 'bk_p1', 'bk_p2', 'bk1', 'bk2',
+                 'best_p1', 'best_p2', 'odd', 'odd1', 'odd2',
+                 'profit_percent', 'profit', 'side1', 'side2',
+                 'outcome', 'ratio')
+    ))
+
+
 async def print_stats(aggregator: OddsAggregator):
-    """
-    Упрощённая версия – только количество вилок/валуев/коридоров,
-    без логирования каждого объекта.
-    """
     while True:
         try:
             await asyncio.sleep(5)
@@ -60,6 +76,10 @@ async def print_stats(aggregator: OddsAggregator):
             if forks:
                 logger.info(f"🔍 Найдено {len(forks)} вилок")
                 for f in forks:
+                    h = _hash_obj(f)
+                    if h in _sent_forks:
+                        continue
+                    _sent_forks.add(h)
                     await broadcast_message({"type": "arbitrage", "payload": f})
 
             # ---- Валуи ----
@@ -67,6 +87,10 @@ async def print_stats(aggregator: OddsAggregator):
             if values:
                 logger.info(f"💰 Найдено {len(values)} валуев")
                 for v in values:
+                    h = _hash_obj(v)
+                    if h in _sent_values:
+                        continue
+                    _sent_values.add(h)
                     await broadcast_message({"type": "value", "payload": v})
 
             # ---- Коридоры ----
@@ -74,13 +98,23 @@ async def print_stats(aggregator: OddsAggregator):
             if corridors:
                 logger.info(f"🚪 Найдено {len(corridors)} коридоров")
                 for c in corridors:
+                    h = _hash_obj(c)
+                    if h in _sent_corridors:
+                        continue
+                    _sent_corridors.add(h)
                     await broadcast_message({"type": "corridor", "payload": c})
 
-            # ---- Статистика советника ----
+            # ---- Статистика советника (всегда отправляем) ----
             stats = aggregator.get_advisor_stats()
-            if stats:
-                logger.info(f"📊 Активных БК: {len(stats)} -> {list(stats.keys())}")
             await broadcast_message({"type": "advisor", "payload": stats})
+
+            # Чистим старые хеши, чтобы память не росла бесконечно
+            if len(_sent_forks) > 2000:
+                _sent_forks.clear()
+            if len(_sent_values) > 2000:
+                _sent_values.clear()
+            if len(_sent_corridors) > 2000:
+                _sent_corridors.clear()
 
         except Exception as e:
             logger.error(f"Ошибка в print_stats: {e}", exc_info=True)
@@ -89,6 +123,8 @@ async def print_stats(aggregator: OddsAggregator):
 
 async def main():
     logger.info("🚀 Запуск системы парсинга настольного тенниса")
+    if DEBUG_PARSERS:
+        logger.info("🔍 DEBUG_PARSERS=1 — логи парсеров включены (INFO)")
 
     detector = Detector(broadcast_callback=broadcast_message)
     aggregator = OddsAggregator(ttl=10)

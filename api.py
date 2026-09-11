@@ -29,19 +29,20 @@ async def websocket_endpoint(websocket: WebSocket):
         while True:
             await websocket.receive_text()
     except WebSocketDisconnect:
-        websocket_clients.remove(websocket)
+        websocket_clients.discard(websocket)
+    except Exception:
+        websocket_clients.discard(websocket)
 
 async def broadcast_message(message: dict):
     if not websocket_clients:
         return
     data = json.dumps(message)
-    # Не логируем каждую отправку – только если нужно отладить, включить DEBUG
-    # logger.debug(f"📤 Отправка WebSocket: {message.get('type')}")
     for client in list(websocket_clients):
         try:
             await client.send_text(data)
-        except:
-            websocket_clients.remove(client)
+        except Exception:
+            # discard не падает, если элемента уже нет в set
+            websocket_clients.discard(client)
 
 @app.get("/matches", response_model=List[Dict])
 async def get_matches():

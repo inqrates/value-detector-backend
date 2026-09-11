@@ -282,6 +282,9 @@ class Detector:
         return tpl.format(id=match_id) if tpl else ""
 
     def _get_match_key(self, p1, p2, tournament=None):
+        """Возвращает строковый ключ (совместим с aggregator._get_key)."""
         n1 = normalizer.normalize_name(p1)
         n2 = normalizer.normalize_name(p2)
-        return tuple(sorted((n1, n2)))
+        if n1 > n2:
+            n1, n2 = n2, n1
+        return f"{n1}||{n2}"
