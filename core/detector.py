@@ -29,7 +29,8 @@ class Detector:
         self.MIN_SCORE_DIFF = 2
 
     async def process(self, match: 'Match'):
-        key = self._get_match_key(match.player1, match.player2)
+        sport = getattr(match, "sport", "table_tennis") or "table_tennis"
+        key = self._get_match_key(match.player1, match.player2, sport=sport)
 
         async with self.locks[key]:
             is_new_for_bk = match.bk_id not in self.known_matches[key]
@@ -292,10 +293,11 @@ class Detector:
         tpl = templates.get(bk_id)
         return tpl.format(id=match_id) if tpl else ""
 
-    def _get_match_key(self, p1, p2, tournament=None):
+    def _get_match_key(self, p1, p2, sport="table_tennis", tournament=None):
         """Возвращает строковый ключ (совместим с aggregator._get_key)."""
         n1 = normalizer.normalize_name(p1)
         n2 = normalizer.normalize_name(p2)
         if n1 > n2:
             n1, n2 = n2, n1
-        return f"{n1}||{n2}"
+        sport = sport or "table_tennis"
+        return f"{sport}::{n1}||{n2}"

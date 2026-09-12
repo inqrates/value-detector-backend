@@ -48,6 +48,9 @@ for name in ['parsers', 'parsers.fonbet_api', 'parsers.winline_api', 'parsers.li
              'parsers.zenit_api', 'parsers.sportbet_api']:
     logging.getLogger(name).setLevel(_parser_level)
 
+# Временно включаем INFO для fonbet для теста мультиспорта
+logging.getLogger('parsers.fonbet_api').setLevel(logging.INFO)
+
 logger = logging.getLogger(__name__)
 
 
@@ -135,8 +138,10 @@ async def main():
     aggregator = OddsAggregator(ttl=10)
     set_aggregator(aggregator)
 
+    FONBET_SPORTS = ["table_tennis", "volleyball", "basketball", "cyber_basketball"]
+
     parsers = [
-        FonbetApiParser(detector=detector, aggregator=aggregator),
+        FonbetApiParser(detector=detector, aggregator=aggregator, enabled_sports=FONBET_SPORTS),
         WinlineApiParser(detector=detector, aggregator=aggregator),
         LigaStavokApiParser(detector=detector, aggregator=aggregator),
         LeonApiParser(detector=detector, aggregator=aggregator),

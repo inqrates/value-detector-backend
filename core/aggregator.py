@@ -24,7 +24,9 @@ class OddsAggregator:
         p2 = normalizer.normalize_name(match.player2)
         if p1 > p2:
             p1, p2 = p2, p1
-        return f"{p1}||{p2}"
+        # Добавляем вид спорта в ключ, чтобы матчи разных видов не смешивались
+        sport = getattr(match, "sport", "table_tennis") or "table_tennis"
+        return f"{sport}::{p1}||{p2}"
 
     def update(self, match: Match):
         key = self._get_key(match)
