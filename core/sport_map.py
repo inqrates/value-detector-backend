@@ -6,16 +6,6 @@
   - Числовой ID (Fonbet, Betcity, Olimp, Sportbet, Zenit, LigaStavok, Winline)
   - Строковый family (Leon)
   - Строковый slug (Marathon)
-
-Структура:
-  SPORT_MAP[bk_id][sport_key] = {
-      'ids': [...],           # список числовых или строковых ID
-      'aliases': [...],       # альтернативные алиасы (для match по различным полям)
-      'name': str,            # человекочитаемое название
-      'url_slug': str,        # slug для URL матча
-      'cyber_in_real': bool,  # кибер внутри реального (Fonbet, Betcity, Leon)
-      'category_ids': [...],  # sportCategoryId для отделения кибера (Fonbet)
-  }
 """
 
 # ============================================================
@@ -38,15 +28,6 @@ CYBERSPORT = "cybersport"
 # ============================================================
 # FONBET
 # ============================================================
-# НТ:        root 3088, alias 'table-tennis'
-# Волейбол:  root 9,    alias 'volleyball'
-# Баскетбол: root 3,    alias 'basketball'
-# Кибер:     внутри реальных видов по sportCategoryId:
-#             118 = FC 26 (киберфутбол)
-#             119 = NBA 2K26 (кибербаскет)
-#             165 = NHL 26 (киберхоккей)
-#            + отдельный root 29086 'esports' (CS, LoL, Dota)
-# ============================================================
 FONBET = {
     TABLE_TENNIS: {
         "ids": [3088],
@@ -65,14 +46,14 @@ FONBET = {
         "aliases": ["basketball"],
         "name": "Баскетбол",
         "url_slug": "basketball",
-        "exclude_category_ids": [119],  # исключаем кибер NBA 2K26
+        "exclude_category_ids": [119],
     },
     CYBER_BASKETBALL: {
-        "ids": [3],                     # тот же root 3
+        "ids": [3],
         "aliases": ["basketball"],
         "name": "Кибербаскетбол",
         "url_slug": "basketball",
-        "category_ids": [119],          # только NBA 2K26
+        "category_ids": [119],
     },
     FOOTBALL: {
         "ids": [1],
@@ -106,297 +87,103 @@ FONBET = {
 # ============================================================
 # BETCITY
 # ============================================================
-# Через поле sports[].id_sp в ответе on_air/bets
-# Кибер внутри basketball (по аналогии с Fonbet)
-# ============================================================
 BETCITY = {
-    TABLE_TENNIS: {
-        "ids": [46],
-        "name": "Настольный теннис",
-        "url_slug": "table-tennis",
-    },
-    VOLLEYBALL: {
-        "ids": [12],
-        "name": "Волейбол",
-        "url_slug": "volleyball",
-    },
-    BASKETBALL: {
-        "ids": [3],
-        "name": "Баскетбол",
-        "url_slug": "basketball",
-    },
+    TABLE_TENNIS: {"ids": [46], "name": "Настольный теннис", "url_slug": "table-tennis"},
+    VOLLEYBALL:   {"ids": [12], "name": "Волейбол",         "url_slug": "volleyball"},
+    BASKETBALL:   {"ids": [3],  "name": "Баскетбол",        "url_slug": "basketball"},
 }
 
 
 # ============================================================
 # OLIMP
 # ============================================================
-# Через поле sportId в HTTP (строкой)
-# Кибер — отдельные ID
-# ============================================================
 OLIMP = {
-    TABLE_TENNIS: {
-        "ids": ["40"],
-        "name": "Настольный теннис",
-        "url_slug": "nastolnyy-tennis-40",
-    },
-    VOLLEYBALL: {
-        "ids": ["10"],
-        "name": "Волейбол",
-        "url_slug": "voleybol-10",
-    },
-    BASKETBALL: {
-        "ids": ["5"],
-        "name": "Баскетбол",
-        "url_slug": "basketbol-5",
-    },
-    CYBER_BASKETBALL: {
-        "ids": ["140"],
-        "name": "Кибербаскетбол",
-        "url_slug": "kiberbasketbol-140",
-    },
-    CYBERSPORT: {
-        "ids": ["112"],
-        "name": "Киберспорт",
-        "url_slug": "kibersport-112",
-    },
-    FOOTBALL: {
-        "ids": ["1"],
-        "name": "Футбол",
-        "url_slug": "futbol-1",
-    },
-    HOCKEY: {
-        "ids": ["2"],
-        "name": "Хоккей",
-        "url_slug": "khokkey-2",
-    },
-    TENNIS: {
-        "ids": ["3"],
-        "name": "Теннис",
-        "url_slug": "tennis-3",
-    },
+    TABLE_TENNIS:     {"ids": ["40"],  "name": "Настольный теннис", "url_slug": "nastolnyy-tennis-40"},
+    VOLLEYBALL:       {"ids": ["10"],  "name": "Волейбол",         "url_slug": "voleybol-10"},
+    BASKETBALL:       {"ids": ["5"],   "name": "Баскетбол",        "url_slug": "basketbol-5"},
+    CYBER_BASKETBALL: {"ids": ["140"], "name": "Кибербаскетбол",   "url_slug": "kiberbasketbol-140"},
+    CYBERSPORT:       {"ids": ["112"], "name": "Киберспорт",       "url_slug": "kibersport-112"},
+    FOOTBALL:         {"ids": ["1"],   "name": "Футбол",           "url_slug": "futbol-1"},
+    HOCKEY:           {"ids": ["2"],   "name": "Хоккей",           "url_slug": "khokkey-2"},
+    TENNIS:           {"ids": ["3"],   "name": "Теннис",           "url_slug": "tennis-3"},
 }
 
 
 # ============================================================
 # SPORTBET
 # ============================================================
-# Через поле sports[].id в events.table
-# ============================================================
 SPORTBET = {
-    TABLE_TENNIS: {
-        "ids": [20],
-        "name": "Настольный теннис",
-        "url_slug": "table-tennis",
-    },
-    VOLLEYBALL: {
-        "ids": [23],
-        "name": "Волейбол",
-        "url_slug": "volleyball",
-    },
-    BASKETBALL: {
-        "ids": [2],
-        "name": "Баскетбол",
-        "url_slug": "basketball",
-    },
-    FOOTBALL: {
-        "ids": [1],
-        "name": "Футбол",
-        "url_slug": "soccer",
-    },
-    HOCKEY: {
-        "ids": [4],
-        "name": "Хоккей",
-        "url_slug": "ice-hockey",
-    },
-    TENNIS: {
-        "ids": [5],
-        "name": "Теннис",
-        "url_slug": "tennis",
-    },
+    TABLE_TENNIS: {"ids": [20], "name": "Настольный теннис", "url_slug": "table-tennis"},
+    VOLLEYBALL:   {"ids": [23], "name": "Волейбол",         "url_slug": "volleyball"},
+    BASKETBALL:   {"ids": [2],  "name": "Баскетбол",        "url_slug": "basketball"},
+    FOOTBALL:     {"ids": [1],  "name": "Футбол",           "url_slug": "soccer"},
+    HOCKEY:       {"ids": [4],  "name": "Хоккей",           "url_slug": "ice-hockey"},
+    TENNIS:       {"ids": [5],  "name": "Теннис",           "url_slug": "tennis"},
 }
 
 
 # ============================================================
 # ZENIT
 # ============================================================
-# Через поле sid в WS (t=21) и HTTP
-# Кибер — отдельные ID
-# ============================================================
 ZENIT = {
-    TABLE_TENNIS: {
-        "ids": [134],
-        "name": "Настольный теннис",
-        "url_slug": "134",
-    },
-    VOLLEYBALL: {
-        "ids": [41],
-        "name": "Волейбол",
-        "url_slug": "41",
-    },
-    BASKETBALL: {
-        "ids": [28],
-        "name": "Баскетбол",
-        "url_slug": "28",
-    },
-    CYBER_BASKETBALL: {
-        "ids": [564],
-        "name": "Кибербаскетбол",
-        "url_slug": "564",
-    },
-    FOOTBALL: {
-        "ids": [26],
-        "name": "Футбол",
-        "url_slug": "26",
-    },
-    HOCKEY: {
-        "ids": [27],
-        "name": "Хоккей",
-        "url_slug": "27",
-    },
-    TENNIS: {
-        "ids": [33],
-        "name": "Теннис",
-        "url_slug": "33",
-    },
-    HANDBALL: {
-        "ids": [32],
-        "name": "Гандбол",
-        "url_slug": "32",
-    },
+    TABLE_TENNIS:     {"ids": [134], "name": "Настольный теннис", "url_slug": "134"},
+    VOLLEYBALL:       {"ids": [41],  "name": "Волейбол",         "url_slug": "41"},
+    BASKETBALL:       {"ids": [28],  "name": "Баскетбол",        "url_slug": "28"},
+    CYBER_BASKETBALL: {"ids": [564], "name": "Кибербаскетбол",   "url_slug": "564"},
+    FOOTBALL:         {"ids": [26],  "name": "Футбол",           "url_slug": "26"},
+    HOCKEY:           {"ids": [27],  "name": "Хоккей",           "url_slug": "27"},
+    TENNIS:           {"ids": [33],  "name": "Теннис",           "url_slug": "33"},
+    HANDBALL:         {"ids": [32],  "name": "Гандбол",          "url_slug": "32"},
 }
 
 
 # ============================================================
 # LIGASTAVOK
 # ============================================================
-# Через поле gameId в eventsList/tournamentTree
-# ============================================================
 LIGASTAVOK = {
-    TABLE_TENNIS: {
-        "ids": [1246],
-        "name": "Настольный теннис",
-        "url_slug": "table-tennis",
-    },
-    VOLLEYBALL: {
-        "ids": [128],
-        "name": "Волейбол",
-        "url_slug": "volleyball",
-    },
-    BASKETBALL: {
-        "ids": [25],
-        "name": "Баскетбол",
-        "url_slug": "basketball",
-    },
-    CYBERSPORT: {
-        "ids": [10014],
-        "name": "Киберспорт",
-        "url_slug": "cybersport",
-    },
-    FOOTBALL: {
-        "ids": [33],
-        "name": "Футбол",
-        "url_slug": "soccer",
-    },
-    HOCKEY: {
-        "ids": [31],
-        "name": "Хоккей",
-        "url_slug": "ice-hockey",
-    },
-    TENNIS: {
-        "ids": [34],
-        "name": "Теннис",
-        "url_slug": "tennis",
-    },
-    HANDBALL: {
-        "ids": [30],
-        "name": "Гандбол",
-        "url_slug": "handball",
-    },
+    TABLE_TENNIS: {"ids": [1246], "name": "Настольный теннис", "url_slug": "table-tennis"},
+    VOLLEYBALL:   {"ids": [128],  "name": "Волейбол",         "url_slug": "volleyball"},
+    BASKETBALL:   {"ids": [25],   "name": "Баскетбол",        "url_slug": "basketball"},
+    CYBERSPORT:   {"ids": [10014],"name": "Киберспорт",       "url_slug": "cybersport"},
+    FOOTBALL:     {"ids": [33],   "name": "Футбол",           "url_slug": "soccer"},
+    HOCKEY:       {"ids": [31],   "name": "Хоккей",           "url_slug": "ice-hockey"},
+    TENNIS:       {"ids": [34],   "name": "Теннис",           "url_slug": "tennis"},
+    HANDBALL:     {"ids": [30],   "name": "Гандбол",          "url_slug": "handball"},
 }
 
 
 # ============================================================
 # LEON
 # ============================================================
-# Через поле family в ответе API
-# Кибербаскет внутри Basketball (region.family == 'ELECTRONIC_LEAGUES')
-# ============================================================
 LEON = {
-    TABLE_TENNIS: {
-        "aliases": ["TableTennis"],
-        "name": "Настольный теннис",
-        "url_slug": "table-tennis",
-    },
-    VOLLEYBALL: {
-        "aliases": ["Volleyball"],
-        "name": "Волейбол",
-        "url_slug": "volleyball",
-    },
-    BASKETBALL: {
-        "aliases": ["Basketball"],
-        "name": "Баскетбол",
-        "url_slug": "basketball",
-    },
+    TABLE_TENNIS:     {"aliases": ["TableTennis"], "name": "Настольный теннис", "url_slug": "table-tennis"},
+    VOLLEYBALL:       {"aliases": ["Volleyball"],  "name": "Волейбол",         "url_slug": "volleyball"},
+    BASKETBALL:       {"aliases": ["Basketball"],  "name": "Баскетбол",        "url_slug": "basketball"},
     CYBER_BASKETBALL: {
-        "aliases": ["Basketball"],           # тот же вид
+        "aliases": ["Basketball"],
         "region_family": "ELECTRONIC_LEAGUES",
         "name": "Кибербаскетбол",
         "url_slug": "basketball",
     },
-    FOOTBALL: {
-        "aliases": ["Football"],
-        "name": "Футбол",
-        "url_slug": "football",
-    },
-    HOCKEY: {
-        "aliases": ["IceHockey"],
-        "name": "Хоккей",
-        "url_slug": "ice-hockey",
-    },
-    TENNIS: {
-        "aliases": ["Tennis"],
-        "name": "Теннис",
-        "url_slug": "tennis",
-    },
+    FOOTBALL: {"aliases": ["Football"],  "name": "Футбол", "url_slug": "football"},
+    HOCKEY:   {"aliases": ["IceHockey"], "name": "Хоккей", "url_slug": "ice-hockey"},
+    TENNIS:   {"aliases": ["Tennis"],    "name": "Теннис", "url_slug": "tennis"},
 }
 
 
 # ============================================================
 # WINLINE
 # ============================================================
-# Через поле sportId в бинарном WS data_ng
-# Кибербаскет — отдельный ID (193)
-# ============================================================
 WINLINE = {
-    TABLE_TENNIS: {
-        "ids": [20],
-        "name": "Настольный теннис",
-        "url_slug": "nastolijnyj_tennis",
-    },
-    VOLLEYBALL: {
-        "ids": [23],
-        "name": "Волейбол",
-        "url_slug": "volleyball",
-    },
-    BASKETBALL: {
-        "ids": [2],
-        "name": "Баскетбол",
-        "url_slug": "basketball",
-    },
-    CYBER_BASKETBALL: {
-        "ids": [193],
-        "name": "Кибербаскетбол",
-        "url_slug": "cyberbasketball",
-    },
+    TABLE_TENNIS:     {"ids": [20],  "name": "Настольный теннис", "url_slug": "nastolijnyj_tennis"},
+    VOLLEYBALL:       {"ids": [23],  "name": "Волейбол",         "url_slug": "volleyball"},
+    BASKETBALL:       {"ids": [2],   "name": "Баскетбол",        "url_slug": "basketball"},
+    CYBER_BASKETBALL: {"ids": [193], "name": "Кибербаскетбол",   "url_slug": "cyberbasketball"},
 }
 
 
 # ============================================================
 # MARATHON
-# ============================================================
-# Через строковый sportSlug в URL SSE
-# Новая схема: /sports/by-slug/all-tournaments/live?sportSlug=XXX
 # ============================================================
 MARATHON = {
     TABLE_TENNIS: {
@@ -419,7 +206,7 @@ MARATHON = {
     },
     CYBER_BASKETBALL: {
         "aliases": ["cyber-basketball"],
-        "sport_code": "e-Sports",       # + seo.sport.name == "Кибербаскетбол"
+        "sport_code": "e-Sports",
         "name": "Кибербаскетбол",
         "url_slug": "cyber-basketball",
     },
@@ -457,7 +244,7 @@ def get_sport_config(bk: str, sport: str) -> dict:
 
 
 def get_ids_for_sport(bk: str, sport: str) -> list:
-    """Вернуть список числовых ID для вида спорта (Fonbet, Olimp, ...)."""
+    """Вернуть список числовых ID для вида спорта."""
     cfg = get_sport_config(bk, sport)
     return cfg.get("ids", [])
 
@@ -473,7 +260,7 @@ def get_aliases_for_sport(bk: str, sport: str) -> list:
 
 
 def get_all_ids_for_bk(bk: str) -> dict:
-    """Собрать маппинг {id: sport_key} для всех включённых видов спорта БК."""
+    """Собрать маппинг {id: sport_key} для всех видов спорта БК."""
     result = {}
     for sport_key, cfg in SPORT_MAP.get(bk, {}).items():
         for id_val in cfg.get("ids", []):
@@ -490,3 +277,72 @@ def get_url_slug(bk: str, sport: str) -> str:
 def list_sports_for_bk(bk: str) -> list:
     """Список всех видов спорта, поддержанных для БК."""
     return list(SPORT_MAP.get(bk, {}).keys())
+
+
+# ============================================================
+# КОДЫ ФАКТОРОВ ПО ВИДАМ СПОРТА
+# ============================================================
+FACTOR_CODES = {
+    "fonbet": {
+        "table_tennis": {
+            "win1": 921, "win2": 923, "draw": None,
+            "total_over": 930, "total_under": 931,
+            "handicap1": 927, "handicap2": 928,
+        },
+        "volleyball": {
+            "win1": 921, "win2": 923, "draw": None,
+            "total_over": 930, "total_under": 931,
+            "handicap1": 927, "handicap2": 928,
+        },
+        "basketball": {
+            "win1": 921, "win2": 923, "draw": 922,
+            "total_over": 930, "total_under": 931,
+            "handicap1": 927, "handicap2": 928,
+            "match_total_over": 1736, "match_total_under": 1737,
+            "match_handicap1": 910, "match_handicap2": 912,
+        },
+        "cyber_basketball": {
+            "win1": 921, "win2": 923, "draw": 922,
+            "total_over": 930, "total_under": 931,
+            "handicap1": 927, "handicap2": 928,
+            "match_total_over": 1736, "match_total_under": 1737,
+            "match_handicap1": 910, "match_handicap2": 912,
+        },
+    },
+}
+
+
+def get_factor_codes(bk: str, sport: str) -> dict:
+    """Вернуть коды факторов для вида спорта."""
+    return FACTOR_CODES.get(bk, {}).get(sport, {})
+
+
+# ============================================================
+# НАЗВАНИЯ ФАЗ ПО ВИДАМ СПОРТА
+# Кортеж: (существительное, суффикс порядкового)
+# ============================================================
+PHASE_LABELS = {
+    "table_tennis":     ("партия",   "я"),
+    "volleyball":       ("сет",      "й"),
+    "beach_volleyball": ("сет",      "й"),
+    "basketball":       ("четверть", "я"),
+    "cyber_basketball": ("четверть", "я"),
+    "football":         ("тайм",     "й"),
+    "futsal":           ("тайм",     "й"),
+    "hockey":           ("период",   "й"),
+    "tennis":           ("сет",      "й"),
+    "handball":         ("тайм",     "й"),
+    "cricket":          ("иннинг",   "й"),
+    "cybersport":       ("карта",    "я"),
+}
+
+
+def format_phase(sport: str, n: int) -> str:
+    """Возвращает '2-й сет', '3-я партия', '1-я четверть' и т.п."""
+    label, sfx = PHASE_LABELS.get(sport, ("фаза", "я"))
+    return f"{n}-{sfx} {label}"
+
+
+def get_phase_label(sport: str) -> str:
+    """Deprecated. Используй format_phase()."""
+    return PHASE_LABELS.get(sport, ("фаза", "я"))[0]
