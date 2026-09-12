@@ -284,6 +284,13 @@ class FonbetApiParser(BaseParser):
     # ============================================================
     def _parse_comment(self, comment: str, sport_key: str,
                        children_miscs: list = None) -> dict:
+        """
+        Возвращает sub1, sub2, total1, total2, phase_num, phase_name.
+
+        НТ — оригинальная логика (последняя пара X-Y через дефис = очки в партии).
+        Волейбол — все партии через пробел, берём последнюю с очками.
+        Баскетбол — сумма четвертей + активная четверть.
+        """
         result = {
             "sub1": 0, "sub2": 0,
             "total1": 0, "total2": 0,
@@ -292,35 +299,23 @@ class FonbetApiParser(BaseParser):
         if not comment:
             comment = ""
 
-        # ── НТ: "(2-1) 10:8" ──
+        # ── НТ: оригинальная логика (ничего не меняем) ──
         if sport_key == "table_tennis":
-            if comment:
-                # Очки в партии: "10:8" после скобок
-                after = re.sub(r'^\([^)]*\)\s*', '', comment)
-                colon = re.findall(r'(\d+):(\d+)', after)
-                if colon:
-                    result["sub1"] = int(colon[0][0])
-                    result["sub2"] = int(colon[0][1])
-                # Счёт партий: "(2-1)"
-                first_bracket = re.search(r'\(([^)]+)\)', comment)
-                s1 = s2 = 0
-                if first_bracket:
-                    m = re.match(r'[*]?(\d+)[*]?-(\d+)', first_bracket.group(1))
-                    if m:
-                        s1, s2 = int(m.group(1)), int(m.group(2))
-                result["total1"] = s1
-                result["total2"] = s2
-                pn = s1 + s2 + 1
-                result["phase_num"] = pn
-                result["phase_name"] = format_phase(sport_key, pn)
+            pairs = re.findall(r'\d+[*]?-\d+[*]?', comment)
+            if pairs:
+                last = pairs[-1].replace('*', '')
+                parts = last.split('-')
+                if len(parts) == 2:
+                    result["sub1"] = int(parts[0]) if parts[0].isdigit() else 0
+                    result["sub2"] = int(parts[1]) if parts[1].isdigit() else 0
+            # phase_num для НТ определим в _try_send_matches по misc.score1/score2
             return result
 
-        # ── Волейбол: "(25-18 16-18*)" — как баскетбол, но счёт сетов из misc ──
+        # ── Волейбол: "(25-18 16-18*)" — как баскетбол ──
         if sport_key in ("volleyball", "beach_volleyball"):
             if comment:
                 first_bracket = re.search(r'\(([^)]+)\)', comment)
                 inner = first_bracket.group(1) if first_bracket else comment
-                # Убираем звёздочки (кто подаёт)
                 inner = inner.replace('*', '')
                 pairs = re.findall(r'(\d+)-(\d+)', inner)
                 phase_num = 0
@@ -336,10 +331,8 @@ class FonbetApiParser(BaseParser):
                 result["sub2"] = sub2
                 result["phase_num"] = phase_num
                 result["phase_name"] = format_phase(sport_key, phase_num)
-                # ВАЖНО: total1/total2 = 0 — счёт сетов берётся из misc.score1/2
                 return result
 
-            # Fallback: comment пустой — из активного ребёнка
             if children_miscs:
                 active_idx = 0
                 active_s1 = active_s2 = 0
@@ -533,11 +526,16 @@ class FonbetApiParser(BaseParser):
                     cm = dict(self._live_cache.get(ceid, {}) or {})
                     children_miscs.append(cm)
 
-            # Парсим comment
+                        # Парсим comment
             score_info = self._parse_comment(comment, sport_key, children_miscs=children_miscs)
             sub1 = score_info["sub1"]
             sub2 = score_info["sub2"]
             phase_name = score_info["phase_name"]
+
+            
+            if sport_key == "table_tennis":
+                phase_num = (s1 or 0) + (s2 or 0) + 1
+                phase_name = format_phase(sport_key, phase_num)
 
             # Итоговый score1/score2
             if sport_key in ("basketball", "cyber_basketball"):
