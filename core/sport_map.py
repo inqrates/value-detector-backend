@@ -206,9 +206,9 @@ MARATHON = {
     },
     CYBER_BASKETBALL: {
         "aliases": ["cyber-basketball"],
-        "sport_code": "e-Sports",
+        "sport_code": "e-Sports",          # <-- из дампа
         "name": "Кибербаскетбол",
-        "url_slug": "cyber-basketball",
+        "url_slug": "cyber-basketball",    # <-- из URL
     },
 }
 

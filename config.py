@@ -49,7 +49,7 @@ SPORT_URLS["_all"] = {
     "fonbet":     "https://fon.bet/live",
     "winline":    "https://winline.ru/live",
     "ligastavok": "https://www.ligastavok.ru/live",
-    "leon":       "https://leon.ru/bets/live",
+    "leon":       "https://leon.ru/live",
     "olimp":      "https://www.olimp.bet/live",
     "betcity":    "https://betcity.ru/ru/live",
     "marathon":   "https://new.marathonbet.ru/su/live",

@@ -48,8 +48,8 @@ for name in ['parsers', 'parsers.fonbet_api', 'parsers.winline_api', 'parsers.li
              'parsers.zenit_api', 'parsers.sportbet_api']:
     logging.getLogger(name).setLevel(_parser_level)
 
-# Временно включаем INFO для fonbet для теста мультиспорта
-logging.getLogger('parsers.ligastavok_api').setLevel(logging.INFO)
+# Временно включаем INFO для  для теста мультиспорта
+logging.getLogger('parsers.winline_api').setLevel(logging.INFO)
 
 
 logger = logging.getLogger(__name__)
@@ -145,15 +145,18 @@ async def main():
     SPORTBET_SPORTS = ["table_tennis", "volleyball", "basketball"]
     ZENIT_SPORTS = ["table_tennis", "volleyball", "basketball", "cyber_basketball"]
     LIGASTAVOK_SPORTS = ["table_tennis", "volleyball", "basketball", "cyber_basketball"]
+    LEON_SPORTS = ["table_tennis", "volleyball", "basketball", "cyber_basketball"]
+    MARATHON_SPORTS = ["table_tennis", "volleyball", "basketball", "cyber_basketball"]
+    WINLINE_SPORTS = ["table_tennis", "volleyball", "basketball", "cyber_basketball"]
 
     parsers = [
         FonbetApiParser(detector=detector, aggregator=aggregator, enabled_sports=FONBET_SPORTS),
-        WinlineApiParser(detector=detector, aggregator=aggregator),
+        WinlineApiParser(detector=detector, aggregator=aggregator, enabled_sports=WINLINE_SPORTS),
         LigaStavokApiParser(detector=detector, aggregator=aggregator, enabled_sports=LIGASTAVOK_SPORTS),
-        LeonApiParser(detector=detector, aggregator=aggregator),
+        LeonApiParser(detector=detector, aggregator=aggregator, enabled_sports=LEON_SPORTS),
         OlimpApiParser(detector=detector, aggregator=aggregator, enabled_sports=OLIMP_SPORTS),
         BetcityApiParser(detector=detector, aggregator=aggregator, enabled_sports=BETCITY_SPORTS),
-        MarathonApiParser(detector=detector, aggregator=aggregator),
+        MarathonApiParser(detector=detector, aggregator=aggregator, enabled_sports=MARATHON_SPORTS),
         ZenitApiParser(detector=detector, aggregator=aggregator, enabled_sports=ZENIT_SPORTS),
         SportbetApiParser(detector=detector, aggregator=aggregator, enabled_sports=SPORTBET_SPORTS),
     ]
