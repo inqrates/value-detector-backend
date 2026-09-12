@@ -49,7 +49,8 @@ for name in ['parsers', 'parsers.fonbet_api', 'parsers.winline_api', 'parsers.li
     logging.getLogger(name).setLevel(_parser_level)
 
 # Временно включаем INFO для fonbet для теста мультиспорта
-logging.getLogger('parsers.fonbet_api').setLevel(logging.INFO)
+logging.getLogger('parsers.ligastavok_api').setLevel(logging.INFO)
+
 
 logger = logging.getLogger(__name__)
 
@@ -139,17 +140,22 @@ async def main():
     set_aggregator(aggregator)
 
     FONBET_SPORTS = ["table_tennis", "volleyball", "basketball", "cyber_basketball"]
+    BETCITY_SPORTS = ["table_tennis", "volleyball", "basketball", "cyber_basketball"]
+    OLIMP_SPORTS = ["table_tennis", "volleyball", "basketball", "cyber_basketball"]
+    SPORTBET_SPORTS = ["table_tennis", "volleyball", "basketball"]
+    ZENIT_SPORTS = ["table_tennis", "volleyball", "basketball", "cyber_basketball"]
+    LIGASTAVOK_SPORTS = ["table_tennis", "volleyball", "basketball", "cyber_basketball"]
 
     parsers = [
         FonbetApiParser(detector=detector, aggregator=aggregator, enabled_sports=FONBET_SPORTS),
         WinlineApiParser(detector=detector, aggregator=aggregator),
-        LigaStavokApiParser(detector=detector, aggregator=aggregator),
+        LigaStavokApiParser(detector=detector, aggregator=aggregator, enabled_sports=LIGASTAVOK_SPORTS),
         LeonApiParser(detector=detector, aggregator=aggregator),
-        OlimpApiParser(detector=detector, aggregator=aggregator),
-        BetcityApiParser(detector=detector, aggregator=aggregator),
+        OlimpApiParser(detector=detector, aggregator=aggregator, enabled_sports=OLIMP_SPORTS),
+        BetcityApiParser(detector=detector, aggregator=aggregator, enabled_sports=BETCITY_SPORTS),
         MarathonApiParser(detector=detector, aggregator=aggregator),
-        ZenitApiParser(detector=detector, aggregator=aggregator),
-        SportbetApiParser(detector=detector, aggregator=aggregator),
+        ZenitApiParser(detector=detector, aggregator=aggregator, enabled_sports=ZENIT_SPORTS),
+        SportbetApiParser(detector=detector, aggregator=aggregator, enabled_sports=SPORTBET_SPORTS),
     ]
 
     logger.info(f"✅ Создано {len(parsers)} парсеров")

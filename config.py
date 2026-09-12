@@ -102,7 +102,7 @@ ODDS_DIFF_THRESHOLD = 0.05
 
 HEADLESS = False
 VIEWPORT_WIDTH = 1920
-VIEWPORT_HEIGHT = 4000
+VIEWPORT_HEIGHT = 6000
 ZOOM = 0.5
 
 # Логирование – меняем на INFO, чтобы не было DEBUG-шума

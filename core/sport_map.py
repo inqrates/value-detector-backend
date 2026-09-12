@@ -141,16 +141,16 @@ ZENIT = {
 # LIGASTAVOK
 # ============================================================
 LIGASTAVOK = {
-    TABLE_TENNIS: {"ids": [1246], "name": "Настольный теннис", "url_slug": "table-tennis"},
-    VOLLEYBALL:   {"ids": [128],  "name": "Волейбол",         "url_slug": "volleyball"},
-    BASKETBALL:   {"ids": [25],   "name": "Баскетбол",        "url_slug": "basketball"},
-    CYBERSPORT:   {"ids": [10014],"name": "Киберспорт",       "url_slug": "cybersport"},
-    FOOTBALL:     {"ids": [33],   "name": "Футбол",           "url_slug": "soccer"},
-    HOCKEY:       {"ids": [31],   "name": "Хоккей",           "url_slug": "ice-hockey"},
-    TENNIS:       {"ids": [34],   "name": "Теннис",           "url_slug": "tennis"},
-    HANDBALL:     {"ids": [30],   "name": "Гандбол",          "url_slug": "handball"},
+    TABLE_TENNIS:     {"ids": [1246], "name": "Настольный теннис", "url_slug": "table-tennis"},
+    VOLLEYBALL:       {"ids": [128],  "name": "Волейбол",         "url_slug": "volleyball"},
+    BASKETBALL:       {"ids": [25],   "name": "Баскетбол",        "url_slug": "basketball"},
+    CYBER_BASKETBALL: {"ids": [23139],"name": "Кибербаскетбол",   "url_slug": "cyberbasketball"},
+    CYBERSPORT:       {"ids": [10014],"name": "Киберспорт",       "url_slug": "cybersport"},
+    FOOTBALL:         {"ids": [33],   "name": "Футбол",           "url_slug": "soccer"},
+    HOCKEY:           {"ids": [31],   "name": "Хоккей",           "url_slug": "ice-hockey"},
+    TENNIS:           {"ids": [34],   "name": "Теннис",           "url_slug": "tennis"},
+    HANDBALL:         {"ids": [30],   "name": "Гандбол",          "url_slug": "handball"},
 }
-
 
 # ============================================================
 # LEON
@@ -338,7 +338,12 @@ PHASE_LABELS = {
 
 
 def format_phase(sport: str, n: int) -> str:
-    """Возвращает '2-й сет', '3-я партия', '1-я четверть' и т.п."""
+    """
+    Возвращает '2-й сет', '3-я партия', '1-я четверть'.
+    Для баскетбола n>4 → 'ОТ1', 'ОТ2' (овертайм).
+    """
+    if sport in ("basketball", "cyber_basketball") and n > 4:
+        return f"ОТ{n - 4}"
     label, sfx = PHASE_LABELS.get(sport, ("фаза", "я"))
     return f"{n}-{sfx} {label}"
 

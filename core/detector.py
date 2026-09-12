@@ -5,6 +5,7 @@ import logging
 from collections import defaultdict
 from core.models import Match
 from core.normalizer import normalizer
+from core.sport_map import format_phase          # <-- ПАТЧ 2a
 
 logger = logging.getLogger(__name__)
 
@@ -153,6 +154,45 @@ class Detector:
     def _set_number(m) -> int:
         return m.score1 + m.score2 + 1
 
+        # <-- ПАТЧ 2b: хелпер метки фазы
+    def _phase_label(self, m, consensus_score, sport):
+        """
+        Возвращает готовую метку фазы ('4-я партия', '2-й сет', '3-я четверть').
+
+        Приоритет:
+          1) raw_time — если в нём сформированная фаза, И слово-маркер
+             соответствует виду спорта. Это защищает от случаев, когда
+             БК кладёт в raw_time чужую формулировку (например, ligastavok
+             пишет 'сет' для настольного тенниса — НЕ примем, уйдём в fallback).
+          2) Вычисление через format_phase(sport, N), где N = сумма партий/сетов + 1.
+        """
+        raw = (getattr(m, "raw_time", "") or "").strip()
+
+        expected_word = {
+            "table_tennis":     "партия",
+            "volleyball":       "сет",
+            "beach_volleyball": "сет",
+            "basketball":       "четверть",
+            "cyber_basketball": "четверть",
+            "football":         "тайм",
+            "futsal":           "тайм",
+            "hockey":           "период",
+            "tennis":           "сет",
+            "handball":         "тайм",
+            "cricket":          "иннинг",
+            "cybersport":       "карта",
+        }.get(sport, "фаза")
+
+        if expected_word in raw:
+            return raw
+
+        if consensus_score is not None:
+            n = consensus_score[0] + consensus_score[1] + 1
+        else:
+            n = self._set_number(m)
+        return format_phase(sport, n)
+    # -- / ПАТЧ 2b -->
+
     def _has_parse_bug(self, majority_score, bk_states, lagging_bks):
         m_s1, m_s2, m_sub1, m_sub2 = majority_score
         if m_s1 == 0 and m_s2 == 0:
@@ -201,28 +241,31 @@ class Detector:
 
         return False
 
+    # <-- ПАТЧ 2c: _emit_signal с правильной фазой
     async def _emit_signal(self, key, fast_bks, slow_bks, consensus_score, delay, is_first):
         fast_match = self.states[key].get(fast_bks[0])
         if not fast_match:
             return
 
-        fast_set = consensus_score[0] + consensus_score[1] + 1
+        sport = getattr(fast_match, "sport", "table_tennis") or "table_tennis"
+
+        fast_phase = self._phase_label(fast_match, consensus_score, sport)
 
         slow_info = []
         for bk_id in slow_bks:
             m = self.states[key].get(bk_id)
             if m:
-                slow_set = self._set_number(m)
+                slow_phase = self._phase_label(m, None, sport)
                 slow_info.append(
-                    f"{bk_id} (сет {slow_set}) {m.sub_score1}:{m.sub_score2} "
+                    f"{bk_id} ({slow_phase}) {m.sub_score1}:{m.sub_score2} "
                     f"(кэфы {m.odds1:.2f}/{m.odds2:.2f})"
                 )
 
         tag = "🚨 НОВЫЙ " if is_first else "⏳ Длится"
 
         logger.warning(
-            f"{tag} | {delay:.1f}с | {fast_match.player1} vs {fast_match.player2}\n"
-            f"   ⚡ {', '.join(fast_bks)} (сет {fast_set}): {consensus_score[2]}:{consensus_score[3]}\n"
+            f"{tag} | {delay:.1f}с | [{sport}] {fast_match.player1} vs {fast_match.player2}\n"
+            f"   ⚡ {', '.join(fast_bks)} ({fast_phase}): {consensus_score[2]}:{consensus_score[3]}\n"
             f"   🐢 " + " | ".join(slow_info)
         )
 
@@ -245,20 +288,18 @@ class Detector:
 
             signal_data = {
                 "match_teams": [fast_match.player1, fast_match.player2],
-                # Консенсус (используется для сравнения)
+                "sport": sport,                       # <-- "table_tennis" / "volleyball" / "basketball" / "cyber_basketball"
+                "fast_phase": fast_phase,             # <-- "2-я партия" / "3-й сет" / "4-я четверть"
                 "score": [consensus_score[0], consensus_score[1]],
                 "sub_score": [consensus_score[2], consensus_score[3]],
-                # Быстрая БК — счёт и кэфы
                 "fast_bk": fast_bks[0],
                 "fast_score": [fast_match.score1, fast_match.score2],
                 "fast_sub_score": [fast_match.sub_score1, fast_match.sub_score2],
                 "fast_odds": [fast_match.odds1, fast_match.odds2],
-                # Медленная БК — счёт и кэфы
                 "slow_bk": slow_bk,
                 "slow_score": [slow_match.score1, slow_match.score2] if slow_match else [0, 0],
                 "slow_sub_score": [slow_match.sub_score1, slow_match.sub_score2] if slow_match else [0, 0],
                 "slow_odds": [slow_match.odds1, slow_match.odds2] if slow_match else [0, 0],
-                # Прочее
                 "delay": round(delay, 1),
                 "match_id": match_id_for_slow,
                 "match_url": match_url,
@@ -266,11 +307,7 @@ class Detector:
                 "tournament": fast_match.tournament,
             }
             await self.broadcast_callback({"type": "signal", "payload": signal_data})
-
-            # Отправка "preopen" пока отключена (будет реализована позже)
-            # Если нужно будет включить, добавьте проверку активных стратегий здесь
-            # или реализуйте отдельный метод.
-            # await self.broadcast_callback({"type": "preopen", "payload": preopen_payload})
+    # -- / ПАТЧ 2c -->
 
     def _get_match_url(self, bk_id: str, match_id: str) -> str:
         """

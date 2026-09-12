@@ -1,27 +1,58 @@
 # parsers/sportbet_api.py
+"""
+Sportbet API-парсер с поддержкой мультиспорта (НТ / волейбол / баскетбол).
+
+Перехват: HTTP `events.table` + WS `table:update`.
+HTTP-снапшот `events.table?status=live&lang=ru&isTime=true` содержит ВСЕ виды спорта:
+  - sport.id = 20 / slug = "table-tennis"
+  - sport.id = 23 / slug = "volleyball"
+  - sport.id = 2  / slug = "basketball"
+
+Формат события:
+  event.score   — счёт партий (НТ, волейбол) или общий счёт (баскетбол)
+  event.scores  — очки по партиям/сетам/четвертям, последняя = активная фаза
+  event.matchStatus — строка фазы ("4-й сет", "2-я четверть", "Перерыв")
+                      Используем только как индикатор перерыва (см. _parse_score).
+
+Маркеты:
+  НТ/волейбол:  186=Победитель, 238=Тотал, 237=Фора
+  Баскетбол:    219=Победитель, 225=Тотал, 223=Фора
+"""
 import asyncio
 import time
 import json
 import re
 import logging
-from typing import Dict, List, Optional, Any
+from typing import Dict, List, Optional
 from playwright.async_api import Response, WebSocket
 from core.models import Match
 from parsers.base import BaseParser
 from core.browser_manager import browser_manager
-from config import ZOOM, PAGE_LOAD_TIMEOUT, PAGE_STABILIZE_TIME
+from config import ZOOM, PAGE_LOAD_TIMEOUT, PAGE_STABILIZE_TIME, SPORT_URLS
+from core.sport_map import (
+    SPORT_MAP, get_sport_config, get_url_slug, format_phase,
+    TABLE_TENNIS, VOLLEYBALL, BASKETBALL, CYBER_BASKETBALL, BEACH_VOLLEYBALL,
+)
 
 logger = logging.getLogger(__name__)
 
 
 # ============================================================
-# Хелпер слагификации (для сборки URL)
+# Коды маркетов по видам спорта (на основе дампа Sportbet)
+# ============================================================
+MARKET_CODES = {
+    TABLE_TENNIS:       {"win": 186, "total": 238, "handicap": 237},
+    VOLLEYBALL:         {"win": 186, "total": 238, "handicap": 237},
+    BEACH_VOLLEYBALL:   {"win": 186, "total": 238, "handicap": 237},
+    BASKETBALL:         {"win": 219, "total": 225, "handicap": 223},
+    CYBER_BASKETBALL:   {"win": 219, "total": 225, "handicap": 223},
+}
+
+
+# ============================================================
+# Хелпер слагификации
 # ============================================================
 def _slug(text: str) -> str:
-    """
-    Простой слагификатор. Кириллицу оставляем как есть —
-    Playwright сам URL-кодирует её при goto().
-    """
     if not text:
         return "x"
     text = text.lower().strip()
@@ -32,14 +63,26 @@ def _slug(text: str) -> str:
 
 
 class SportbetApiParser(BaseParser):
-    def __init__(self, detector=None, aggregator=None):
+    def __init__(self, detector=None, aggregator=None, enabled_sports=None):
         super().__init__('sportbet', detector=detector, aggregator=aggregator)
+
+        self.enabled_sports = enabled_sports or [
+            TABLE_TENNIS, VOLLEYBALL, BASKETBALL,
+        ]
+
+        # Sportbet отдаёт все виды с одного URL — открываем общий лайв
+        self.url = SPORT_URLS.get("_all", {}).get("sportbet", self.url)
+        logger.info(f"[{self.bk_id}] Используем общий лайв: {self.url}")
+
         self._data_queue = asyncio.Queue()
         self._matches_cache: Dict[str, dict] = {}
         self._first_seen: Dict[str, float] = {}
         self._last_sent_time: Dict[str, float] = {}
         self.is_running = False
 
+    # ============================================================
+    # Запуск и перехват
+    # ============================================================
     async def start(self):
         if self.page is None or self.page.is_closed():
             self.page = await browser_manager.new_page()
@@ -47,7 +90,8 @@ class SportbetApiParser(BaseParser):
             self.page.on("websocket", self._handle_websocket)
 
             logger.info(f"[{self.bk_id}] Загрузка страницы {self.url}")
-            await self.page.goto(self.url, wait_until='domcontentloaded', timeout=PAGE_LOAD_TIMEOUT)
+            await self.page.goto(self.url, wait_until='domcontentloaded',
+                                 timeout=PAGE_LOAD_TIMEOUT)
             await self.page.wait_for_timeout(PAGE_STABILIZE_TIME)
             await self.page.evaluate(f"document.body.style.zoom = '{int(ZOOM * 100)}%'")
             await self.page.wait_for_timeout(500)
@@ -65,7 +109,7 @@ class SportbetApiParser(BaseParser):
             if 'events.sidebar' in url or 'events.table' in url:
                 data = await response.json()
                 await self._data_queue.put(('http', data))
-                logger.debug(f"[{self.bk_id}] 📥 Перехвачен {url.split('/')[-1]}")
+                logger.debug(f"[{self.bk_id}] 📥 Перехвачен {url.split('?')[0]}")
         except Exception as e:
             logger.warning(f"[{self.bk_id}] Ошибка парсинга HTTP {url}: {e}")
 
@@ -78,46 +122,33 @@ class SportbetApiParser(BaseParser):
         try:
             if isinstance(payload, bytes):
                 payload = payload.decode('utf-8')
-            if not payload:
+            if not payload or len(payload) < 20:
                 return
 
-            if len(payload) < 20:
-                logger.debug(f"[{self.bk_id}] ⏩ Пропуск короткого WS: {payload[:50]}")
-                return
-
-            logger.debug(f"[{self.bk_id}] 📨 WS-фрейм: {payload[:300]}...")
-
-            if payload.startswith('42'):
-                if ',' in payload:
-                    comma_pos = payload.find(',')
-                    if comma_pos != -1:
-                        json_part = payload[comma_pos + 1:].strip()
-                        if json_part.startswith('['):
-                            data = json.loads(json_part)
-                            if isinstance(data, list) and len(data) == 2 and data[0] == "table:update":
-                                asyncio.create_task(self._data_queue.put(('ws', data[1])))
-                                logger.debug(f"[{self.bk_id}] ✅ Обработан WS: table:update")
-                                return
-                try:
-                    json_part = payload.split(',', 1)[1] if ',' in payload else payload
-                    data = json.loads(json_part)
-                    asyncio.create_task(self._data_queue.put(('ws', data)))
-                    logger.debug(f"[{self.bk_id}] ✅ Обработан WS: {type(data)}")
-                except Exception as e:
-                    logger.warning(f"[{self.bk_id}] Не удалось распарсить Socket.IO: {e}")
-            else:
-                try:
-                    data = json.loads(payload)
-                    asyncio.create_task(self._data_queue.put(('ws', data)))
-                except json.JSONDecodeError:
-                    logger.debug(f"[{self.bk_id}] WS-фрейм не JSON: {payload[:100]}")
+            if payload.startswith('42') and ',' in payload:
+                comma_pos = payload.find(',')
+                if comma_pos != -1:
+                    json_part = payload[comma_pos + 1:].strip()
+                    if json_part.startswith('['):
+                        data = json.loads(json_part)
+                        if isinstance(data, list) and len(data) == 2 and data[0] == "table:update":
+                            asyncio.create_task(self._data_queue.put(('ws', data[1])))
+                            return
+            try:
+                json_part = payload.split(',', 1)[1] if ',' in payload else payload
+                data = json.loads(json_part)
+                asyncio.create_task(self._data_queue.put(('ws', data)))
+            except (json.JSONDecodeError, IndexError):
+                pass
         except Exception as e:
             logger.error(f"[{self.bk_id}] Ошибка WS-фрейма: {e}", exc_info=True)
 
     async def _process_queues(self):
         while self.is_running:
             try:
-                msg_type, data = await asyncio.wait_for(self._data_queue.get(), timeout=1.0)
+                msg_type, data = await asyncio.wait_for(
+                    self._data_queue.get(), timeout=1.0
+                )
                 if msg_type == 'http':
                     self._process_http(data)
                 elif msg_type == 'ws':
@@ -128,99 +159,136 @@ class SportbetApiParser(BaseParser):
             except Exception as e:
                 logger.error(f"[{self.bk_id}] Ошибка обработки очереди: {e}", exc_info=True)
 
+    # ============================================================
+    # HTTP-снапшот
+    # ============================================================
+    def _resolve_sport_key_from_sport(self, sport: dict) -> Optional[str]:
+        """Определить вид спорта по sport.id или sport.slug из ответа API."""
+        sid = sport.get('id')
+        slug = sport.get('slug', '')
+        for key in self.enabled_sports:
+            cfg = get_sport_config(self.bk_id, key)
+            if not cfg:
+                continue
+            if sid in cfg.get('ids', []):
+                return key
+            if slug and (slug == cfg.get('url_slug') or slug in cfg.get('aliases', [])):
+                return key
+        return None
+
     def _process_http(self, data: dict):
-        try:
-            sports = data.get('data', {}).get('sports', [])
-        except AttributeError:
+        sports = data.get('data', {}).get('sports', [])
+        if not sports:
             return
 
         for sport in sports:
-            if sport.get('slug') != 'table-tennis' and sport.get('id') != 20:
+            sport_key = self._resolve_sport_key_from_sport(sport)
+            if not sport_key:
                 continue
-            tournaments = sport.get('tournaments', [])
-            for tournament in tournaments:
+            for tournament in sport.get('tournaments', []):
                 tournament_name = tournament.get('name', 'Неизвестно')
                 category = tournament.get('category', {})
                 category_name = category.get('name', '')
                 full_tournament = f"{category_name}. {tournament_name}".strip('. ')
-                events = tournament.get('events', [])
-                for event in events:
-                    event_id = str(event.get('id'))
-                    if not event_id:
-                        continue
+                for event in tournament.get('events', []):
+                    self._process_event(
+                        event, sport_key, full_tournament,
+                        category_name, tournament_name,
+                    )
 
-                    teams = event.get('teams', {})
-                    team1 = teams.get('team1', {}).get('name', 'Неизвестно')
-                    team2 = teams.get('team2', {}).get('name', 'Неизвестно')
+    def _process_event(self, event: dict, sport_key: str,
+                       tournament: str, category_name: str,
+                       tournament_short: str):
+        event_id = str(event.get('id', ''))
+        if not event_id:
+            return
 
-                    if event_id not in self._matches_cache:
-                        self._matches_cache[event_id] = {
-                            'player1': team1,
-                            'player2': team2,
-                            'tournament': full_tournament,
-                            # ДОБАВЛЕНО: страна и лига — нужны для URL
-                            'country': category_name,
-                            'league': tournament_name,
-                            # ──────────────────────────────────────
-                            'score1': 0, 'score2': 0,
-                            'sub1': 0, 'sub2': 0,
-                            'odds1': 0.0, 'odds2': 0.0,
-                            'total_line': 0.0, 'total_over': 0.0, 'total_under': 0.0,
-                            'handicap1': 0.0, 'handicap2': 0.0,
-                            'handicap_odds1': 0.0, 'handicap_odds2': 0.0,
-                            'finished': False,
-                            '_last_sent': None,
-                        }
-                        self._first_seen[event_id] = time.time()
-                        logger.debug(f"[{self.bk_id}] 📝 Новый матч: {team1} vs {team2} (id={event_id})")
-                    else:
-                        cache = self._matches_cache[event_id]
-                        cache['player1'] = team1
-                        cache['player2'] = team2
-                        cache['tournament'] = full_tournament
-                        # ДОБАВЛЕНО: обновляем страну/лигу при каждом апдейте
-                        cache['country'] = category_name
-                        cache['league'] = tournament_name
-                        # ──────────────────────────────────────
+        teams = event.get('teams', {})
+        team1 = teams.get('team1', {}).get('name', 'Неизвестно')
+        team2 = teams.get('team2', {}).get('name', 'Неизвестно')
 
-                    self._parse_score(event_id, event.get('score', ''), event.get('scores', ''))
-                    markets = event.get('markets', [])
-                    if markets:
-                        self._parse_odds_from_markets(event_id, markets)
+        if event_id not in self._matches_cache:
+            self._matches_cache[event_id] = {'_last_sent': None}
+            self._first_seen[event_id] = time.time()
 
-    def _parse_score(self, event_id: str, score_str: str, scores_str: str):
+        cache = self._matches_cache[event_id]
+        cache['player1'] = team1
+        cache['player2'] = team2
+        cache['tournament'] = tournament
+        cache['country'] = category_name
+        cache['league'] = tournament_short
+        cache['sport'] = sport_key
+        cache['match_status'] = event.get('matchStatus', '') or ''
+
+        self._parse_score(event_id, event.get('score', ''),
+                          event.get('scores', ''), sport_key)
+
+        markets = event.get('markets', [])
+        if markets:
+            self._parse_odds_from_markets(event_id, markets, sport_key)
+
+    # ============================================================
+    # Score / odds
+    # ============================================================
+    def _parse_score(self, event_id: str, score_str: str,
+                     scores_str: str, sport_key: str):
         cache = self._matches_cache.get(event_id)
         if not cache:
             return
+
+        # score — счёт партий/сетов (НТ, волейбол) или общий счёт (баскетбол)
         if score_str:
             try:
                 s1, s2 = map(int, score_str.split(':'))
                 cache['score1'] = s1
                 cache['score2'] = s2
-            except:
+            except ValueError:
                 pass
+
+        # scores — очки по партиям/сетам/четвертям, последняя часть = активная
+        sub1 = sub2 = 0
+        phase_num = 1
         if scores_str:
             parts = scores_str.split()
             if parts:
-                last_set = parts[-1]
-                if ':' in last_set:
+                last = parts[-1]
+                if ':' in last:
                     try:
-                        sub1, sub2 = map(int, last_set.split(':'))
-                        cache['sub1'] = sub1
-                        cache['sub2'] = sub2
-                    except:
+                        sub1, sub2 = map(int, last.split(':'))
+                    except ValueError:
                         pass
+                phase_num = len(parts)
 
-    def _parse_odds_from_markets(self, event_id: str, markets: list):
+        cache['sub1'] = sub1
+        cache['sub2'] = sub2
+
+        # phase_num:
+        # - для НТ/волейбола — сумма партий/сетов + 1 (активная)
+        # - для баскетбола — номер активной четверти = len(scores)
+        if sport_key in (BASKETBALL, CYBER_BASKETBALL):
+            cache['phase_num'] = phase_num
+        else:
+            s1 = cache.get('score1', 0) or 0
+            s2 = cache.get('score2', 0) or 0
+            cache['phase_num'] = s1 + s2 + 1
+
+    def _parse_odds_from_markets(self, event_id: str, markets: list, sport_key: str):
         cache = self._matches_cache.get(event_id)
         if not cache:
             return
 
+        codes = MARKET_CODES.get(sport_key, {})
+        win_id = codes.get('win')
+        total_id = codes.get('total')
+        handicap_id = codes.get('handicap')
+
         for market in markets:
+            if market.get('status') != 'active':
+                continue
             market_id = market.get('id')
             outcomes = market.get('outcomes', [])
 
-            if market_id == 186:  # Победитель
+            if market_id == win_id:
                 for out in outcomes:
                     if out.get('active') is False:
                         continue
@@ -231,18 +299,17 @@ class SportbetApiParser(BaseParser):
                     elif name == 'Поб 2':
                         cache['odds2'] = odd
 
-            elif market_id == 238:  # Тотал очков
+            elif market_id == total_id:
                 for out in outcomes:
                     if out.get('active') is False:
                         continue
                     odd = out.get('odd', 0.0)
                     spec = out.get('specifiers', '')
                     if 'total=' in spec:
-                        line_str = spec.split('total=')[1].split('&')[0]
                         try:
-                            line = float(line_str)
-                            cache['total_line'] = line
-                        except:
+                            line_str = spec.split('total=')[1].split('&')[0]
+                            cache['total_line'] = float(line_str)
+                        except (ValueError, IndexError):
                             pass
                     name = out.get('name', '')
                     if 'ТБ' in name or 'Больше' in name:
@@ -250,164 +317,133 @@ class SportbetApiParser(BaseParser):
                     elif 'ТМ' in name or 'Меньше' in name:
                         cache['total_under'] = odd
 
-            elif market_id == 237:  # Фора очков
+            elif market_id == handicap_id:
                 for out in outcomes:
                     if out.get('active') is False:
                         continue
                     odd = out.get('odd', 0.0)
                     full_name = out.get('fullName', '')
-                    match = re.search(r'\(([+-]?\d+\.?\d*)\)', full_name)
-                    if match:
-                        try:
-                            line = float(match.group(1))
-                        except:
-                            line = 0.0
-                    else:
+                    m = re.search(r'\(([+-]?\d+\.?\d*)\)', full_name)
+                    if not m:
                         continue
-                    if 'Фора 1' in out.get('name', '') or 'Фора 1' in full_name:
+                    try:
+                        line = float(m.group(1))
+                    except ValueError:
+                        continue
+                    name = out.get('name', '')
+                    if 'Фора 1' in name:
                         cache['handicap1'] = line
                         cache['handicap_odds1'] = odd
-                    elif 'Фора 2' in out.get('name', '') or 'Фора 2' in full_name:
+                    elif 'Фора 2' in name:
                         cache['handicap2'] = line
                         cache['handicap_odds2'] = odd
 
+    # ============================================================
+    # WebSocket — обновляем только уже известные матчи
+    # ============================================================
     def _process_ws(self, data):
-        """Обработка WebSocket-сообщений (обновления матчей)."""
         if not isinstance(data, dict):
-            logger.debug(f"[{self.bk_id}] ⏩ Пропуск WS-данных (не dict): {type(data)}")
             return
-
         events = data.get('events', [])
         if not events:
-            logger.debug(f"[{self.bk_id}] В WS нет events")
             return
 
-        updated_count = 0
         for event in events:
-            event_id = str(event.get('id'))
+            event_id = str(event.get('id', ''))
             if not event_id:
                 continue
-
+            # Ждём HTTP-снапшот, который проставит sport и team names
             if event_id not in self._matches_cache:
-                self._matches_cache[event_id] = {
-                    'player1': 'Неизвестно',
-                    'player2': 'Неизвестно',
-                    'tournament': 'Sportbet',
-                    'country': '',                    # <-- ДОБАВЛЕНО
-                    'league': '',                     # <-- ДОБАВЛЕНО
-                    'score1': 0, 'score2': 0,
-                    'sub1': 0, 'sub2': 0,
-                    'odds1': 0.0, 'odds2': 0.0,
-                    'total_line': 0.0, 'total_over': 0.0, 'total_under': 0.0,
-                    'handicap1': 0.0, 'handicap2': 0.0,
-                    'handicap_odds1': 0.0, 'handicap_odds2': 0.0,
-                    'finished': False,
-                    '_last_sent': None,
-                }
-                self._first_seen[event_id] = time.time()
-                logger.debug(f"[{self.bk_id}] 📝 Новый матч из WS: id={event_id}")
-
+                continue
             cache = self._matches_cache[event_id]
-            tournament = event.get('tournament')
-            category = event.get('category')
-            if tournament and category:
-                cache['tournament'] = f"{category}. {tournament}".strip('. ')
-                cache['country'] = category             # <-- ДОБАВЛЕНО
-                cache['league'] = tournament            # <-- ДОБАВЛЕНО
-            elif tournament:
-                cache['tournament'] = tournament
-                cache['league'] = tournament            # <-- ДОБАВЛЕНО
+            sport_key = cache.get('sport', TABLE_TENNIS)
 
-            self._parse_score(event_id, event.get('score', ''), event.get('scores', ''))
+            self._parse_score(event_id, event.get('score', ''),
+                              event.get('scores', ''), sport_key)
             markets = event.get('markets', [])
             if markets:
-                self._parse_odds_from_markets(event_id, markets)
+                self._parse_odds_from_markets(event_id, markets, sport_key)
 
-            match_status = event.get('matchStatus', '')
-            if 'заверш' in match_status.lower() or 'finished' in match_status.lower():
-                cache['finished'] = True
-                logger.debug(f"[{self.bk_id}] 🏁 Матч {event_id} завершён")
+            status = event.get('matchStatus', '')
+            if status:
+                cache['match_status'] = status
 
-            updated_count += 1
-
-        if updated_count:
-            logger.debug(f"[{self.bk_id}] ✅ Обновлено {updated_count} матчей через WS")
-
+    # ============================================================
+    # Отправка в detector
+    # ============================================================
     async def _try_send_matches(self):
         sent = 0
         current_time = time.time()
 
-        to_delete = []
-        for match_id, m in self._matches_cache.items():
-            if m.get('finished', False):
-                if current_time - self._first_seen.get(match_id, current_time) > 60:
-                    to_delete.append(match_id)
-        for mid in to_delete:
-            del self._matches_cache[mid]
-            self._first_seen.pop(mid, None)
-            self._last_sent_time.pop(mid, None)
-
         for match_id, m in list(self._matches_cache.items()):
-            if m.get('finished', False):
+            if not m.get('player1') or m.get('player1') == 'Неизвестно':
                 continue
-            if not m.get('player1') or not m.get('player2') or m.get('player1') == 'Неизвестно':
+            if not m.get('player2') or m.get('player2') == 'Неизвестно':
                 continue
+
+            sport_key = m.get('sport', TABLE_TENNIS)
 
             first_seen = self._first_seen.get(match_id, current_time)
-            if m['odds1'] == 0 and m['odds2'] == 0 and current_time - first_seen < 30:
-                continue
+            if m.get('odds1', 0) == 0 and m.get('odds2', 0) == 0:
+                if current_time - first_seen < 15:
+                    continue
 
             last_sent = self._last_sent_time.get(match_id, 0)
             if current_time - last_sent < 1.0:
                 continue
 
-            current_state = (m['score1'], m['score2'], m['sub1'], m['sub2'],
-                             m['odds1'], m['odds2'], m['total_line'], m['total_over'],
-                             m['total_under'], m['handicap1'], m['handicap2'],
-                             m['handicap_odds1'], m['handicap_odds2'])
+            current_state = (
+                m.get('score1', 0), m.get('score2', 0),
+                m.get('sub1', 0), m.get('sub2', 0),
+                m.get('phase_num', 0),
+                m.get('odds1', 0.0), m.get('odds2', 0.0),
+                m.get('total_line', 0.0), m.get('total_over', 0.0),
+                m.get('total_under', 0.0),
+                m.get('handicap1', 0.0), m.get('handicap2', 0.0),
+                m.get('handicap_odds1', 0.0), m.get('handicap_odds2', 0.0),
+            )
             if m.get('_last_sent') == current_state:
                 continue
 
-            # ============================================================
-            # ДОБАВЛЕНО: собираем URL для страницы матча.
-            # Формат: https://sportbet.ru/live/table-tennis/{country}--{league}/{p1}-vs-{p2}--{id}?isTime=1&h=all&page=main
-            # Ключ навигации — суффикс "--{id}"; слаги улучшают UX, но
-            # даже если они "не совпадут" — сайт всё равно откроет матч по id.
-            # ============================================================
+            phase_num = m.get('phase_num', 1) or 1
+            phase_name = format_phase(sport_key, phase_num)
+
+            # URL страницы матча
+            slug = get_url_slug(self.bk_id, sport_key) or 'table-tennis'
             country_slug = _slug(m.get('country', '')) or 'x'
             league_slug = _slug(m.get('league', '')) or 'x'
             p1_slug = _slug(m.get('player1', ''))
             p2_slug = _slug(m.get('player2', ''))
             match_url = (
-                f"https://sportbet.ru/live/table-tennis/"
+                f"https://sportbet.ru/live/{slug}/"
                 f"{country_slug}--{league_slug}/"
                 f"{p1_slug}-vs-{p2_slug}--{match_id}"
                 f"?isTime=1&h=all&page=main"
             )
-            # ============================================================
 
             match = Match(
                 bk_id='sportbet',
                 match_id=match_id,
                 player1=m['player1'],
                 player2=m['player2'],
-                score1=m['score1'],
-                score2=m['score2'],
-                sub_score1=m['sub1'],
-                sub_score2=m['sub2'],
+                score1=m.get('score1', 0),
+                score2=m.get('score2', 0),
+                sub_score1=m.get('sub1', 0),
+                sub_score2=m.get('sub2', 0),
                 tournament=m.get('tournament', 'Sportbet'),
-                odds1=m['odds1'],
-                odds2=m['odds2'],
-                total_line=m['total_line'],
-                total_over=m['total_over'],
-                total_under=m['total_under'],
-                handicap1=m['handicap1'],
-                handicap2=m['handicap2'],
-                handicap_odds1=m['handicap_odds1'],
-                handicap_odds2=m['handicap_odds2'],
+                odds1=m.get('odds1', 0.0),
+                odds2=m.get('odds2', 0.0),
+                total_line=m.get('total_line', 0.0),
+                total_over=m.get('total_over', 0.0),
+                total_under=m.get('total_under', 0.0),
+                handicap1=m.get('handicap1', 0.0),
+                handicap2=m.get('handicap2', 0.0),
+                handicap_odds1=m.get('handicap_odds1', 0.0),
+                handicap_odds2=m.get('handicap_odds2', 0.0),
                 timestamp=current_time,
-                raw_time='',
-                match_url=match_url,             # <-- ДОБАВЛЕНО
+                raw_time=phase_name,
+                sport=sport_key,
+                match_url=match_url,
             )
 
             if self.detector:
@@ -419,14 +455,19 @@ class SportbetApiParser(BaseParser):
             self._last_sent_time[match_id] = current_time
             sent += 1
 
-            logger.info(f"[{self.bk_id}] 🟢 Отправлен: {match.player1} vs {match.player2} | "
-                        f"{match.score1}:{match.score2} (сет: {match.sub_score1}:{match.sub_score2}) | "
-                        f"К: {match.odds1}/{match.odds2} | Т: {match.total_line} | Ф: {match.handicap1}")
-            logger.debug(f"[{self.bk_id}] URL: {match_url}")
+            logger.info(
+                f"[{self.bk_id}] 🟢 [{sport_key}] {match.player1} vs {match.player2} | "
+                f"матч {match.score1}:{match.score2} | "
+                f"{phase_name} {match.sub_score1}:{match.sub_score2} | "
+                f"К: {match.odds1}/{match.odds2}"
+            )
 
         if sent:
-            logger.info(f"[{self.bk_id}] ✅ Отправлено обновлений: {sent}, всего в кеше: {len(self._matches_cache)}")
+            logger.info(f"[{self.bk_id}] ✅ Отправлено: {sent} (в кеше: {len(self._matches_cache)})")
 
+    # ============================================================
+    # Loop
+    # ============================================================
     async def parse(self) -> List[Match]:
         return []
 
@@ -441,7 +482,7 @@ class SportbetApiParser(BaseParser):
             except asyncio.CancelledError:
                 break
             except Exception as e:
-                logger.error(f"[{self.bk_id}] Критическая ошибка, перезапуск: {e}", exc_info=True)
+                logger.error(f"[{self.bk_id}] Критическая ошибка: {e}", exc_info=True)
                 await self.stop()
                 await asyncio.sleep(5)
 

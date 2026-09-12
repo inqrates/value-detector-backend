@@ -282,14 +282,20 @@ class FonbetApiParser(BaseParser):
     # ============================================================
     # parse_comment — общая логика для всех видов
     # ============================================================
+    # <-- ПАТЧ 1a: добавлены total_s1/total_s2
     def _parse_comment(self, comment: str, sport_key: str,
-                       children_miscs: list = None) -> dict:
+                       children_miscs: list = None,
+                       total_s1: Optional[int] = None,
+                       total_s2: Optional[int] = None) -> dict:
         """
         Возвращает sub1, sub2, total1, total2, phase_num, phase_name.
 
         НТ — оригинальная логика (последняя пара X-Y через дефис = очки в партии).
         Волейбол — все партии через пробел, берём последнюю с очками.
         Баскетбол — сумма четвертей + активная четверть.
+                    Если сумма пар == misc.score1/score2 и в последней паре
+                    есть очки — считаем, что это конец четверти (перерыв),
+                    счёт активной четверти = 0:0, фаза = следующая.
         """
         result = {
             "sub1": 0, "sub2": 0,
@@ -352,23 +358,31 @@ class FonbetApiParser(BaseParser):
             return result
 
         # ── Баскетбол: "(35-19 19-26 9-3)" — сумма четвертей ──
+       
         if sport_key in ("basketball", "cyber_basketball"):
             if comment:
                 first_bracket = re.search(r'\(([^)]+)\)', comment)
                 inner = first_bracket.group(1) if first_bracket else comment
                 pairs = re.findall(r'(\d+)-(\d+)', inner)
-                phase_num = 0
-                sub1 = sub2 = 0
-                total1 = total2 = 0
-                for i, (h, a) in enumerate(pairs):
-                    h, a = int(h), int(a)
-                    total1 += h
-                    total2 += a
-                    if h > 0 or a > 0:
-                        phase_num = i + 1
-                        sub1, sub2 = h, a
+
+                total1 = sum(int(h) for h, a in pairs) if pairs else 0
+                total2 = sum(int(a) for h, a in pairs) if pairs else 0
+
+                if not pairs:
+                    sub1 = sub2 = 0
+                    phase_num = 1
+                else:
+                    last_h, last_a = int(pairs[-1][0]), int(pairs[-1][1])
+                    # Последняя пара = активная четверть (в comment она есть).
+                    # В перерыве Betcity сам скажет time_name, у Fonbet
+                    # comment просто не увеличится, пока новая не начнётся.
+                    sub1 = last_h
+                    sub2 = last_a
+                    phase_num = len(pairs)
+
                 if phase_num == 0:
                     phase_num = 1
+
                 result["sub1"] = sub1
                 result["sub2"] = sub2
                 result["phase_num"] = phase_num
@@ -377,25 +391,8 @@ class FonbetApiParser(BaseParser):
                 result["total2"] = total2
                 return result
 
-            if children_miscs:
-                active_idx = 0
-                active_s1 = active_s2 = 0
-                for i, cm in enumerate(children_miscs):
-                    s1 = cm.get('score1') or 0
-                    s2 = cm.get('score2') or 0
-                    if s1 > 0 or s2 > 0:
-                        active_idx = i + 1
-                        active_s1 = s1
-                        active_s2 = s2
-                if active_idx == 0:
-                    active_idx = 1
-                result["sub1"] = active_s1
-                result["sub2"] = active_s2
-                result["phase_num"] = active_idx
-                result["phase_name"] = format_phase(sport_key, active_idx)
-            return result
-
         return result
+    # -- / ПАТЧ 1a, 1b -->
 
     # ============================================================
     # _parse_factors
@@ -526,13 +523,17 @@ class FonbetApiParser(BaseParser):
                     cm = dict(self._live_cache.get(ceid, {}) or {})
                     children_miscs.append(cm)
 
-                        # Парсим comment
-            score_info = self._parse_comment(comment, sport_key, children_miscs=children_miscs)
+            # <-- ПАТЧ 1c: прокидываем total_s1/total_s2 (s1/s2 из misc)
+            score_info = self._parse_comment(
+                comment, sport_key,
+                children_miscs=children_miscs,
+                total_s1=s1,
+                total_s2=s2,
+            )
             sub1 = score_info["sub1"]
             sub2 = score_info["sub2"]
             phase_name = score_info["phase_name"]
 
-            
             if sport_key == "table_tennis":
                 phase_num = (s1 or 0) + (s2 or 0) + 1
                 phase_name = format_phase(sport_key, phase_num)
@@ -613,6 +614,7 @@ class FonbetApiParser(BaseParser):
 
         if sent:
             logger.info(f"[{self.bk_id}] ✅ Отправлено: {sent} (в кеше: {len(self._live_cache)})")
+    # -- / ПАТЧ 1c -->
 
     # ============================================================
     # Loop
