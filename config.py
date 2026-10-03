@@ -80,12 +80,10 @@ def format_phase(sport: str, n: int) -> str:
     return f"{n}-{sfx} {label}"
 
 
-# Убираем старую функцию get_phase_label, если она была — оставь только format_phase
-
-
 def get_phase_label(sport: str) -> str:
     """Deprecated. Используй format_phase()."""
     return PHASE_LABELS.get(sport, ("фаза", "я"))[0]
+
 
 # Какие виды спорта включены по умолчанию
 DEFAULT_ENABLED_SPORTS = ["table_tennis"]
@@ -102,11 +100,11 @@ ODDS_DIFF_THRESHOLD = 0.05
 
 HEADLESS = False
 VIEWPORT_WIDTH = 1920
-VIEWPORT_HEIGHT = 6000
+VIEWPORT_HEIGHT = 4000
 ZOOM = 0.5
 
-# Логирование – меняем на INFO, чтобы не было DEBUG-шума
-LOG_LEVEL = "INFO"          # <-- изменено с "DEBUG"
+# Логирование
+LOG_LEVEL = "INFO"
 LOG_FILE = "logs/backend.log"
 
 # ---- Антисон для вкладок ----
@@ -122,8 +120,30 @@ PAGE_STUCK_TIMEOUT_BY_BK = {
 }
 PAGE_STUCK_TIMEOUT_DEFAULT = 45
 
-# Периодический reload — для БК, где список матчей подгружается
-# только при загрузке страницы (новые матчи не видны без reload)
+# ============================================================
+# Периодический reload — сбрасывает DOM/JS heap у Chromium
+# ============================================================
+# Дефолт 20 минут — для всех БК, у которых нет индивидуальной настройки.
+# Перезагрузка освобождает память: DOM сбрасывается, JS heap чистится.
+# ============================================================
+# Периодический reload — сбрасывает DOM/JS heap у Chromium
+# ============================================================
+# ВАЖНО: PAGE_PERIODIC_RELOAD_* применяются ТОЛЬКО к парсерам,
+# которые наследуют BaseParser и имеют self.page (Playwright Page).
+# На момент рефакторинга это ТОЛЬКО marathon.
+#
+# Остальные парсеры (fonbet, winline, ligastavok, leon, olimp,
+# betcity, zenit, sportbet) работают через curl_cffi / websockets —
+# у них нет страницы, reload не применим. Их чистит HealthMonitor
+# через FORCED_RESTART_INTERVAL (см. core/health_monitor.py).
+
+PAGE_PERIODIC_RELOAD_DEFAULT = 1200      # 20 мин
+
+# Индивидуальные интервалы для marathon (единственный BaseParser).
+# Ключи для остальных БК оставлены для совместимости, но фактически
+# игнорируются (парсер не имеет self.page).
 PAGE_PERIODIC_RELOAD_BY_BK = {
-    'sportbet': 300,   # перезагрузка каждые 5 минут
+    'sportbet': 300,     # не используется (нет self.page)
+    'betcity':  900,     # не используется
+    'winline':  1800,    # не используется
 }

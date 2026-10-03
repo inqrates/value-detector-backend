@@ -1,0 +1,156 @@
+{
+  "cookies": [
+    {
+      "name": "spid",
+      "value": "1789314731931_914a639ebf84b38e41b5bb6b64ab1952_c4a9bhv8c5ujbq9s",
+      "domain": "fon.bet",
+      "path": "/",
+      "expires": 1823874732.688051,
+      "httpOnly": false,
+      "secure": true,
+      "sameSite": "None"
+    },
+    {
+      "name": "spsc",
+      "value": "1789314731931_a855a6889516000d3d163df6d71de883_VZoaEWWIzrLQj4DWlVugcHZ-7ae6gg82feTeZPucIy8Z",
+      "domain": "fon.bet",
+      "path": "/",
+      "expires": 1823874732.688223,
+      "httpOnly": false,
+      "secure": true,
+      "sameSite": "None"
+    },
+    {
+      "name": "deviceId",
+      "value": "4E164C52A25134AE7CC606956A212AB4",
+      "domain": ".fastviewdata.bk6bba-resources.com",
+      "path": "/",
+      "expires": 1820850732,
+      "httpOnly": true,
+      "secure": true,
+      "sameSite": "None"
+    },
+    {
+      "name": "local.deviceId",
+      "value": "4E164C52A25134AE7CC606956A212AB4",
+      "domain": ".fon.bet",
+      "path": "/",
+      "expires": 1823874733.392228,
+      "httpOnly": false,
+      "secure": false,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "_ym_uid",
+      "value": "1789314738912121963",
+      "domain": ".fon.bet",
+      "path": "/",
+      "expires": 1820850738,
+      "httpOnly": false,
+      "secure": true,
+      "sameSite": "None"
+    },
+    {
+      "name": "_ym_d",
+      "value": "1789314738",
+      "domain": ".fon.bet",
+      "path": "/",
+      "expires": 1820850738,
+      "httpOnly": false,
+      "secure": true,
+      "sameSite": "None"
+    },
+    {
+      "name": "yabs-sid",
+      "value": "2016489361789314737",
+      "domain": "mc.yandex.ru",
+      "path": "/",
+      "expires": -1,
+      "httpOnly": false,
+      "secure": true,
+      "sameSite": "None"
+    },
+    {
+      "name": "i",
+      "value": "jA0fN38MxzWpf9peznOLQVOqy3I3GOorf6TpzBUNJpoWMA72Md6EGL7i5qoYpPQHsTuro6CxTRq5OTVQI4DWjo7xYJs=",
+      "domain": ".yandex.ru",
+      "path": "/",
+      "expires": 1823874738.419557,
+      "httpOnly": true,
+      "secure": true,
+      "sameSite": "None"
+    },
+    {
+      "name": "yandexuid",
+      "value": "7599120281789314737",
+      "domain": ".yandex.ru",
+      "path": "/",
+      "expires": 1823874738.419605,
+      "httpOnly": false,
+      "secure": true,
+      "sameSite": "None"
+    },
+    {
+      "name": "yuidss",
+      "value": "7599120281789314737",
+      "domain": ".yandex.ru",
+      "path": "/",
+      "expires": 1823874738.419637,
+      "httpOnly": false,
+      "secure": true,
+      "sameSite": "None"
+    },
+    {
+      "name": "ymex",
+      "value": "2104674737.yrts.1789314737#2104674737.yrtsi.1789314737",
+      "domain": ".yandex.ru",
+      "path": "/",
+      "expires": 1820850737,
+      "httpOnly": false,
+      "secure": true,
+      "sameSite": "None"
+    },
+    {
+      "name": "receive-cookie-deprecation",
+      "value": "1",
+      "domain": ".yandex.ru",
+      "path": "/",
+      "expires": 1820850750,
+      "httpOnly": true,
+      "secure": true,
+      "sameSite": "None",
+      "partitionKey": "https://fon.bet",
+      "_crHasCrossSiteAncestor": true
+    },
+    {
+      "name": "_ym_isad",
+      "value": "2",
+      "domain": ".fon.bet",
+      "path": "/",
+      "expires": 1789386738,
+      "httpOnly": false,
+      "secure": true,
+      "sameSite": "None"
+    },
+    {
+      "name": "bh",
+      "value": "EiciQ2hyb21pdW0iO3Y9IjE1MSIsIk5vdD1BP0JyYW5kIjt2PSI5OSIaA3g4NiINMTUxLjAuNzkyMi4zNCoCPzA6B1dpbmRvd3NCBjE5LjAuMEoCNjRSNyJDaHJvbWl1bSI7dj0iMTUxLjAuNzkyMi4zNCIsIk5vdD1BP0JyYW5kIjt2PSI5OS4wLjAuMCJgvo2b1QZqHtzK4f8IktihsQOfz+HqA/v68OcN6//99g/B/s+HCA==",
+      "domain": ".yandex.ru",
+      "path": "/",
+      "expires": 1823874750,
+      "httpOnly": false,
+      "secure": true,
+      "sameSite": "None"
+    },
+    {
+      "name": "mdd",
+      "value": "0",
+      "domain": ".fon.bet",
+      "path": "/",
+      "expires": 1789401152,
+      "httpOnly": false,
+      "secure": true,
+      "sameSite": "None"
+    }
+  ]
+}

@@ -1,0 +1,54 @@
+{
+  "cookies": [
+    {
+      "name": "imprint",
+      "value": "0945a2abfac46dbeca57ed64cb9c337e",
+      "domain": "zenit.win",
+      "path": "/",
+      "expires": -1,
+      "httpOnly": false,
+      "secure": true,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "lang",
+      "value": "1",
+      "domain": ".zenit.win",
+      "path": "/",
+      "expires": -1,
+      "httpOnly": false,
+      "secure": false,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "user_logged_in",
+      "value": "0",
+      "domain": "zenit.win",
+      "path": "/",
+      "expires": -1,
+      "httpOnly": false,
+      "secure": false,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "PHPSESSID",
+      "value": "0B4A1F2A09833904CA20561F1C5A8270B5FE785534CC1A582D48685C46EC3D31D348E5BAE09939FF",
+      "domain": ".zenit.win",
+      "path": "/",
+      "expires": 1797957330.243863,
+      "httpOnly": false,
+      "secure": false,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "timezone",
+      "value": "5",
+      "domain": ".zenit.win",
+      "path": "/",
+      "expires": 1794501327.776097,
+      "httpOnly": false,
+      "secure": false,
+      "sameSite": "Lax"
+    }
+  ]
+}

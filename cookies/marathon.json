@@ -1,0 +1,276 @@
+{
+  "cookies": [
+    {
+      "name": "spid",
+      "value": "1789315572464_7ac358a388e84d5a4b0a6f2dbbe1d7f9_odbalw81o6ah021o",
+      "domain": "new.marathonbet.ru",
+      "path": "/",
+      "expires": 1823875573.276195,
+      "httpOnly": false,
+      "secure": true,
+      "sameSite": "None"
+    },
+    {
+      "name": "puid",
+      "value": "rBMEzWqmyfRzP9H8A0a7Ag==",
+      "domain": ".marathonbet.ru",
+      "path": "/",
+      "expires": 1823875574.346873,
+      "httpOnly": false,
+      "secure": true,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "user-page-locale",
+      "value": "su",
+      "domain": "new.marathonbet.ru",
+      "path": "/",
+      "expires": 1820851575,
+      "httpOnly": false,
+      "secure": false,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "deviceUUID",
+      "value": "9108f346-3383-43a7-9c26-07a30ac27ef6",
+      "domain": "api.mindbox.ru",
+      "path": "/",
+      "expires": 1823875577.9182,
+      "httpOnly": true,
+      "secure": true,
+      "sameSite": "None"
+    },
+    {
+      "name": "AMP_2bc40d65b6",
+      "value": "JTdCJTIyZGV2aWNlSWQlMjIlM0ElMjJmOGQ5ZGFmMS1iYjUyLTQzZWMtODYxYy02MjFjNjJiNDZjNzMlMjIlMkMlMjJzZXNzaW9uSWQlMjIlM0ExNzg5MzE1NTc2NDU4JTJDJTIyb3B0T3V0JTIyJTNBZmFsc2UlMkMlMjJwYWdlQ291bnRlciUyMiUzQTAlMkMlMjJjb29raWVEb21haW4lMjIlM0ElMjIubWFyYXRob25iZXQucnUlMjIlN0Q=",
+      "domain": ".marathonbet.ru",
+      "path": "/",
+      "expires": 1820851576,
+      "httpOnly": false,
+      "secure": false,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "_ym_uid",
+      "value": "1789315577490637526",
+      "domain": ".marathonbet.ru",
+      "path": "/",
+      "expires": 1820851576,
+      "httpOnly": false,
+      "secure": true,
+      "sameSite": "None"
+    },
+    {
+      "name": "_ym_d",
+      "value": "1789315577",
+      "domain": ".marathonbet.ru",
+      "path": "/",
+      "expires": 1820851576,
+      "httpOnly": false,
+      "secure": true,
+      "sameSite": "None"
+    },
+    {
+      "name": "popmechanic_sbjs_migrations",
+      "value": "popmechanic_1418474375998%3D1%7C%7C%7C1471519752600%3D1%7C%7C%7C1471519752605%3D1",
+      "domain": ".new.marathonbet.ru",
+      "path": "/",
+      "expires": 1804867576,
+      "httpOnly": false,
+      "secure": false,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "ymex",
+      "value": "2104675575.yrts.1789315575#2104675575.yrtsi.1789315575",
+      "domain": ".yandex.ru",
+      "path": "/",
+      "expires": 1820851575,
+      "httpOnly": false,
+      "secure": true,
+      "sameSite": "None"
+    },
+    {
+      "name": "receive-cookie-deprecation",
+      "value": "1",
+      "domain": ".yandex.ru",
+      "path": "/",
+      "expires": 1820851575,
+      "httpOnly": true,
+      "secure": true,
+      "sameSite": "None",
+      "partitionKey": "https://marathonbet.ru",
+      "_crHasCrossSiteAncestor": true
+    },
+    {
+      "name": "bh",
+      "value": "EigiQ2hyb21pdW0iO3Y9IjE1MSIsICJOb3Q9QT9CcmFuZCI7dj0iOTkiKgI/MDoJIldpbmRvd3MiYPeTm9UGah7cyuH/CJLYobEDn8/h6gP7+vDnDev//fYPwf7Phwg=",
+      "domain": ".yandex.ru",
+      "path": "/",
+      "expires": 1823875576.741633,
+      "httpOnly": false,
+      "secure": true,
+      "sameSite": "None"
+    },
+    {
+      "name": "yabs-sid",
+      "value": "1974359261789315575",
+      "domain": "mc.yandex.ru",
+      "path": "/",
+      "expires": -1,
+      "httpOnly": false,
+      "secure": true,
+      "sameSite": "None"
+    },
+    {
+      "name": "i",
+      "value": "Spl5BNqxUVR0FC8SPxZ455dmVk0zQJaf+0wE4HExzamPNkzdkLngLOE0PBn1NW6LFZx2gRRUnIS1iGs7eRUetacDv6w=",
+      "domain": ".yandex.ru",
+      "path": "/",
+      "expires": 1823875576.728879,
+      "httpOnly": true,
+      "secure": true,
+      "sameSite": "None"
+    },
+    {
+      "name": "yandexuid",
+      "value": "2323944581789315575",
+      "domain": ".yandex.ru",
+      "path": "/",
+      "expires": 1823875576.728943,
+      "httpOnly": false,
+      "secure": true,
+      "sameSite": "None"
+    },
+    {
+      "name": "yuidss",
+      "value": "2323944581789315575",
+      "domain": ".yandex.ru",
+      "path": "/",
+      "expires": 1823875576.728998,
+      "httpOnly": false,
+      "secure": true,
+      "sameSite": "None"
+    },
+    {
+      "name": "_yasc",
+      "value": "ADQDRTSJBJL3ahqiw8Fh4Gf5uL8fbqi8XeulFoAcGPy7cvcPiBWELvcWDmOZFS5X9CZ+UybBkQ==",
+      "domain": ".yandex.ru",
+      "path": "/",
+      "expires": 1823875576.729245,
+      "httpOnly": false,
+      "secure": true,
+      "sameSite": "None"
+    },
+    {
+      "name": "_ym_isad",
+      "value": "2",
+      "domain": ".marathonbet.ru",
+      "path": "/",
+      "expires": 1789387576,
+      "httpOnly": false,
+      "secure": true,
+      "sameSite": "None"
+    },
+    {
+      "name": "_ym_visorc",
+      "value": "b",
+      "domain": ".marathonbet.ru",
+      "path": "/",
+      "expires": 1789317377,
+      "httpOnly": false,
+      "secure": true,
+      "sameSite": "None"
+    },
+    {
+      "name": "mindboxDeviceUUID",
+      "value": "9108f346-3383-43a7-9c26-07a30ac27ef6",
+      "domain": ".marathonbet.ru",
+      "path": "/",
+      "expires": 1823875577.920338,
+      "httpOnly": false,
+      "secure": false,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "directCrm-session",
+      "value": "%7B%22deviceGuid%22%3A%229108f346-3383-43a7-9c26-07a30ac27ef6%22%7D",
+      "domain": ".marathonbet.ru",
+      "path": "/",
+      "expires": 1823875577.920977,
+      "httpOnly": false,
+      "secure": false,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "sync_cookie_csrf",
+      "value": "824418711fake",
+      "domain": ".mc.webvisor.org",
+      "path": "/",
+      "expires": 1789316177,
+      "httpOnly": false,
+      "secure": true,
+      "sameSite": "None"
+    },
+    {
+      "name": "bh",
+      "value": "EigiQ2hyb21pdW0iO3Y9IjE1MSIsICJOb3Q9QT9CcmFuZCI7dj0iOTkiKgI/MDoJIldpbmRvd3MiYPmTm9UGah7cyuH/CJLYobEDn8/h6gP7+vDnDev//fYPwf7Phwg=",
+      "domain": ".webvisor.org",
+      "path": "/",
+      "expires": 1823875577,
+      "httpOnly": false,
+      "secure": true,
+      "sameSite": "None"
+    },
+    {
+      "name": "sync_cookie_csrf",
+      "value": "2107997566fake",
+      "domain": ".mc.yandex.ru",
+      "path": "/",
+      "expires": 1789316177,
+      "httpOnly": false,
+      "secure": true,
+      "sameSite": "None"
+    },
+    {
+      "name": "yandexuid",
+      "value": "2323944581789315575",
+      "domain": ".webvisor.org",
+      "path": "/",
+      "expires": 1823875578.164056,
+      "httpOnly": false,
+      "secure": true,
+      "sameSite": "None"
+    },
+    {
+      "name": "yuidss",
+      "value": "2323944581789315575",
+      "domain": ".webvisor.org",
+      "path": "/",
+      "expires": 1823875578.164147,
+      "httpOnly": false,
+      "secure": true,
+      "sameSite": "None"
+    },
+    {
+      "name": "i",
+      "value": "Spl5BNqxUVR0FC8SPxZ455dmVk0zQJaf+0wE4HExzamPNkzdkLngLOE0PBn1NW6LFZx2gRRUnIS1iGs7eRUetacDv6w=",
+      "domain": ".webvisor.org",
+      "path": "/",
+      "expires": 1823875578.16418,
+      "httpOnly": false,
+      "secure": true,
+      "sameSite": "None"
+    },
+    {
+      "name": "sync_cookie_ok",
+      "value": "synced",
+      "domain": ".mc.webvisor.org",
+      "path": "/",
+      "expires": 1789401977,
+      "httpOnly": false,
+      "secure": true,
+      "sameSite": "None"
+    }
+  ]
+}

@@ -1,32 +1,22 @@
 # parsers/olimp_api.py
 """
-Olimp API-парсер с поддержкой мультиспорта (НТ / волейбол / баскетбол / кибербаскет).
+Olimp — HTTP-парсер через curl_cffi (без Playwright).
 
-Особенности Olimp:
-  - На /live прилетает МАССИВ [dict, dict, ...] — по одному элементу
-    на каждый вид спорта. data[0] всегда футбол (id=1), поэтому нельзя
-    брать только первый элемент — нужно итерировать весь массив.
-  - Каждый элемент массива: {operationId, version, payload}, где
-    payload.id = sportId ("1"=футбол, "5"=баскет, "10"=волей, "40"=НТ, "140"=кибер, ...).
-  - Внутри payload.competitionsWithEvents[].events[] лежат события.
-  - Вид спорта для каждого события берём из event.sportId (а не из payload.id).
-  - Счёт по фазам — из event.mapsScore[]:
-      НТ/волейбол: последняя пара = очки текущей партии/сета
-      Баскетбол/кибер: последняя пара = очки текущей четверти
-  - Кэфы из event.outcomes[]:
-      RESULT  — П1/П2 (у баскетбола tableType="OTHER", но categories=["RESULT"])
-      HANDICAP — "Фора 1"/"Фора 2" (главные, без дФ*К-дублей)
-      TOTAL   — "ТотМ"/"ТотБ"      (главные, без ТотNТотN*)
+API отдаёт JSON на /api/v4/0/live/sports-with-competitions-with-events
+без cookies, только с правильными headers (X-Cupis, X-Olimp, Origin, Referer).
+Проверено: HTTP 200, ~3.6 МБ JSON, 23 элемента массива (по одному на вид спорта).
+
+Класс сохранён как OlimpApiParser и имеет тот же интерфейс, что у старой
+Playwright-версии, чтобы main.py не требовал правок.
 """
 import asyncio
-import time
 import logging
-from typing import Dict, List, Optional
-from playwright.async_api import Response
+import time
+from typing import Dict, List
+
+from curl_cffi.requests import AsyncSession
+
 from core.models import Match
-from parsers.base import BaseParser
-from core.browser_manager import browser_manager
-from config import ZOOM, PAGE_LOAD_TIMEOUT, PAGE_STABILIZE_TIME, SPORT_URLS
 from core.sport_map import (
     SPORT_MAP, get_url_slug, format_phase,
     TABLE_TENNIS, VOLLEYBALL, BASKETBALL, CYBER_BASKETBALL,
@@ -35,152 +25,174 @@ from core.sport_map import (
 logger = logging.getLogger(__name__)
 
 
-class OlimpApiParser(BaseParser):
-    def __init__(self, detector=None, aggregator=None, enabled_sports=None):
-        super().__init__('olimp', detector=detector, aggregator=aggregator)
+class OlimpApiParser:
+    bk_id = "olimp"
 
+    URL = "https://www.olimp.bet/api/v4/0/live/sports-with-competitions-with-events"
+
+    HEADERS = {
+        "Accept": "application/json, text/plain, */*",
+        "Accept-Language": "ru-RU,ru;q=0.9",
+        "X-Cupis": "1",
+        "X-Olimp": "cupis-desktop",
+        "Origin": "https://www.olimp.bet",
+        "Referer": "https://www.olimp.bet/live",
+        "Sec-Fetch-Site": "same-origin",
+        "Sec-Fetch-Mode": "cors",
+        "Sec-Fetch-Dest": "empty",
+    }
+
+    IMPERSONATE = "chrome150"
+    POLL_INTERVAL = 0.5
+
+    def __init__(self, detector=None, aggregator=None, enabled_sports=None):
+        self.detector = detector
+        self.aggregator = aggregator
         self.enabled_sports = enabled_sports or [
             TABLE_TENNIS, VOLLEYBALL, BASKETBALL, CYBER_BASKETBALL,
         ]
+        self.is_running = False
 
-        # Общий лайв Olimp — на нём приходят все виды одним массивом
-        self.url = SPORT_URLS.get("_all", {}).get("olimp", self.url)
-        logger.info(f"[{self.bk_id}] Стартовый URL: {self.url}")
-
-        self._data_queue = asyncio.Queue()
+        # ---- Кэши (эти же имена ищет global_cache_cleaner в main.py) ----
         self._matches_cache: Dict[str, dict] = {}
         self._first_seen: Dict[str, float] = {}
         self._last_sent_time: Dict[str, float] = {}
-        self.is_running = False
+        self._last_update_time: Dict[str, float] = {}
 
-        # sport_id → sport_key
+        # sport_id (str) → sport_key
         self._sport_ids: Dict[str, str] = {}
-        for sport_key in self.enabled_sports:
-            cfg = SPORT_MAP.get('olimp', {}).get(sport_key, {})
-            for sid in cfg.get('ids', []):
-                self._sport_ids[str(sid)] = sport_key
+        for sk in self.enabled_sports:
+            cfg = SPORT_MAP.get(self.bk_id, {}).get(sk, {})
+            for sid in cfg.get("ids", []):
+                self._sport_ids[str(sid)] = sk
         logger.info(f"[{self.bk_id}] sport_ids: {self._sport_ids}")
 
+        self._session: AsyncSession = None
+
     # ============================================================
-    # Запуск
+    # Жизненный цикл
     # ============================================================
     async def start(self):
-        if self.page is None or self.page.is_closed():
-            self.page = await browser_manager.new_page()
-            self.page.on("response", self._handle_response)
+        if self._session is None:
+            self._session = AsyncSession(
+                impersonate=self.IMPERSONATE,
+                timeout=30,
+                headers=self.HEADERS,
+            )
+        logger.info(f"[{self.bk_id}] ✅ HTTP-парсер инициализирован")
 
-            logger.info(f"[{self.bk_id}] Загрузка страницы {self.url}")
-            await self.page.goto(self.url, wait_until='domcontentloaded',
-                                 timeout=PAGE_LOAD_TIMEOUT)
-            await self.page.wait_for_timeout(PAGE_STABILIZE_TIME + 2000)
-            await self.page.evaluate(f"document.body.style.zoom = '{int(ZOOM * 100)}%'")
-            await self.page.wait_for_timeout(500)
+    async def stop(self):
+        self.is_running = False
+        if self._session is not None:
+            try:
+                await self._session.close()
+            except Exception:
+                pass
+            self._session = None
+        logger.info(f"[{self.bk_id}] 🛑 Остановка HTTP-парсера...")
 
-            logger.info(f"[{self.bk_id}] ✅ Страница загружена, перехватчик API активен")
-            asyncio.create_task(self._process_queues())
+    async def run(self):
+        self.is_running = True
+        await self.start()
+        logger.info(f"[{self.bk_id}] 🚀 HTTP-парсер Olimp запущен (без Playwright)")
+
+        while self.is_running:
+            t0 = time.monotonic()
+            try:
+                await self._poll_once()
+            except asyncio.CancelledError:
+                break
+            except Exception as e:
+                logger.error(f"[{self.bk_id}] Ошибка опроса: {e}", exc_info=True)
+                await asyncio.sleep(3)
+                continue
+
+            elapsed = time.monotonic() - t0
+            sleep_time = max(0, self.POLL_INTERVAL - elapsed)
+            if sleep_time > 0:
+                await asyncio.sleep(sleep_time)
 
     # ============================================================
-    # Перехват ответов
+    # Один опрос API
     # ============================================================
-    async def _handle_response(self, response: Response):
-        url = response.url
-        # Только live-эндпоинты с событиями. Дерево
-        # (sports-with-categories-with-competitions), line/ и broadcast/ — не нужны.
-        if 'api/v4/0/live' not in url:
-            return
-        if 'sports-with-competitions-with-events' not in url:
+    async def _poll_once(self):
+        r = await self._session.get(self.URL, headers=self.HEADERS)
+        if r.status_code != 200:
+            logger.warning(f"[{self.bk_id}] HTTP {r.status_code}")
             return
 
-        try:
-            data = await response.json()
-        except Exception as e:
-            logger.debug(f"[{self.bk_id}] JSON error {url[:100]}: {e}")
-            return
-
-        # Ответ — массив [dict, dict, ...], по одному dict на вид спорта.
-        # data[0] — всегда футбол, поэтому нельзя брать только его.
-        if isinstance(data, list):
-            items = [x for x in data if isinstance(x, dict)]
-        elif isinstance(data, dict):
-            items = [data]
-        else:
-            return
+        data = r.json()
+        items = data if isinstance(data, list) else [data]
 
         for item in items:
-            payload = item.get('payload')
+            if not isinstance(item, dict):
+                continue
+            payload = item.get("payload")
             if not isinstance(payload, dict):
                 continue
-            comps = payload.get('competitionsWithEvents')
+            comps = payload.get("competitionsWithEvents")
             if not isinstance(comps, list) or not comps:
                 continue
-            await self._data_queue.put(('http', item))
+            self._process_payload(payload)
+
+        await self._try_send_matches()
 
     # ============================================================
-    # Обработка
+    # Разбор payload (логика из старой Playwright-версии)
     # ============================================================
-    def _process_http(self, data: dict):
-        payload = data.get('payload', {})
-        if not isinstance(payload, dict):
-            return
-
-        comps = payload.get('competitionsWithEvents', [])
+    def _process_payload(self, payload: dict):
+        comps = payload.get("competitionsWithEvents", [])
         if not isinstance(comps, list):
             return
 
         for block in comps:
             if not isinstance(block, dict):
                 continue
-            competition = block.get('competition', {}) or {}
-            tournament_name = competition.get('name', 'Неизвестно')
-            events = block.get('events', []) or []
-            for event in events:
+            comp = block.get("competition", {}) or {}
+            tournament = comp.get("name", "Неизвестно")
+            tournament_id = comp.get("id")           # ← НОВОЕ
+            for event in block.get("events", []) or []:
                 if not isinstance(event, dict):
                     continue
-
-                # Вид спорта определяем по event.sportId.
-                sport_id_str = str(event.get('sportId') or '')
+                sport_id_str = str(event.get("sportId") or "")
                 sport_key = self._sport_ids.get(sport_id_str)
                 if not sport_key:
                     continue
+                # ← передаём tournament_id
+                self._process_event(event, tournament, sport_key, tournament_id)
 
-                self._process_event(event, tournament_name, sport_key)
-
-    def _process_event(self, event: dict, tournament_name: str, sport_key: str):
-        state = event.get('state', '')
-        if state == 'FINISHED':
+    def _process_event(self, event: dict, tournament: str, sport_key: str,
+                       tournament_id=None):
+        if event.get("state") == "FINISHED":
             return
 
-        match_id = str(event.get('id') or '')
+        match_id = str(event.get("id") or "")
         if not match_id:
             return
 
         if match_id not in self._matches_cache:
-            self._matches_cache[match_id] = {'_last_sent': None}
+            self._matches_cache[match_id] = {"_last_sent": None}
             self._first_seen[match_id] = time.time()
 
         cache = self._matches_cache[match_id]
-        cache['tournament'] = tournament_name
-        cache['sport'] = sport_key
+        cache["tournament"] = tournament
+        cache["tournament_id"] = tournament_id      # ← НОВОЕ
+        cache["sport"] = sport_key
+        cache["player1"] = event.get("team1Name", "Неизвестно")
+        cache["player2"] = event.get("team2Name", "Неизвестно")
 
-        cache['player1'] = event.get('team1Name', 'Неизвестно')
-        cache['player2'] = event.get('team2Name', 'Неизвестно')
-
-        # ─── score ───
-        score_str = event.get('score', '') or '0:0'
+        # ---- score ----
         try:
-            s1, s2 = map(int, score_str.split(':'))
+            s1, s2 = map(int, (event.get("score") or "0:0").split(":"))
         except (ValueError, TypeError):
             s1, s2 = 0, 0
-        cache['score1'] = s1
-        cache['score2'] = s2
 
-        # ─── sub_score из mapsScore ───
-        maps = event.get('mapsScore', []) or []
+        # ---- sub_score из mapsScore ----
         pairs = []
-        for m in maps:
+        for m in event.get("mapsScore") or []:
             if isinstance(m, dict):
                 try:
-                    pairs.append((int(m.get('team1', 0)), int(m.get('team2', 0))))
+                    pairs.append((int(m.get("team1", 0)), int(m.get("team2", 0))))
                 except (ValueError, TypeError):
                     pairs.append((0, 0))
 
@@ -188,6 +200,11 @@ class OlimpApiParser(BaseParser):
             if pairs:
                 sub1, sub2 = pairs[-1]
                 phase_num = len(pairs)
+                if s1 == 0 and s2 == 0:
+                    t1 = sum(p[0] for p in pairs)
+                    t2 = sum(p[1] for p in pairs)
+                    if t1 > 0 or t2 > 0:
+                        s1, s2 = t1, t2
             else:
                 sub1 = sub2 = 0
                 phase_num = 1
@@ -198,138 +215,130 @@ class OlimpApiParser(BaseParser):
                 sub1 = sub2 = 0
             phase_num = s1 + s2 + 1
 
-        cache['sub1'] = sub1
-        cache['sub2'] = sub2
-        cache['phase_num'] = phase_num
+        cache["score1"] = s1
+        cache["score2"] = s2
+        cache["sub1"] = sub1
+        cache["sub2"] = sub2
+        cache["phase_num"] = phase_num
 
-        # ─── Кэфы ───
+        # ---- Кэфы ----
         odds1 = odds2 = 0.0
         total_line = total_over = total_under = 0.0
         h1 = h2 = h_o1 = h_o2 = 0.0
 
-        outcomes = event.get('outcomes', []) or []
-        for out in outcomes:
+        for out in event.get("outcomes", []) or []:
             if not isinstance(out, dict):
                 continue
-
-            table_type = out.get('tableType', '')
-            categories = out.get('categories', []) or []
-            short_name = out.get('shortName', '')
-            prob_str = out.get('probability', '0')
-            param_str = out.get('param', '0')
+            table_type = out.get("tableType", "")
+            categories = out.get("categories", []) or []
+            short_name = out.get("shortName", "")
 
             try:
-                prob = float(str(prob_str).replace(',', '.'))
+                prob = float(str(out.get("probability", "0")).replace(",", "."))
             except (ValueError, TypeError):
                 prob = 0.0
             try:
-                param = float(str(param_str).replace(',', '.'))
+                param = float(str(out.get("param", "0")).replace(",", "."))
             except (ValueError, TypeError):
                 param = 0.0
 
-            is_result = (table_type == 'RESULT') or ('RESULT' in categories)
+            is_result = (table_type == "RESULT") or ("RESULT" in categories)
 
-            if is_result and short_name == 'П1':
+            if is_result and short_name == "П1":
                 odds1 = prob
-            elif is_result and short_name == 'П2':
+            elif is_result and short_name == "П2":
                 odds2 = prob
-            elif table_type == 'HANDICAP' and short_name == 'Фора 1':
-                h1 = param
-                h_o1 = prob
-            elif table_type == 'HANDICAP' and short_name == 'Фора 2':
-                h2 = param
-                h_o2 = prob
-            elif table_type == 'TOTAL' and short_name == 'ТотМ':
+            elif table_type == "HANDICAP" and short_name == "Фора 1":
+                h1, h_o1 = param, prob
+            elif table_type == "HANDICAP" and short_name == "Фора 2":
+                h2, h_o2 = param, prob
+            elif table_type == "TOTAL" and short_name == "ТотМ":
                 total_under = prob
                 total_line = param
-            elif table_type == 'TOTAL' and short_name == 'ТотБ':
+            elif table_type == "TOTAL" and short_name == "ТотБ":
                 total_over = prob
                 total_line = param
 
-        cache['odds1'] = odds1
-        cache['odds2'] = odds2
-        cache['total_line'] = total_line
-        cache['total_over'] = total_over
-        cache['total_under'] = total_under
-        cache['handicap1'] = h1
-        cache['handicap2'] = h2
-        cache['handicap_odds1'] = h_o1
-        cache['handicap_odds2'] = h_o2
+        cache["odds1"] = odds1
+        cache["odds2"] = odds2
+        cache["total_line"] = total_line
+        cache["total_over"] = total_over
+        cache["total_under"] = total_under
+        cache["handicap1"] = h1
+        cache["handicap2"] = h2
+        cache["handicap_odds1"] = h_o1
+        cache["handicap_odds2"] = h_o2
+
+        self._last_update_time[match_id] = time.time()
 
     # ============================================================
-    # Очередь / отправка
+    # Отправка в detector/aggregator
     # ============================================================
-    async def _process_queues(self):
-        while self.is_running:
-            try:
-                msg_type, data = await asyncio.wait_for(
-                    self._data_queue.get(), timeout=1.0
-                )
-                if msg_type == 'http':
-                    self._process_http(data)
-                await self._try_send_matches()
-            except asyncio.TimeoutError:
-                continue
-            except Exception as e:
-                logger.error(f"[{self.bk_id}] Ошибка очереди: {e}", exc_info=True)
-
     async def _try_send_matches(self):
         sent = 0
-        current_time = time.time()
+        now = time.time()
 
         for match_id, m in list(self._matches_cache.items()):
-            if not m.get('player1') or m.get('player1') == 'Неизвестно':
+            if not m.get("player1") or m["player1"] == "Неизвестно":
                 continue
 
-            first_seen = self._first_seen.get(match_id, current_time)
-            if m.get('odds1', 0) == 0 and m.get('odds2', 0) == 0:
-                if current_time - first_seen < 15:
+            first_seen = self._first_seen.get(match_id, now)
+            if m.get("odds1", 0) == 0 and m.get("odds2", 0) == 0:
+                if now - first_seen < 15:
                     continue
 
             last_sent = self._last_sent_time.get(match_id, 0)
-            if current_time - last_sent < 1.0:
+            if now - last_sent < 1.0:
                 continue
-
-            sport_key = m.get('sport', TABLE_TENNIS)
 
             current_state = (
-                m.get('score1', 0), m.get('score2', 0),
-                m.get('sub1', 0), m.get('sub2', 0),
-                m.get('phase_num', 0),
-                m.get('odds1', 0.0), m.get('odds2', 0.0),
-                m.get('total_line', 0.0), m.get('total_over', 0.0),
-                m.get('total_under', 0.0),
-                m.get('handicap1', 0.0), m.get('handicap2', 0.0),
-                m.get('handicap_odds1', 0.0), m.get('handicap_odds2', 0.0),
+                m.get("score1", 0), m.get("score2", 0),
+                m.get("sub1", 0), m.get("sub2", 0),
+                m.get("phase_num", 0),
+                m.get("odds1", 0.0), m.get("odds2", 0.0),
+                m.get("total_line", 0.0), m.get("total_over", 0.0),
+                m.get("total_under", 0.0),
+                m.get("handicap1", 0.0), m.get("handicap2", 0.0),
+                m.get("handicap_odds1", 0.0), m.get("handicap_odds2", 0.0),
             )
-            if m.get('_last_sent') == current_state:
+            if m.get("_last_sent") == current_state:
                 continue
 
-            slug = get_url_slug('olimp', sport_key) or 'nastolnyy-tennis-40'
-            match_url = f"https://www.olimp.bet/live/{slug}/x/x-{match_id}"
+            sport_key = m.get("sport", TABLE_TENNIS)
+            slug = get_url_slug(self.bk_id, sport_key) or "nastolnyy-tennis-40"
+            tour_id = m.get("tournament_id")
 
-            phase_name = format_phase(sport_key, m.get('phase_num', 1))
+            if tour_id:
+                # Проверенный формат: /live/{sport}/{tour_id}/{match_id}
+                # Работает для НТ / волейбола / баскетбола (проверено на живых матчах).
+                match_url = (
+                    f"https://www.olimp.bet/live/{slug}/{tour_id}/{match_id}"
+                )
+            else:
+                # Без tournament_id URL не работает → пусто, фронт ищет кликом
+                match_url = ""
+            phase_name = format_phase(sport_key, m.get("phase_num", 1))
 
             match = Match(
-                bk_id='olimp',
+                bk_id=self.bk_id,
                 match_id=match_id,
-                player1=m['player1'],
-                player2=m['player2'],
-                score1=m.get('score1', 0),
-                score2=m.get('score2', 0),
-                sub_score1=m.get('sub1', 0),
-                sub_score2=m.get('sub2', 0),
-                tournament=m.get('tournament', 'Неизвестно'),
-                odds1=m.get('odds1', 0.0),
-                odds2=m.get('odds2', 0.0),
-                total_line=m.get('total_line', 0.0),
-                total_over=m.get('total_over', 0.0),
-                total_under=m.get('total_under', 0.0),
-                handicap1=m.get('handicap1', 0.0),
-                handicap2=m.get('handicap2', 0.0),
-                handicap_odds1=m.get('handicap_odds1', 0.0),
-                handicap_odds2=m.get('handicap_odds2', 0.0),
-                timestamp=current_time,
+                player1=m["player1"],
+                player2=m["player2"],
+                score1=m.get("score1", 0),
+                score2=m.get("score2", 0),
+                sub_score1=m.get("sub1", 0),
+                sub_score2=m.get("sub2", 0),
+                tournament=m.get("tournament", "Неизвестно"),
+                odds1=m.get("odds1", 0.0),
+                odds2=m.get("odds2", 0.0),
+                total_line=m.get("total_line", 0.0),
+                total_over=m.get("total_over", 0.0),
+                total_under=m.get("total_under", 0.0),
+                handicap1=m.get("handicap1", 0.0),
+                handicap2=m.get("handicap2", 0.0),
+                handicap_odds1=m.get("handicap_odds1", 0.0),
+                handicap_odds2=m.get("handicap_odds2", 0.0),
+                timestamp=now,
                 raw_time=phase_name,
                 sport=sport_key,
                 match_url=match_url,
@@ -340,8 +349,8 @@ class OlimpApiParser(BaseParser):
             if self.aggregator:
                 self.aggregator.update(match)
 
-            m['_last_sent'] = current_state
-            self._last_sent_time[match_id] = current_time
+            m["_last_sent"] = current_state
+            self._last_sent_time[match_id] = now
             sent += 1
 
             logger.info(
@@ -352,26 +361,10 @@ class OlimpApiParser(BaseParser):
             )
 
         if sent:
-            logger.info(f"[{self.bk_id}] ✅ Отправлено: {sent} (в кеше: {len(self._matches_cache)})")
+            logger.info(
+                f"[{self.bk_id}] ✅ Отправлено: {sent} "
+                f"(в кеше: {len(self._matches_cache)})"
+            )
 
     async def parse(self) -> List[Match]:
         return []
-
-    async def run(self):
-        self.is_running = True
-        logger.info(f"[{self.bk_id}] 🚀 API-парсер Olimp запущен")
-        await self.start()
-
-        while self.is_running:
-            try:
-                await asyncio.sleep(1)
-            except asyncio.CancelledError:
-                break
-            except Exception as e:
-                logger.error(f"[{self.bk_id}] Критическая ошибка: {e}", exc_info=True)
-                await self.stop()
-                await asyncio.sleep(5)
-
-    async def stop(self):
-        self.is_running = False
-        logger.info(f"[{self.bk_id}] 🛑 Остановка парсера...")

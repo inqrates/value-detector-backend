@@ -1,0 +1,30 @@
+[
+  {
+    "type": "text-maybe-b64",
+    "len": 3,
+    "text": "lang",
+    "hex": "95a9e0"
+  },
+  {
+    "type": "text-maybe-b64",
+    "len": 1,
+    "text": "AA==",
+    "hex": "00"
+  },
+  {
+    "type": "text-maybe-b64",
+    "len": 3,
+    "text": "data",
+    "hex": "75ab5a"
+  },
+  {
+    "type": "text",
+    "len": 7,
+    "text": "WINLINE"
+  },
+  {
+    "type": "text",
+    "len": 7,
+    "text": "getdate"
+  }
+]

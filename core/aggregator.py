@@ -5,6 +5,7 @@ from typing import Dict, List, Optional, Tuple
 from core.models import Match
 from core.normalizer import normalizer
 
+
 class OddsAggregator:
     def __init__(self, ttl: int = 10):
         self._matches: Dict[str, Dict[str, Match]] = {}
@@ -83,16 +84,43 @@ class OddsAggregator:
         self._clean_expired()
         results = []
         for key, bk_data in self._matches.items():
-            odds1 = [(bk, m.odds1, m.match_id) for bk, m in bk_data.items() if m.odds1 > 0]
-            odds2 = [(bk, m.odds2, m.match_id) for bk, m in bk_data.items() if m.odds2 > 0]
+            # Фильтр: реальные live-кэфы от 1.01 до 100
+            odds1 = [(bk, m.odds1, m.match_id)
+                     for bk, m in bk_data.items()
+                     if 1.01 <= m.odds1 <= 100]
+            odds2 = [(bk, m.odds2, m.match_id)
+                     for bk, m in bk_data.items()
+                     if 1.01 <= m.odds2 <= 100]
             if not odds1 or not odds2:
                 continue
+
             max1_bk, max1, id1 = max(odds1, key=lambda x: x[1])
             max2_bk, max2, id2 = max(odds2, key=lambda x: x[1])
-            inv_sum = 1/max1 + 1/max2
+
+            # ВИЛКА ВНУТРИ ОДНОЙ БК — не вилка
+            if max1_bk == max2_bk:
+                continue
+
+            # СВЕЖЕСТЬ: обе стороны должны быть обновлены за последние N секунд
+            now = time.time()
+            m1 = bk_data[max1_bk]
+            m2 = bk_data[max2_bk]
+            if now - m1.timestamp > 20 or now - m2.timestamp > 20:
+                continue
+
+            # ЗАЩИТА ОТ УСТАРЕВШИХ КЭФОВ:
+            # если лучший кэф в 1.5x больше среднего по всем БК —
+            # скорее всего это «залипший» кэф у одной БК, а не реальная вилка
+            avg1_all = sum(o for _, o, _ in odds1) / len(odds1)
+            avg2_all = sum(o for _, o, _ in odds2) / len(odds2)
+            if max1 > avg1_all * 1.5 or max2 > avg2_all * 1.5:
+                continue
+
+            # СТРАХОВКА ОТ МУСОРА: прибыль > 10% — почти всегда глюк
+            inv_sum = 1 / max1 + 1 / max2
             if inv_sum < 1:
                 profit = (1 - inv_sum) * 100
-                if profit >= min_profit:
+                if min_profit <= profit <= 10.0:
                     sample = next(iter(bk_data.values()))
                     results.append({
                         'key': key,
@@ -106,7 +134,10 @@ class OddsAggregator:
                         'match_id_p1': id1,
                         'match_id_p2': id2,
                         'profit_percent': profit,
-                        'all': {bk: {'p1': m.odds1, 'p2': m.odds2, 'match_id': m.match_id} for bk, m in bk_data.items()}
+                        'all': {
+                            bk: {'p1': m.odds1, 'p2': m.odds2, 'match_id': m.match_id}
+                            for bk, m in bk_data.items()
+                        }
                     })
         return results
 
@@ -117,15 +148,15 @@ class OddsAggregator:
         for key, bk_data in self._matches.items():
             handicaps = []
             for bk, m in bk_data.items():
-                if m.handicap1 != 0 and m.handicap_odds1 > 0:
+                if m.handicap1 != 0 and 1.01 <= m.handicap_odds1 <= 100:
                     handicaps.append((bk, '1', m.handicap1, m.handicap_odds1, m.match_id))
-                if m.handicap2 != 0 and m.handicap_odds2 > 0:
+                if m.handicap2 != 0 and 1.01 <= m.handicap_odds2 <= 100:
                     handicaps.append((bk, '2', m.handicap2, m.handicap_odds2, m.match_id))
             if len(handicaps) < 2:
                 continue
             sample = next(iter(bk_data.values()))
             for i, (bk1, side1, line1, odd1, id1) in enumerate(handicaps):
-                for bk2, side2, line2, odd2, id2 in handicaps[i+1:]:
+                for bk2, side2, line2, odd2, id2 in handicaps[i + 1:]:
                     if bk1 == bk2:
                         continue
                     if line1 < line2:
@@ -150,15 +181,21 @@ class OddsAggregator:
         self._clean_expired()
         results = []
         for key, bk_data in self._matches.items():
-            p1s = [(m.odds1, m.match_id) for m in bk_data.values() if m.odds1 > 0]
-            p2s = [(m.odds2, m.match_id) for m in bk_data.values() if m.odds2 > 0]
+            p1s = [(m.odds1, m.match_id)
+                   for m in bk_data.values()
+                   if 1.01 <= m.odds1 <= 100]
+            p2s = [(m.odds2, m.match_id)
+                   for m in bk_data.values()
+                   if 1.01 <= m.odds2 <= 100]
             if not p1s or not p2s:
                 continue
             avg1 = sum(o for o, _ in p1s) / len(p1s)
             avg2 = sum(o for o, _ in p2s) / len(p2s)
             sample = next(iter(bk_data.values()))
             for bk, m in bk_data.items():
-                if m.odds1 > avg1 * threshold:
+                # Реальный value — 1.05–1.4x от среднего.
+                # Всё что выше — устаревший/закрытый кэф, а не валуй.
+                if m.odds1 > avg1 * threshold and m.odds1 / avg1 <= 1.4:
                     results.append({
                         'key': key,
                         'player1': sample.player1,
@@ -171,7 +208,7 @@ class OddsAggregator:
                         'ratio': m.odds1 / avg1,
                         'match_id': m.match_id,
                     })
-                if m.odds2 > avg2 * threshold:
+                if m.odds2 > avg2 * threshold and m.odds2 / avg2 <= 1.4:
                     results.append({
                         'key': key,
                         'player1': sample.player1,

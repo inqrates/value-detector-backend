@@ -1,0 +1,94 @@
+{
+  "cookies": [
+    {
+      "name": "cud",
+      "value": "TpvBTmqmw2l9GgI2BTZqAg==",
+      "domain": ".betcity.ru",
+      "path": "/",
+      "expires": 1823873897.996576,
+      "httpOnly": true,
+      "secure": true,
+      "sameSite": "Strict"
+    },
+    {
+      "name": "__zzatgib-w-betcity",
+      "value": "MDA0dBA=Fz2+aQ==",
+      "domain": ".betcity.ru",
+      "path": "/",
+      "expires": 1820849899,
+      "httpOnly": false,
+      "secure": false,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "dev",
+      "value": "eaed1eb6fa7d5ef80a35a5e59929a220",
+      "domain": ".betcity.ru",
+      "path": "/",
+      "expires": 1791905904,
+      "httpOnly": false,
+      "secure": false,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "close-page-text",
+      "value": "1",
+      "domain": "betcity.ru",
+      "path": "/",
+      "expires": -1,
+      "httpOnly": false,
+      "secure": false,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "xq_icm",
+      "value": "10000",
+      "domain": ".betcity.ru",
+      "path": "/",
+      "expires": 1791905899,
+      "httpOnly": false,
+      "secure": false,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "gsscgib-w-betcity",
+      "value": "eGhR2YoLeO9qHMoKOpLjYrQi3NxH7U7C+DMvA8DZszjrp/Vcgfydaw+kagn7As19E93Vxu/MNulKTZYDpKIaUjzAUjZANr0hqJkb8WiF7970fBKy3KGPYXCGV/c7Ex6YlqVrrQcqytQvrLCpRui6Smvn1Mg9TcFtcc7+QOs+7X3MawmL5AsUB0zfRoNxlBSj55B9ObzC9qi7bywonfYoT4WHPC1q+xpnZ1eymNf5lE0H4NdUubURJj6dyer8W2AV8r1HPyWL0PpzOQSi59SCDT9K5Bq7Yhw=",
+      "domain": "lf.betcity.ru",
+      "path": "/",
+      "expires": 1820849903.708704,
+      "httpOnly": false,
+      "secure": true,
+      "sameSite": "None"
+    },
+    {
+      "name": "cfidsgib-w-betcity",
+      "value": "JGGm/B8WBn4mXUOFoM1BrAJ/ZvhrziA/6RE0NL1I4aDiM4utKK9zD9oO4XUBt9/ln96ayPEcP5MHRDn4FWXpsSpTFVbLb5zPYr7IDQAGvVVdF6WCSxJRUQqSWH6ajEXNlxpighT8qX13rhPFRRn7XhuyGrAMXC5ACLDj",
+      "domain": "lf.betcity.ru",
+      "path": "/",
+      "expires": 1820849903.708774,
+      "httpOnly": false,
+      "secure": true,
+      "sameSite": "None"
+    },
+    {
+      "name": "cfidsgib-w-betcity",
+      "value": "JGGm/B8WBn4mXUOFoM1BrAJ/ZvhrziA/6RE0NL1I4aDiM4utKK9zD9oO4XUBt9/ln96ayPEcP5MHRDn4FWXpsSpTFVbLb5zPYr7IDQAGvVVdF6WCSxJRUQqSWH6ajEXNlxpighT8qX13rhPFRRn7XhuyGrAMXC5ACLDj",
+      "domain": ".betcity.ru",
+      "path": "/",
+      "expires": 1820849903,
+      "httpOnly": false,
+      "secure": false,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "gsscgib-w-betcity",
+      "value": "eGhR2YoLeO9qHMoKOpLjYrQi3NxH7U7C+DMvA8DZszjrp/Vcgfydaw+kagn7As19E93Vxu/MNulKTZYDpKIaUjzAUjZANr0hqJkb8WiF7970fBKy3KGPYXCGV/c7Ex6YlqVrrQcqytQvrLCpRui6Smvn1Mg9TcFtcc7+QOs+7X3MawmL5AsUB0zfRoNxlBSj55B9ObzC9qi7bywonfYoT4WHPC1q+xpnZ1eymNf5lE0H4NdUubURJj6dyer8W2AV8r1HPyWL0PpzOQSi59SCDT9K5Bq7Yhw=",
+      "domain": ".betcity.ru",
+      "path": "/",
+      "expires": 1820849903,
+      "httpOnly": false,
+      "secure": false,
+      "sameSite": "Lax"
+    }
+  ]
+}

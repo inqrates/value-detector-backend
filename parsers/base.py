@@ -11,7 +11,7 @@ from config import (
     PAGE_RELOAD_ENABLED, PAGE_RELOAD_STAGGER,
     PAGE_KEEP_FRONT, PAGE_KEEP_FRONT_INTERVAL,
     PAGE_STUCK_TIMEOUT_BY_BK, PAGE_STUCK_TIMEOUT_DEFAULT,
-    PAGE_PERIODIC_RELOAD_BY_BK,
+    PAGE_PERIODIC_RELOAD_BY_BK, PAGE_PERIODIC_RELOAD_DEFAULT,
 )
 
 logger = logging.getLogger(__name__)
@@ -87,15 +87,17 @@ class BaseParser(ABC):
     async def _reload_loop(self):
         """
         Комбинированный watchdog:
-        - Периодический reload (для БК из PAGE_PERIODIC_RELOAD_BY_BK) —
-          чтобы подтягивались новые матчи.
+        - Периодический reload (PAGE_PERIODIC_RELOAD_BY_BK → дефолт 20 мин) —
+          сбрасывает DOM и JS heap, освобождает память.
         - Watchdog залипаний — reload, если БК давно не отдавала данные.
         """
         STUCK_TIMEOUT = PAGE_STUCK_TIMEOUT_BY_BK.get(
             self.bk_id, PAGE_STUCK_TIMEOUT_DEFAULT
         )
-        # Периодический интервал (для Sportbet и подобных), может быть None
-        PERIODIC_INTERVAL = PAGE_PERIODIC_RELOAD_BY_BK.get(self.bk_id)
+        # Периодический интервал: индивидуальный из BY_BK, иначе общий дефолт
+        PERIODIC_INTERVAL = PAGE_PERIODIC_RELOAD_BY_BK.get(
+            self.bk_id, PAGE_PERIODIC_RELOAD_DEFAULT
+        )
         CHECK_INTERVAL = 15
         MIN_UPTIME = 30 if self.bk_id in PAGE_KEEP_FRONT else 60
         MAX_SILENT_RELOADS = 3
@@ -168,7 +170,6 @@ class BaseParser(ABC):
                     logger.info(f"[{self.bk_id}] ✅ Перезагрузка завершена")
                     last_reload_at = time.time()
                     silent_reloads = 0
-                    # Сбрасываем счётчик "нет данных" для новой страницы
                     started_at = time.time()
                 except asyncio.CancelledError:
                     break

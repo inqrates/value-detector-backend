@@ -1,0 +1,82 @@
+{
+  "cookies": [
+    {
+      "name": "spjs",
+      "value": "1789335805520_43384ef6_0f8be3d2_5009781053994a0dae9046eb0d5924fa_70CscBCgQIABAAEAEY4gogkQEyfwjUCRIHCAEQARjGBhIHCAEQABjHBhIFCAEYqgkSBQgBGKkCEgUIARieCBICCAASBQgBGMwGEgUIARiGBxIFCAEYzAkSBQgBGJsBEgUIARjbAhIFCAEY4QUSBAgBGFISBQgBGJ4DEgQIARhLEgIIABICCAASAggAEgIIABICCAA6JAogYjVmNDA2ODczNGU2NDJhMmE4YWM4NjdhMDU3YmVmNWQQAEIICAAQABgAIAJKBggiECUYIhKvAQgAEiA1MWU5NWViYWU5ZmEwMzEwNjU0MGM3MDU3YTczZTk4Zhi5AiorCOgBEBcYBiAFKiA5YjlhMDE2YjMyZjEyM2U5MTk4NWJjMmFlYzE5NzM2MDIGCAAQABgAOiAxOWVlNTQ4YTVkOWQxYzc2NzU0YTUxNzZiYjZlZjBhOEIgM2Q3OTk5MzcxOWM5N2ZiNjA3Nzg2ZjdhYzY2ZWY3ZmZNAAAkQVAAWgYIARABGAAalAMIehpvTW96aWxsYS81LjAgKFdpbmRvd3MgTlQgMTAuMDsgV2luNjQ7IHg2NCkgQXBwbGVXZWJLaXQvNTM3LjM2IChLSFRNTCwgbGlrZSBHZWNrbykgQ2hyb21lLzE1MS4wLjAuMCBTYWZhcmkvNTM3LjM2IgQIIBAMKg4IARUAAIA/HQAAAAAgADIFV2luMzI6HQoFcnUtUlUSBXJ1LVJVEgJydRIFZW4tVVMSAmVuQABKJwgAEgdXaW5kb3dzGghDaHJvbWl1bRoLTm90PUE/QnJhbmQiA5cBY1IECAEQBVoCCAJgAGoXMTE1MTExNDQyNDE1MjIyNDQxMjIxMTJwAHo4CgN4ODYSAjY0IAAqADIHV2luZG93czoGMTkuMC4wQg0xNTEuMC43OTIyLjM0SABaB0Rlc2t0b3CCAQtHb29nbGUgSW5jLogBZJIBCAj68IyCBRAwogEAqgE0CFMSBAgBGCgSBggBEAEYFRIGCAEQABgWEgQIARgsEgQIARgvEgQIARguEgIIABgcIAAoALABACKuAQoDAQAAEH0iFgEDAQIAAQQEAQEBAQACAgQCAgEAPwMqFwABAAMBAAADAwMAAAAAAwADAwAAAwMAMg4IDRAIGA0gCDDhzNzbAjoMDQAAAEAVAACAPxgBQgRhdXRvQgRub25lQgRhdXRvQgRub25lSgsIARAAGAAggAEoAFIxAQEBAQEBAQEBAQEAAQEBAQEBAQAAAQEBAQEBAQEBAQEBAQEBAQABAQEBAQEBAAEBASo0CM4BGAEiAwEBACoMCAAQABgAIAAoADAAMAA6BAgAEABAAEgAUANYAGIICAAQABgAIABoADJwCiwIAhACGAEgAigAMAI4AEAASABQAFoFcnUtUlVgAGgAcAB4AoABAIgBAJABAhCwASIhChJBc2lhL1lla2F0ZXJpbmJ1cmcSAnJ1GgcyLWRpZ2l0KNT9/////////wEyDwgBEgQDAwMBGAElAAAAADpICh8IgA8QoB8YgA8goB8qEWxhbmRzY2FwZS1wcmltYXJ5EhYIgA8QoB8dACDuRCUAAHpFKLEHMPQHGgsIGBAYHQAAgD8gASBbQiISAyIBMRoFCAAqATEiATAo8wE6AQFCCygKMgcAAAAAAAAASmYIIRIQCICAgLABEILk7QMY7u+9AhIQCICAgLABEPTenwkY/MqPAxoJCMqKgIAYEMoKKFAyBggDEAMYAUDeAlD/AVoMCAAQABgAIAAoADAAYgoN4KuHRBWamTlCaN2WWnIFZmlsZTpQs+z8pbcyXQCAbURgJGoAchBCSj7iS7+XOcguOHaZsfNZej4IhwEaNAgAEAAYASCi26CZBygQMAw4IEoRcnUtUlUscnUsZW4tVVMsZW5SBVdpbjMyYABoAHAAeAAiAwAAAIIBAIgBAA==",
+      "domain": "leon.ru",
+      "path": "/"
+    },
+    {
+      "name": "spsc",
+      "value": "1789335805520_c88ff940b7a06db180c1f36ba3349316_zD.-OZ0MjSNtZN0hNAZf3dx4mxK.iXQTEVO0zRHJVCQZ",
+      "domain": "leon.ru",
+      "path": "/"
+    },
+    {
+      "name": "spid",
+      "value": "1789335805520_9e568802332c523b86f2e48762bba8db_vustck2l32pkclfr",
+      "domain": "leon.ru",
+      "path": "/"
+    },
+    {
+      "name": "ABTestSeed",
+      "value": "60",
+      "domain": "leon.ru",
+      "path": "/"
+    },
+    {
+      "name": "qtag_rfrr",
+      "value": "bnVsbC1odHRwczovL2xlb24ucnUvbGl2ZQ==",
+      "domain": "leon.ru",
+      "path": "/"
+    },
+    {
+      "name": "ipfrom",
+      "value": "178.208.244.134",
+      "domain": "leon.ru",
+      "path": "/"
+    },
+    {
+      "name": "referer",
+      "value": "aHR0cHM6Ly9sZW9uLnJ1L2xpdmU=",
+      "domain": "leon.ru",
+      "path": "/"
+    },
+    {
+      "name": "x-app-language",
+      "value": "ru_RU",
+      "domain": "leon.ru",
+      "path": "/"
+    },
+    {
+      "name": "firstTheme",
+      "value": "LIGHT",
+      "domain": "leon.ru",
+      "path": "/"
+    },
+    {
+      "name": "ab_experiments",
+      "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzcGxpdElkcyI6W10sImlhdCI6MTc4OTMzNTgwOSwiZXhwaXJlZEF0TWludXRlIjoyOTgyMjI2OH0.9AF2rFkfzB6njL7bxPTlCTWam9nbtEUKbmxdwd2E678",
+      "domain": "leon.ru",
+      "path": "/"
+    },
+    {
+      "name": "_ym_uid",
+      "value": "1789335811834723293",
+      "domain": ".leon.ru",
+      "path": "/"
+    },
+    {
+      "name": "_ym_d",
+      "value": "1789335811",
+      "domain": ".leon.ru",
+      "path": "/"
+    },
+    {
+      "name": "bh",
+      "value": "EigiQ2hyb21pdW0iO3Y9IjE1MSIsICJOb3Q9QT9CcmFuZCI7dj0iOTkiKgI/MDoJIldpbmRvd3MiYIKynNUGah7cyuH/CJLYobEDn8/h6gP7+vDnDev//fYPwf7Phwg=",
+      "domain": ".yandex.com",
+      "path": "/"
+    }
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "url": "https://leon.ru/api-2/betline/events/inplayupcoming?ctag=ru-RU&hideClosed=true&flags=reg,urlv2,orn2,cn,mm2,rrc,nodup,cmg",
+  "method": "GET",
+  "headers": {
+    "x-app-platform": "web",
+    "sec-ch-ua-platform": "\"Windows\"",
+    "x-app-referrer": "https://leon.ru/live",
+    "x-app-modernity": "modern",
+    "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+    "sec-ch-ua-mobile": "?0",
+    "x-requested-uri": "/live",
+    "x-app-rendering": "csr",
+    "x-app-browser": "chrome",
+    "x-app-env": "prod",
+    "x-app-skin": "default",
+    "referer": "https://leon.ru/live",
+    "x-app-os": "windows",
+    "x-app-version": "6.143.2",
+    "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+    "x-app-layout": "desktop",
+    "x-app-theme": "LIGHT",
+    "x-app-language": "ru_RU"
+  }
+}

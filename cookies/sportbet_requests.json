@@ -1,0 +1,73 @@
+[
+  {
+    "url": "https://bthm-server.sportbet.ru/events.sidebar?status=live&lang=ru",
+    "method": "GET",
+    "body": null,
+    "headers": {
+      "accept": "application/json, text/plain, */*",
+      "origin": "https://sportbet.ru",
+      "referer": "https://sportbet.ru/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0",
+      "sec-ch-ua-platform": "\"Windows\""
+    }
+  },
+  {
+    "url": "https://sportbet.ru/api/urls",
+    "method": "GET",
+    "body": null,
+    "headers": {
+      "accept": "*/*",
+      "referer": "https://sportbet.ru/live?h=all&isTime=1",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0",
+      "sec-ch-ua-platform": "\"Windows\""
+    }
+  },
+  {
+    "url": "https://bthm-server.sportbet.ru/events.table?status=live&lang=ru&isTime=true",
+    "method": "GET",
+    "body": null,
+    "headers": {
+      "accept": "application/json, text/plain, */*",
+      "origin": "https://sportbet.ru",
+      "referer": "https://sportbet.ru/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0",
+      "sec-ch-ua-platform": "\"Windows\""
+    }
+  },
+  {
+    "url": "https://sportbet.ru/api/session",
+    "method": "GET",
+    "body": null,
+    "headers": {
+      "accept": "*/*",
+      "referer": "https://sportbet.ru/live?h=all&isTime=1",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0",
+      "sec-ch-ua-platform": "\"Windows\""
+    }
+  },
+  {
+    "url": "https://sportbet.ru/api/help-center/about/docs/privacy_policy.pdf?_rsc=LsP7pMtvKgLK_aLC",
+    "method": "GET",
+    "body": null,
+    "headers": {
+      "accept": "*/*",
+      "referer": "https://sportbet.ru/live?h=all&isTime=1",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "next-router-prefetch": "1",
+      "next-router-segment-prefetch": "/_tree",
+      "next-url": "/ru/live",
+      "rsc": "1",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0",
+      "sec-ch-ua-platform": "\"Windows\""
+    }
+  }
+]

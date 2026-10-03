@@ -1,0 +1,84 @@
+{
+  "cookies": [
+    {
+      "name": "last_visit_host",
+      "value": "winline.ru",
+      "domain": ".winline.ru",
+      "path": "/",
+      "expires": 1823877961.041861,
+      "httpOnly": false,
+      "secure": false,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "cid",
+      "value": "A66I7LzMJceJAkw2P1mGH6g",
+      "domain": ".adriver.ru",
+      "path": "/",
+      "expires": 1823877968.932905,
+      "httpOnly": false,
+      "secure": true,
+      "sameSite": "None"
+    },
+    {
+      "name": "adrdel",
+      "value": "1789317965363",
+      "domain": ".winline.ru",
+      "path": "/",
+      "expires": 1823877965.363404,
+      "httpOnly": false,
+      "secure": true,
+      "sameSite": "None"
+    },
+    {
+      "name": "adrcid",
+      "value": "A66I7LzMJceJAkw2P1mGH6g",
+      "domain": ".winline.ru",
+      "path": "/",
+      "expires": 1823877965.363739,
+      "httpOnly": false,
+      "secure": true,
+      "sameSite": "None"
+    },
+    {
+      "name": "acs_3",
+      "value": "%7B%22hash%22%3A%2278168166d1d84ba31a91bed5b79968efe721107d%22%2C%22nst%22%3A1789404365368%2C%22sl%22%3A%7B%22224%22%3A1789317965368%2C%221228%22%3A1789317965368%7D%7D",
+      "domain": ".winline.ru",
+      "path": "/",
+      "expires": 1823877965.369736,
+      "httpOnly": false,
+      "secure": true,
+      "sameSite": "None"
+    },
+    {
+      "name": "inithref",
+      "value": "https%3A%2F%2Fwinline.ru%2Flive",
+      "domain": ".winline.ru",
+      "path": "/",
+      "expires": -1,
+      "httpOnly": false,
+      "secure": false,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "referer",
+      "value": "",
+      "domain": ".winline.ru",
+      "path": "/",
+      "expires": -1,
+      "httpOnly": false,
+      "secure": false,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "sd",
+      "value": "1",
+      "domain": ".content.adriver.ru",
+      "path": "/",
+      "expires": -1,
+      "httpOnly": false,
+      "secure": true,
+      "sameSite": "None"
+    }
+  ]
+}

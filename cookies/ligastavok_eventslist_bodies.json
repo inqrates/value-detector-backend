@@ -1,0 +1,145 @@
+[
+  {
+    "url": "https://lds-api-sites.ligastavok.ru/rest/events/v8/eventsList",
+    "method": "POST",
+    "body": {
+      "gameId": [],
+      "limit": 40,
+      "ns": [
+        "live"
+      ],
+      "topEvents": false,
+      "view": "priority",
+      "widgetVideo": false
+    },
+    "headers": {
+      "cookie": "qrator_jsr=v2.0.1789316694.913.b2d0f486kZc8MobC|VVHztyT6jKnxVr1f|cdsHGq7rWRGZbmHD3jj5gTH2t7DtwhY17OncKUONGkhi/w06CNEG+er9FDV3RykEo+MHN4+ZBQsMK5Dl5+fURfhS2CVQ5XrA1AcT4EjkZmU=-c7pDu6Tq3/MUlGczaMxXkzWYYtY=-00; qrator_jsid2=v2.0.1789316694.913.b2d0f486kZc8MobC|RwBS9pMg3XBnW65q|HOHONn50gyYtUHMu5GmoIOkqGJZCYYb2He3SbtD2PkV0+BwTjm4XZtREJA5Bn5DZk7qS8kdJDuyiBTsFsN0pvWFu4SWdVpGwGHZQcQ6oPEMe4cbu2s+iLIFKx+ZrfP49aN9V21+CG//egWQiPgi6deeas+qwYVoyDb0aMIcwUUQ=-KfdTmYEoQG8DG157hd3MBhs95yM=",
+      "origin": "https://www.ligastavok.ru",
+      "referer": "https://www.ligastavok.ru/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "accept": "application/json",
+      "content-type": "application/json",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0",
+      "sec-ch-ua-platform": "\"Windows\"",
+      "x-application-name": "mobile",
+      "x-req-id": "9e6c7007-78bc-506a-c345-26eb86443448"
+    }
+  },
+  {
+    "url": "https://lds-api-sites.ligastavok.ru/rest/events/v8/eventsList",
+    "method": "POST",
+    "body": {
+      "gameId": [],
+      "limit": 40,
+      "ns": [
+        "live"
+      ],
+      "skip": 40,
+      "topEvents": false,
+      "ts": 1789316701694,
+      "view": "priority",
+      "widgetVideo": false
+    },
+    "headers": {
+      "cookie": "qrator_jsr=v2.0.1789316694.913.b2d0f486kZc8MobC|VVHztyT6jKnxVr1f|cdsHGq7rWRGZbmHD3jj5gTH2t7DtwhY17OncKUONGkhi/w06CNEG+er9FDV3RykEo+MHN4+ZBQsMK5Dl5+fURfhS2CVQ5XrA1AcT4EjkZmU=-c7pDu6Tq3/MUlGczaMxXkzWYYtY=-00; qrator_jsid2=v2.0.1789316694.913.b2d0f486kZc8MobC|RwBS9pMg3XBnW65q|HOHONn50gyYtUHMu5GmoIOkqGJZCYYb2He3SbtD2PkV0+BwTjm4XZtREJA5Bn5DZk7qS8kdJDuyiBTsFsN0pvWFu4SWdVpGwGHZQcQ6oPEMe4cbu2s+iLIFKx+ZrfP49aN9V21+CG//egWQiPgi6deeas+qwYVoyDb0aMIcwUUQ=-KfdTmYEoQG8DG157hd3MBhs95yM=",
+      "origin": "https://www.ligastavok.ru",
+      "referer": "https://www.ligastavok.ru/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "accept": "application/json",
+      "content-type": "application/json",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0",
+      "sec-ch-ua-platform": "\"Windows\"",
+      "x-application-name": "mobile",
+      "x-req-id": "36a64c0d-5154-eea5-d47a-b862f2f87a0f"
+    }
+  },
+  {
+    "url": "https://lds-api-sites.ligastavok.ru/rest/events/v8/eventsList",
+    "method": "POST",
+    "body": {
+      "gameId": [],
+      "limit": 40,
+      "ns": [
+        "live"
+      ],
+      "skip": 80,
+      "topEvents": false,
+      "ts": 1789316702723,
+      "view": "priority",
+      "widgetVideo": false
+    },
+    "headers": {
+      "cookie": "qrator_jsr=v2.0.1789316694.913.b2d0f486kZc8MobC|VVHztyT6jKnxVr1f|cdsHGq7rWRGZbmHD3jj5gTH2t7DtwhY17OncKUONGkhi/w06CNEG+er9FDV3RykEo+MHN4+ZBQsMK5Dl5+fURfhS2CVQ5XrA1AcT4EjkZmU=-c7pDu6Tq3/MUlGczaMxXkzWYYtY=-00; qrator_jsid2=v2.0.1789316694.913.b2d0f486kZc8MobC|RwBS9pMg3XBnW65q|HOHONn50gyYtUHMu5GmoIOkqGJZCYYb2He3SbtD2PkV0+BwTjm4XZtREJA5Bn5DZk7qS8kdJDuyiBTsFsN0pvWFu4SWdVpGwGHZQcQ6oPEMe4cbu2s+iLIFKx+ZrfP49aN9V21+CG//egWQiPgi6deeas+qwYVoyDb0aMIcwUUQ=-KfdTmYEoQG8DG157hd3MBhs95yM=",
+      "origin": "https://www.ligastavok.ru",
+      "referer": "https://www.ligastavok.ru/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "accept": "application/json",
+      "content-type": "application/json",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0",
+      "sec-ch-ua-platform": "\"Windows\"",
+      "x-application-name": "mobile",
+      "x-req-id": "c0b5fc6e-6d56-6d29-55ff-c4a62bff126c"
+    }
+  },
+  {
+    "url": "https://lds-api-sites.ligastavok.ru/rest/events/v8/eventsList",
+    "method": "POST",
+    "body": {
+      "gameId": [],
+      "limit": 40,
+      "ns": [
+        "live"
+      ],
+      "skip": 120,
+      "topEvents": false,
+      "ts": 1789316703163,
+      "view": "priority",
+      "widgetVideo": false
+    },
+    "headers": {
+      "cookie": "qrator_jsr=v2.0.1789316694.913.b2d0f486kZc8MobC|VVHztyT6jKnxVr1f|cdsHGq7rWRGZbmHD3jj5gTH2t7DtwhY17OncKUONGkhi/w06CNEG+er9FDV3RykEo+MHN4+ZBQsMK5Dl5+fURfhS2CVQ5XrA1AcT4EjkZmU=-c7pDu6Tq3/MUlGczaMxXkzWYYtY=-00; qrator_jsid2=v2.0.1789316694.913.b2d0f486kZc8MobC|RwBS9pMg3XBnW65q|HOHONn50gyYtUHMu5GmoIOkqGJZCYYb2He3SbtD2PkV0+BwTjm4XZtREJA5Bn5DZk7qS8kdJDuyiBTsFsN0pvWFu4SWdVpGwGHZQcQ6oPEMe4cbu2s+iLIFKx+ZrfP49aN9V21+CG//egWQiPgi6deeas+qwYVoyDb0aMIcwUUQ=-KfdTmYEoQG8DG157hd3MBhs95yM=; __zzatgib-w-ligastavok=MDA0dBA=Fz2+aQ==; _ga_Y35SX19KN6=GS2.1.s1789316705$o1$g0$t1789316705$j60$l0$h812192388; _ga=GA1.1.830491173.1789316706",
+      "origin": "https://www.ligastavok.ru",
+      "referer": "https://www.ligastavok.ru/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "accept": "application/json",
+      "content-type": "application/json",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0",
+      "sec-ch-ua-platform": "\"Windows\"",
+      "x-application-name": "mobile",
+      "x-req-id": "6c93d4c6-eae7-bd25-88c2-e615dd6ac428"
+    }
+  },
+  {
+    "url": "https://lds-api-sites.ligastavok.ru/rest/events/v8/eventsList",
+    "method": "POST",
+    "body": {
+      "gameId": [],
+      "limit": 40,
+      "ns": [
+        "live"
+      ],
+      "skip": 160,
+      "topEvents": false,
+      "ts": 1789316705284,
+      "view": "priority",
+      "widgetVideo": false
+    },
+    "headers": {
+      "cookie": "qrator_jsr=v2.0.1789316694.913.b2d0f486kZc8MobC|VVHztyT6jKnxVr1f|cdsHGq7rWRGZbmHD3jj5gTH2t7DtwhY17OncKUONGkhi/w06CNEG+er9FDV3RykEo+MHN4+ZBQsMK5Dl5+fURfhS2CVQ5XrA1AcT4EjkZmU=-c7pDu6Tq3/MUlGczaMxXkzWYYtY=-00; qrator_jsid2=v2.0.1789316694.913.b2d0f486kZc8MobC|RwBS9pMg3XBnW65q|HOHONn50gyYtUHMu5GmoIOkqGJZCYYb2He3SbtD2PkV0+BwTjm4XZtREJA5Bn5DZk7qS8kdJDuyiBTsFsN0pvWFu4SWdVpGwGHZQcQ6oPEMe4cbu2s+iLIFKx+ZrfP49aN9V21+CG//egWQiPgi6deeas+qwYVoyDb0aMIcwUUQ=-KfdTmYEoQG8DG157hd3MBhs95yM=; __zzatgib-w-ligastavok=MDA0dBA=Fz2+aQ==; _ga=GA1.1.830491173.1789316706; _ym_uid=1789316706128365257; _ym_d=1789316706; _ga_Y35SX19KN6=GS2.1.s1789316705$o1$g1$t1789316706$j59$l0$h812192388; cfidsgib-w-ligastavok=y3QWymisG1Tlxbai/6thdr5ZFCMNxaZdUJ/bRPz7IsJbKY70MA2aVCyzbOzwd/bDo1pUee1pHFg3757ZYagzZcfYAbl9DfN4s+JNOXaEo9ohT92MBrED1uhRzuX6/RV9CzMv/emMVV66yiuIBF1ymcyX",
+      "origin": "https://www.ligastavok.ru",
+      "referer": "https://www.ligastavok.ru/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "accept": "application/json",
+      "content-type": "application/json",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0",
+      "sec-ch-ua-platform": "\"Windows\"",
+      "x-application-name": "mobile",
+      "x-req-id": "8a985fab-394b-a569-d62e-417268a45ca5"
+    }
+  }
+]

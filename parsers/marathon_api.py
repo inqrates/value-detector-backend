@@ -4,8 +4,9 @@ Marathon API-парсер с поддержкой мультиспорта (НТ
 
 Особенности:
   - Новый API: /eag/event-line/api/v1/sports/by-slug/all-tournaments/live?sportSlug=...
-  - Три параллельных SSE-стрима (table-tennis, volleyball, basketball).
-  - Формат данных: JSON-массив изменений {path, value}.
+  - SSE-стримы для быстрых обновлений score/odds (Accept: text/event-stream).
+  - Дополнительный SEO-enricher: раз в N сек тянет полный JSON-снапшот
+    (Accept: application/json) и подтягивает slug'и для URL матча.
   - Вид спорта определяется по sportSlug в URL и проверяется через value.sportCode.
 
 Парсинг коэфов (из markets):
@@ -13,6 +14,15 @@ Marathon API-парсер с поддержкой мультиспорта (НТ
   model MTCH_TTLG / MTCH_TTLP → Тотал (total_line/total_over/total_under)
   model MTCH_HB / MTCH_HBP → Фора (handicap1/2 + odds)
   Коэффициенты в формате {n, d} → (n+d)/d.
+
+URL матча:
+  https://new.marathonbet.ru/su/betting/event/{sportSlug}/{champSlug}/{matchSlug}
+  Slug'и приходят только в JSON-снапшоте (не в SSE).
+
+ВАЖНО: дочерние задачи (SSE-стримы, process_queues, seo_enricher)
+сохраняются в self._bg_tasks и отменяются в stop(). Без этого
+при рестарте HealthMonitor'ом старые задачи продолжали работать
+с закрытым HTTP-клиентом и спамили "client has been closed".
 """
 import asyncio
 import time
@@ -40,6 +50,7 @@ SPORT_CODE_TO_KEY = {
     "e-Sports": CYBER_BASKETBALL,
 }
 
+
 def _slug(text: str) -> str:
     if not text:
         return "x"
@@ -57,6 +68,10 @@ def _fraction_to_decimal(n: int, d: int) -> float:
 
 
 class MarathonApiParser(BaseParser):
+    # Интервалы SEO-enricher'а
+    SEO_INTERVAL_FAST = 10.0    # когда есть матчи без slug'ов
+    SEO_INTERVAL_SLOW = 60.0    # когда все обогащены
+
     def __init__(self, detector=None, aggregator=None, enabled_sports=None):
         super().__init__('marathon', detector=detector, aggregator=aggregator)
 
@@ -67,8 +82,16 @@ class MarathonApiParser(BaseParser):
         self._matches_cache: Dict[str, dict] = {}
         self._first_seen: Dict[str, float] = {}
         self._last_sent_time: Dict[str, float] = {}
+        self._last_update_time: Dict[str, float] = {}
         self.is_running = False
         self._client: httpx.AsyncClient = None
+
+        # Флаг: нужен срочный SEO-fetch (появился новый матч)
+        self._needs_seo_fetch = False
+
+        # Дочерние задачи (SSE-стримы, process_queues, seo_enricher).
+        # Нужны для корректной отмены при stop()/restart.
+        self._bg_tasks: List[asyncio.Task] = []
 
     # ============================================================
     # Запуск
@@ -76,11 +99,19 @@ class MarathonApiParser(BaseParser):
     async def start(self):
         if self._client is None:
             await self._init_client()
+
+        # Подчищаем ссылки на завершённые задачи
+        self._bg_tasks = [t for t in self._bg_tasks if not t.done()]
+
         for sport_key in self.enabled_sports:
             url = self._build_sse_url(sport_key)
-            asyncio.create_task(self._sse_loop(sport_key, url))
+            t = asyncio.create_task(self._sse_loop(sport_key, url))
+            self._bg_tasks.append(t)
             logger.info(f"[{self.bk_id}] SSE запущен для {sport_key}: {url}")
-        asyncio.create_task(self._process_queues())
+
+        self._bg_tasks.append(asyncio.create_task(self._process_queues()))
+        # Дополнительный поток: тянет SEO-slug'и для URL матчей
+        self._bg_tasks.append(asyncio.create_task(self._seo_enricher_loop()))
 
     def _build_sse_url(self, sport_key: str) -> str:
         slug = get_url_slug(self.bk_id, sport_key)
@@ -90,16 +121,33 @@ class MarathonApiParser(BaseParser):
                 f"sports/by-slug/all-tournaments/live?sportSlug={slug}")
 
     async def _init_client(self):
-        page = await browser_manager.new_page()
-        try:
-            await page.goto("https://new.marathonbet.ru/su/live/table-tennis",
-                            wait_until='domcontentloaded', timeout=PAGE_LOAD_TIMEOUT)
-            await page.wait_for_timeout(3000)
-            cookies = await page.context.cookies()
-            cookies_dict = {c['name']: c['value'] for c in cookies}
-            user_agent = await page.evaluate("navigator.userAgent")
-        finally:
-            await page.close()
+        """
+        Загружаем cookies из cookies/marathon.json (сняты скриптом
+        scripts/sniff_marathon_cookies.py один раз).
+        Playwright в горячем цикле не используется.
+
+        Если клиент уже есть и не закрыт — не пересоздаём.
+        """
+        # Если клиент уже живой — выходим
+        if self._client is not None:
+            try:
+                if not self._client.is_closed:
+                    return
+            except Exception:
+                pass
+
+        from pathlib import Path
+
+        cookies_path = Path("cookies/marathon.json")
+        if not cookies_path.exists():
+            raise RuntimeError(
+                "cookies/marathon.json не найден. "
+                "Запусти: python scripts/sniff_marathon_cookies.py"
+            )
+
+        cookies_raw = json.loads(cookies_path.read_text(encoding="utf-8")).get("cookies", [])
+        cookies_dict = {c["name"]: c["value"] for c in cookies_raw}
+        logger.info(f"[{self.bk_id}] 🍪 Загружено {len(cookies_dict)} cookies")
 
         headers = {
             "Accept": "text/event-stream",
@@ -108,11 +156,16 @@ class MarathonApiParser(BaseParser):
             "Pragma": "no-cache",
             "Referer": "https://new.marathonbet.ru/su/live/table-tennis",
             "Origin": "https://new.marathonbet.ru",
-            "User-Agent": user_agent,
+            "User-Agent": (
+                "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+                "AppleWebKit/537.36 (KHTML, like Gecko) "
+                "Chrome/150.0.0.0 Safari/537.36"
+            ),
             "x-pan-source": "REDESIGN_WEB",
             "x-pan-target": "BROWSER",
             "x-pan-version": "MOBILE-SSR-2.6.5",
         }
+
         self._client = httpx.AsyncClient(
             cookies=cookies_dict,
             headers=headers,
@@ -162,8 +215,41 @@ class MarathonApiParser(BaseParser):
 
             except asyncio.CancelledError:
                 break
+
+            # ── Клиент закрыт при stop() — выходим из цикла ──
+            # Иначе задача останется висеть и будет спамить в лог.
+            except RuntimeError as e:
+                msg = str(e)
+                if "client has been closed" in msg or "client is closed" in msg:
+                    logger.info(
+                        f"[{self.bk_id}] [{sport_key}] клиент закрыт → "
+                        f"SSE loop завершается"
+                    )
+                    break
+                logger.warning(
+                    f"[{self.bk_id}] [{sport_key}] SSE RuntimeError: {e}"
+                )
+                await asyncio.sleep(retry_delay)
+                retry_delay = min(retry_delay * 2, max_retry_delay)
+
+            # Marathon штатно закрывает SSE каждые 2–5 минут.
+            # Переподключаемся сразу, без backoff.
+            except (httpx.RemoteProtocolError, httpx.ReadError,
+                    httpx.ReadTimeout) as e:
+                logger.info(
+                    f"[{self.bk_id}] [{sport_key}] SSE закрыт сервером "
+                    f"({type(e).__name__}) → переподключение"
+                )
+                retry_delay = 1
+                await asyncio.sleep(0.3)
+                continue
+
+            # Реальные ошибки (сеть, DNS, TLS) — с backoff
             except Exception as e:
-                logger.error(f"[{self.bk_id}] [{sport_key}] SSE ошибка: {e}", exc_info=True)
+                logger.warning(
+                    f"[{self.bk_id}] [{sport_key}] SSE ошибка "
+                    f"({type(e).__name__}): {e}"
+                )
                 await asyncio.sleep(retry_delay)
                 retry_delay = min(retry_delay * 2, max_retry_delay)
 
@@ -186,6 +272,132 @@ class MarathonApiParser(BaseParser):
         for change in data:
             if isinstance(change, dict):
                 self._apply_change(change, sport_key)
+
+    # ============================================================
+    # SEO-ENRICHER: тянет slug'и для URL
+    # ============================================================
+    async def _seo_enricher_loop(self):
+        """
+        Периодически тянет полный JSON-снапшот с Accept: application/json
+        и дополняет кэш slug'ами для URL.
+
+        Адаптивный интервал:
+          - Есть матчи без slug'ов → 10 сек (быстро подтягиваем новые)
+          - Все обогащены          → 60 сек (фоновое обновление)
+          - Новый матч появился    → срочный fetch вне расписания
+
+        НЕ трогает основную SSE-логику, только дописывает seo_* поля.
+        """
+        # Ждём, чтобы не стартовать одновременно с SSE
+        await asyncio.sleep(15)
+
+        while self.is_running:
+            try:
+                if self._client is None:
+                    await asyncio.sleep(5)
+                    continue
+
+                # Срочный fetch при появлении нового матча
+                urgent = self._needs_seo_fetch
+                if urgent:
+                    self._needs_seo_fetch = False
+
+                # Основной проход
+                for sport_key in self.enabled_sports:
+                    await self._fetch_seo_for_sport(sport_key)
+
+                # Определяем, есть ли матчи без slug'ов
+                has_unenriched = False
+                for m in self._matches_cache.values():
+                    if m.get("player1") and not m.get("seo_match"):
+                        has_unenriched = True
+                        break
+
+                if urgent:
+                    # После срочного — короткая пауза, но не 10 сек
+                    delay = 3.0
+                elif has_unenriched:
+                    delay = self.SEO_INTERVAL_FAST
+                else:
+                    delay = self.SEO_INTERVAL_SLOW
+
+            except asyncio.CancelledError:
+                break
+            except Exception as e:
+                logger.warning(f"[{self.bk_id}] SEO-enricher ошибка: {e}")
+                delay = 30.0
+
+            await asyncio.sleep(delay)
+
+    async def _fetch_seo_for_sport(self, sport_key: str):
+        """
+        Один HTTP-запрос с Accept: application/json — получаем полный
+        снапшот с slug'ами. Обновляем только seo_* поля в кэше.
+        """
+        slug = get_url_slug(self.bk_id, sport_key)
+        if not slug:
+            slug = sport_key.replace('_', '-')
+
+        url = (f"https://new.marathonbet.ru/eag/event-line/api/v1/"
+               f"sports/by-slug/all-tournaments/live?sportSlug={slug}")
+
+        # Ключевое отличие от SSE — Accept: application/json.
+        # Per-request headers перекрывают клиентские.
+        try:
+            resp = await self._client.get(
+                url,
+                headers={"Accept": "application/json"},
+                timeout=20.0,
+            )
+        except Exception as e:
+            logger.debug(f"[{self.bk_id}] [{sport_key}] seo fetch: {e}")
+            return
+
+        if resp.status_code != 200:
+            logger.debug(
+                f"[{self.bk_id}] [{sport_key}] seo HTTP {resp.status_code}"
+            )
+            return
+
+        try:
+            data = resp.json()
+        except Exception:
+            return
+
+        item_map = data.get("itemMap") or {}
+        if not isinstance(item_map, dict):
+            return
+
+        enriched = 0
+        for tournament in item_map.values():
+            if not isinstance(tournament, dict):
+                continue
+            for event in tournament.get("liveEvents") or []:
+                if not isinstance(event, dict):
+                    continue
+                match_id = str(event.get("treeId", ""))
+                if not match_id or match_id not in self._matches_cache:
+                    continue
+
+                seo = event.get("seo") or {}
+                cache = self._matches_cache[match_id]
+                new_sport = seo.get("sportSlug") or ""
+                new_champ = seo.get("champSlug") or ""
+                new_match = seo.get("matchSlug") or ""
+
+                # Пишем только если что-то новое
+                if (cache.get("seo_sport") != new_sport
+                        or cache.get("seo_champ") != new_champ
+                        or cache.get("seo_match") != new_match):
+                    cache["seo_sport"] = new_sport
+                    cache["seo_champ"] = new_champ
+                    cache["seo_match"] = new_match
+                    enriched += 1
+
+        if enriched:
+            logger.info(
+                f"[{self.bk_id}] [{sport_key}] 🏷 Обогащено slug'ами: {enriched}"
+            )
 
     # ============================================================
     # Обработка одного изменения
@@ -214,6 +426,9 @@ class MarathonApiParser(BaseParser):
             if match_id:
                 self._update_selection(match_id, value)
 
+        if match_id := self._match_id_from_path(change.get("path") or []):
+            self._last_update_time[match_id] = time.time()
+
     def _match_id_from_path(self, path: list) -> Optional[str]:
         for p in path:
             if (isinstance(p, dict)
@@ -229,17 +444,29 @@ class MarathonApiParser(BaseParser):
         if SPORT_CODE_TO_KEY.get(event.get("sportCode")) != sport_key:
             return
 
-        if match_id not in self._matches_cache:
+        # ── Новый матч? Ставим флаг для срочного SEO-fetch ──
+        is_new = match_id not in self._matches_cache
+
+        if is_new:
             self._matches_cache[match_id] = {"_last_sent": None}
             self._first_seen[match_id] = time.time()
+            self._needs_seo_fetch = True
 
         cache = self._matches_cache[match_id]
         cache["sport"] = sport_key
+        cache["event_id"] = event.get("eventId")
         cache["player1"] = (event.get("homeTeam", {}).get("members", [{}])[0]
                             .get("name", ""))
         cache["player2"] = (event.get("awayTeam", {}).get("members", [{}])[0]
                             .get("name", ""))
         cache["tournament"] = event.get("header", "")
+
+        # ── SEO slug'и: если в SSE-кадре случайно пришли — сохраняем ──
+        seo = event.get("seo")
+        if isinstance(seo, dict) and seo:
+            cache["seo_sport"] = seo.get("sportSlug") or cache.get("seo_sport", "")
+            cache["seo_champ"] = seo.get("champSlug") or cache.get("seo_champ", "")
+            cache["seo_match"] = seo.get("matchSlug") or cache.get("seo_match", "")
 
         phase = event.get("phase") or {}
         cache["phase_num"] = phase.get("partNumber", 1)
@@ -362,6 +589,8 @@ class MarathonApiParser(BaseParser):
             try:
                 await asyncio.sleep(1)
                 await self._try_send_matches()
+            except asyncio.CancelledError:
+                break
             except Exception as e:
                 logger.error(f"[{self.bk_id}] Ошибка очереди: {e}", exc_info=True)
 
@@ -400,14 +629,22 @@ class MarathonApiParser(BaseParser):
             phase_num = m.get("phase_num", 1)
             phase_name = format_phase(sport_key, phase_num)
 
-            slug = get_url_slug(self.bk_id, sport_key) or 'table-tennis'
-            tour_slug = _slug(m.get("tournament", ""))
-            p1_slug = _slug(m.get("player1", ""))
-            p2_slug = _slug(m.get("player2", ""))
-            match_url = (
-                f"https://new.marathonbet.ru/su/betting/event/"
-                f"{slug}/{tour_slug}/{p1_slug}-vs-{p2_slug}"
-            )
+            # ── URL из SEO-slug'ов ──
+            seo_sport = m.get("seo_sport") or ""
+            seo_champ = m.get("seo_champ") or ""
+            seo_match = m.get("seo_match") or ""
+
+            if seo_champ and seo_match:
+                sport_slug = seo_sport or \
+                    get_url_slug(self.bk_id, sport_key) or "table-tennis"
+                match_url = (
+                    f"https://new.marathonbet.ru/su/betting/event/"
+                    f"{sport_slug}/{seo_champ}/{seo_match}"
+                )
+            else:
+                # Slug'и ещё не подтянулись (новый матч).
+                # Фронт откроет матч кликом по live-разделу.
+                match_url = ""
 
             match = Match(
                 bk_id='marathon',
@@ -472,6 +709,26 @@ class MarathonApiParser(BaseParser):
 
     async def stop(self):
         self.is_running = False
+
+        # 1) Отменяем все дочерние задачи (SSE, queues, seo).
+        # Иначе они продолжат работать с закрытым клиентом
+        # и спамить "Cannot send a request, as the client has been closed".
+        tasks = [t for t in self._bg_tasks if not t.done()]
+        for t in tasks:
+            t.cancel()
+        if tasks:
+            try:
+                await asyncio.wait(tasks, timeout=3.0)
+            except Exception:
+                pass
+        self._bg_tasks.clear()
+
+        # 2) Закрываем HTTP-клиент
         if self._client:
-            await self._client.aclose()
+            try:
+                await self._client.aclose()
+            except Exception:
+                pass
+            self._client = None
+
         logger.info(f"[{self.bk_id}] 🛑 Остановка парсера...")

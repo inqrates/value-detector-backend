@@ -5,9 +5,16 @@ import logging
 from collections import defaultdict
 from core.models import Match
 from core.normalizer import normalizer
-from core.sport_map import format_phase          # <-- ПАТЧ 2a
+from core.sport_map import format_phase
 
 logger = logging.getLogger(__name__)
+
+
+# ── Порог «fast уже много набрал, а slow молчит» ──
+# Реальная задержка послегола — обычно +1…+3 очка. Если fast набрал
+# >= N очков в текущей партии, а slow показывает 0:0 — это потеря
+# данных, а не задержка. Защищает от ложных сигналов (LigaStavok 0:0).
+ZERO_SUB_FAST_THRESHOLD = 4
 
 
 class Detector:
@@ -22,6 +29,8 @@ class Detector:
         self.last_signal_context = {}
         self.last_signal_time = {}
         self.last_global_update = {}
+
+        self._phase_history = defaultdict(dict)
 
         self.STALE_TIMEOUT = 25.0
         self.MIN_CONSENSUS_BKS = 2
@@ -43,6 +52,22 @@ class Detector:
                         f"→ {sorted(self.known_matches[key])}"
                     )
 
+            old = self.states[key].get(match.bk_id)
+            if old is not None:
+                old_phase = (getattr(old, "raw_time", "") or "").strip()
+                new_phase = (getattr(match, "raw_time", "") or "").strip()
+                if old_phase and new_phase and old_phase != new_phase:
+                    self._phase_history[key][match.bk_id] = {
+                        'phase_name': old_phase,
+                        'score1': old.score1,
+                        'score2': old.score2,
+                        'sub1': old.sub_score1,
+                        'sub2': old.sub_score2,
+                        'odds1': old.odds1,
+                        'odds2': old.odds2,
+                        'ts': old.timestamp,
+                    }
+
             self.states[key][match.bk_id] = match
             await self._analyze_match(key)
 
@@ -53,7 +78,6 @@ class Detector:
 
         now = time.time()
 
-        # Удаляем записи старше 30 секунд (предотвращает бесконечный рост задержки)
         expired = [bk for bk, m in bk_states.items() if now - m.timestamp > 30]
         for bk in expired:
             del bk_states[bk]
@@ -102,7 +126,6 @@ class Detector:
         if self._has_parse_bug(majority_score, bk_states, lagging_bks):
             return
 
-        # Таймер консенсуса
         if key not in self.consensus_time or self.consensus_time[key]['score'] != majority_score:
             self.consensus_time[key] = {'score': majority_score, 'time': now}
 
@@ -123,7 +146,6 @@ class Detector:
                 ]
 
                 if active_lagging:
-                    # Вычисляем реальную задержку (максимальное время с последнего обновления)
                     max_delay = 0.0
                     for bk_id in active_lagging:
                         m = bk_states[bk_id]
@@ -132,7 +154,6 @@ class Detector:
                             if delay > max_delay:
                                 max_delay = delay
 
-                    # Ограничиваем максимум 60 секунд
                     if max_delay > 60:
                         max_delay = 60.0
 
@@ -149,23 +170,26 @@ class Detector:
                         self.last_signal_context[key] = current_context
                         self.last_signal_time[key] = now
 
-    # ---------- Хелперы ----------
     @staticmethod
     def _set_number(m) -> int:
         return m.score1 + m.score2 + 1
 
-        # <-- ПАТЧ 2b: хелпер метки фазы
-    def _phase_label(self, m, consensus_score, sport):
-        """
-        Возвращает готовую метку фазы ('4-я партия', '2-й сет', '3-я четверть').
+    @staticmethod
+    def _is_reverse_order(fast_match, slow_match) -> bool:
+        if not fast_match or not slow_match:
+            return False
+        try:
+            fn1 = normalizer.normalize_name(fast_match.player1 or "")
+            fn2 = normalizer.normalize_name(fast_match.player2 or "")
+            sn1 = normalizer.normalize_name(slow_match.player1 or "")
+            sn2 = normalizer.normalize_name(slow_match.player2 or "")
+        except Exception:
+            return False
+        if not (fn1 and fn2 and sn1 and sn2):
+            return False
+        return fn1 == sn2 and fn2 == sn1
 
-        Приоритет:
-          1) raw_time — если в нём сформированная фаза, И слово-маркер
-             соответствует виду спорта. Это защищает от случаев, когда
-             БК кладёт в raw_time чужую формулировку (например, ligastavok
-             пишет 'сет' для настольного тенниса — НЕ примем, уйдём в fallback).
-          2) Вычисление через format_phase(sport, N), где N = сумма партий/сетов + 1.
-        """
+    def _phase_label(self, m, consensus_score, sport):
         raw = (getattr(m, "raw_time", "") or "").strip()
 
         expected_word = {
@@ -191,17 +215,34 @@ class Detector:
         else:
             n = self._set_number(m)
         return format_phase(sport, n)
-    # -- / ПАТЧ 2b -->
 
     def _has_parse_bug(self, majority_score, bk_states, lagging_bks):
+        """
+        Защита от ложных сигналов при «битых» данных у одной из БК.
+
+        Пример: fast sub 6:10, slow sub 0:0 (LigaStavok теряет данные).
+        Это не задержка, а рассинхрон. Пропускаем.
+
+        Раньше был ранний `return False` при score1=score2=0, из-за чего
+        защита не работала в 1-й партии. Теперь смотрим ещё и на sub.
+        """
         m_s1, m_s2, m_sub1, m_sub2 = majority_score
-        if m_s1 == 0 and m_s2 == 0:
+        majority_sub_sum = (m_sub1 or 0) + (m_sub2 or 0)
+
+        if m_s1 == 0 and m_s2 == 0 and majority_sub_sum == 0:
             return False
+
         majority_sub_is_zero = (m_sub1 == 0 and m_sub2 == 0)
+
         for bk_id in lagging_bks:
             m = bk_states[bk_id]
             lag_sub_is_zero = (m.sub_score1 == 0 and m.sub_score2 == 0)
             if majority_sub_is_zero != lag_sub_is_zero:
+                logger.debug(
+                    f"[detector] parse_bug: majority_sub="
+                    f"{m_sub1}:{m_sub2} lag_sub={m.sub_score1}:{m.sub_score2} "
+                    f"bk={bk_id}"
+                )
                 return True
         return False
 
@@ -220,9 +261,20 @@ class Detector:
         m_s1, m_s2, m_sub1, m_sub2 = majority_score
         maj_set = m_s1 + m_s2 + 1
 
+        fast_max_sub = max(m_sub1 or 0, m_sub2 or 0)
+
         for bk_id in lagging_bks:
             m = bk_states[bk_id]
             lag_set = self._set_number(m)
+
+            # ── СТРАХОВКА: slow потерял sub (0:0), а fast уже много набрал ──
+            slow_sub_sum = (m.sub_score1 or 0) + (m.sub_score2 or 0)
+            if slow_sub_sum == 0 and fast_max_sub >= ZERO_SUB_FAST_THRESHOLD:
+                logger.debug(
+                    f"[detector] skip zero-slow-sub bk={bk_id} "
+                    f"fast_sub={m_sub1}:{m_sub2} slow_sub=0:0"
+                )
+                continue
 
             if lag_set < maj_set:
                 if max(m.sub_score1, m.sub_score2) >= 11:
@@ -241,55 +293,78 @@ class Detector:
 
         return False
 
-    # <-- ПАТЧ 2c: _emit_signal с правильной фазой
     async def _emit_signal(self, key, fast_bks, slow_bks, consensus_score, delay, is_first):
         fast_match = self.states[key].get(fast_bks[0])
         if not fast_match:
             return
 
         sport = getattr(fast_match, "sport", "table_tennis") or "table_tennis"
-
         fast_phase = self._phase_label(fast_match, consensus_score, sport)
+
+        prev = self._phase_history.get(key, {}).get(fast_bks[0]) or {}
+        fast_prev_phase = prev.get('phase_name', '') or ''
+        fast_prev_score = [prev.get('score1', 0), prev.get('score2', 0)]
+        fast_prev_sub = [prev.get('sub1', 0), prev.get('sub2', 0)]
+        fast_prev_odds = [prev.get('odds1', 0.0), prev.get('odds2', 0.0)]
+
+        slow_bk = slow_bks[0] if slow_bks else fast_bks[0]
+        slow_match = self.states[key].get(slow_bk)
+
+        reverse = self._is_reverse_order(fast_match, slow_match)
+
+        if slow_match:
+            if reverse:
+                slow_score_pair = [slow_match.score2, slow_match.score1]
+                slow_sub_pair = [slow_match.sub_score2, slow_match.sub_score1]
+                slow_odds_pair = [slow_match.odds2, slow_match.odds1]
+            else:
+                slow_score_pair = [slow_match.score1, slow_match.score2]
+                slow_sub_pair = [slow_match.sub_score1, slow_match.sub_score2]
+                slow_odds_pair = [slow_match.odds1, slow_match.odds2]
+
+            match_id_for_slow = slow_match.match_id
+            match_url = getattr(slow_match, 'match_url', '') or ''
+            if not match_url:
+                match_url = self._get_match_url(slow_bk, match_id_for_slow)
+        else:
+            slow_score_pair = [0, 0]
+            slow_sub_pair = [0, 0]
+            slow_odds_pair = [0.0, 0.0]
+            match_id_for_slow = fast_match.match_id
+            match_url = getattr(fast_match, 'match_url', '') or \
+                        self._get_match_url(fast_bks[0], match_id_for_slow)
 
         slow_info = []
         for bk_id in slow_bks:
             m = self.states[key].get(bk_id)
-            if m:
-                slow_phase = self._phase_label(m, None, sport)
-                slow_info.append(
-                    f"{bk_id} ({slow_phase}) {m.sub_score1}:{m.sub_score2} "
-                    f"(кэфы {m.odds1:.2f}/{m.odds2:.2f})"
-                )
+            if not m:
+                continue
+            rev = self._is_reverse_order(fast_match, m)
+            if rev:
+                ss1, ss2 = m.sub_score2, m.sub_score1
+                o1, o2 = m.odds2, m.odds1
+            else:
+                ss1, ss2 = m.sub_score1, m.sub_score2
+                o1, o2 = m.odds1, m.odds2
+            slow_phase = self._phase_label(m, None, sport)
+            slow_info.append(
+                f"{bk_id} ({slow_phase}) {ss1}:{ss2} (кэфы {o1:.2f}/{o2:.2f})"
+            )
 
         tag = "🚨 НОВЫЙ " if is_first else "⏳ Длится"
+        rev_note = " [порядок команд инвертирован]" if reverse else ""
 
         logger.warning(
-            f"{tag} | {delay:.1f}с | [{sport}] {fast_match.player1} vs {fast_match.player2}\n"
+            f"{tag} | {delay:.1f}с | [{sport}] {fast_match.player1} vs {fast_match.player2}{rev_note}\n"
             f"   ⚡ {', '.join(fast_bks)} ({fast_phase}): {consensus_score[2]}:{consensus_score[3]}\n"
             f"   🐢 " + " | ".join(slow_info)
         )
 
         if self.broadcast_callback:
-            slow_bk = slow_bks[0] if slow_bks else fast_bks[0]
-            slow_match = self.states[key].get(slow_bk)
-            if slow_match:
-                match_id_for_slow = slow_match.match_id
-                # 1) сначала пробуем готовый URL, который собрал парсер
-                match_url = getattr(slow_match, 'match_url', '') or ''
-                # 2) фолбэк — короткий ID-only URL
-                if not match_url:
-                    match_url = self._get_match_url(slow_bk, match_id_for_slow)
-            else:
-                match_id_for_slow = fast_match.match_id  # fallback
-                match_url = getattr(fast_match, 'match_url', '') or \
-                            self._get_match_url(fast_bks[0], match_id_for_slow)
-
-            slow_match = self.states[key].get(slow_bk)
-
             signal_data = {
                 "match_teams": [fast_match.player1, fast_match.player2],
-                "sport": sport,                       # <-- "table_tennis" / "volleyball" / "basketball" / "cyber_basketball"
-                "fast_phase": fast_phase,             # <-- "2-я партия" / "3-й сет" / "4-я четверть"
+                "sport": sport,
+                "fast_phase": fast_phase,
                 "score": [consensus_score[0], consensus_score[1]],
                 "sub_score": [consensus_score[2], consensus_score[3]],
                 "fast_bk": fast_bks[0],
@@ -297,32 +372,30 @@ class Detector:
                 "fast_sub_score": [fast_match.sub_score1, fast_match.sub_score2],
                 "fast_odds": [fast_match.odds1, fast_match.odds2],
                 "slow_bk": slow_bk,
-                "slow_score": [slow_match.score1, slow_match.score2] if slow_match else [0, 0],
-                "slow_sub_score": [slow_match.sub_score1, slow_match.sub_score2] if slow_match else [0, 0],
-                "slow_odds": [slow_match.odds1, slow_match.odds2] if slow_match else [0, 0],
+                "slow_score": slow_score_pair,
+                "slow_sub_score": slow_sub_pair,
+                "slow_odds": slow_odds_pair,
                 "delay": round(delay, 1),
                 "match_id": match_id_for_slow,
                 "match_url": match_url,
                 "is_new": is_first,
                 "tournament": fast_match.tournament,
+                "fast_prev_phase": fast_prev_phase,
+                "fast_prev_score": fast_prev_score,
+                "fast_prev_sub_score": fast_prev_sub,
+                "fast_prev_odds": fast_prev_odds,
             }
             await self.broadcast_callback({"type": "signal", "payload": signal_data})
-    # -- / ПАТЧ 2c -->
 
     def _get_match_url(self, bk_id: str, match_id: str) -> str:
-        """
-        Фолбэк-шаблоны: короткие ID-only URL.
-        Большинство сайтов (SPA) сами редиректят на полный URL,
-        прочитав ID из последнего сегмента.
-        """
         templates = {
-            "fonbet":     "https://fon.bet/live/table-tennis/{id}",
-            "winline":    "https://winline.ru/live/sport/nastolijnyj_tennis/{id}",
-            "ligastavok": "https://www.ligastavok.ru/sports/table-tennis/x-p-id-0-service-id-27-ext-id-{id}",
+            "fonbet":     "https://fon.bet/live/table-tennis/category/x/x/{id}",
+            "winline":    "https://winline.ru/live/sport/nastolijnyj_tennis/event/{id}",
+            "ligastavok": "https://www.ligastavok.ru/sports/table-tennis/x-id-{id}-service-id-27-ext-id-{id}",
             "leon":       "https://leon.ru/bets/table-tennis/{id}",
             "olimp":      "https://www.olimp.bet/live/nastolnyy-tennis-40/x/x-{id}",
             "betcity":    "https://betcity.ru/ru/live/table-tennis/{id}",
-            "marathon":   "https://new.marathonbet.ru/su/betting/event/table-tennis/x/{id}",
+            "marathon":   "https://new.marathonbet.ru/su/betting/event/table-tennis/x/x-vs-x",
             "zenit":      "https://zenit.win/live/134/{id}",
             "sportbet":   "https://sportbet.ru/live/table-tennis/x--x/x-vs-x--{id}?isTime=1&h=all&page=main",
             "baltbet":    "https://baltbet.ru/event/{id}",
@@ -331,7 +404,6 @@ class Detector:
         return tpl.format(id=match_id) if tpl else ""
 
     def _get_match_key(self, p1, p2, sport="table_tennis", tournament=None):
-        """Возвращает строковый ключ (совместим с aggregator._get_key)."""
         n1 = normalizer.normalize_name(p1)
         n2 = normalizer.normalize_name(p2)
         if n1 > n2:

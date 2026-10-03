@@ -1,0 +1,276 @@
+[
+  {
+    "url": "https://api.ligastavok.ru/rest/content/v1/getPromoBlocksList",
+    "method": "POST",
+    "headers": {
+      "cookie": "qrator_jsr=v2.0.1789316517.029.b2d0f486fo1brw3F|g6pE2bKRKmNnq1fR|uBE8xovsTrG57aSbRbSigVd4MONZLH8p6s3n8hwgmcsGy2tRCZMZPGl5QT/0svHG5CxN3ss9hHqvp+iSub0fUWw4VtQ/IgYPrJWOFuksEQ8=-RZ/4xUlitCwC9HW4cI+C+qlEGF4=-00; qrator_jsid2=v2.0.1789316517.029.b2d0f486fo1brw3F|oTPgW08wEdnVbiFy|bgYz2Yg9SKA2F6tg1CIoIFDzy9rsPso29GN85wBzzCm2klVCluq35T2SbfS0Lh2nDH7FNcOwuVAmPC1lnVPspYN5MALOnDZTYAgmlkdo56rXTguKq8QgcjyP29usTCTjvulCmEM0YuWirzUjfJlJ2GHgevW8NlZLwlDaNSgFWA4=-MluQzRMp+6EMWyYYYRccKJ1yHUM=",
+      "origin": "https://www.ligastavok.ru",
+      "referer": "https://www.ligastavok.ru/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "accept": "application/json",
+      "content-type": "application/json",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0",
+      "sec-ch-ua-platform": "\"Windows\"",
+      "x-application-name": "mobile",
+      "x-req-id": "5f47c29c-ac16-24e2-1317-0c5d60599a0b"
+    }
+  },
+  {
+    "url": "https://api.ligastavok.ru/rest/content/v1/selectStaticTextBlocks",
+    "method": "POST",
+    "headers": {
+      "cookie": "qrator_jsr=v2.0.1789316517.029.b2d0f486fo1brw3F|g6pE2bKRKmNnq1fR|uBE8xovsTrG57aSbRbSigVd4MONZLH8p6s3n8hwgmcsGy2tRCZMZPGl5QT/0svHG5CxN3ss9hHqvp+iSub0fUWw4VtQ/IgYPrJWOFuksEQ8=-RZ/4xUlitCwC9HW4cI+C+qlEGF4=-00; qrator_jsid2=v2.0.1789316517.029.b2d0f486fo1brw3F|oTPgW08wEdnVbiFy|bgYz2Yg9SKA2F6tg1CIoIFDzy9rsPso29GN85wBzzCm2klVCluq35T2SbfS0Lh2nDH7FNcOwuVAmPC1lnVPspYN5MALOnDZTYAgmlkdo56rXTguKq8QgcjyP29usTCTjvulCmEM0YuWirzUjfJlJ2GHgevW8NlZLwlDaNSgFWA4=-MluQzRMp+6EMWyYYYRccKJ1yHUM=",
+      "origin": "https://www.ligastavok.ru",
+      "referer": "https://www.ligastavok.ru/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "accept": "application/json",
+      "content-type": "application/json",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0",
+      "sec-ch-ua-platform": "\"Windows\"",
+      "x-application-name": "mobile",
+      "x-req-id": "28887d59-b99d-06df-61f7-1c7483565d64"
+    }
+  },
+  {
+    "url": "https://lds-api-sites.ligastavok.ru/rest/events/v8/tournamentTree",
+    "method": "POST",
+    "headers": {
+      "cookie": "qrator_jsr=v2.0.1789316517.029.b2d0f486fo1brw3F|g6pE2bKRKmNnq1fR|uBE8xovsTrG57aSbRbSigVd4MONZLH8p6s3n8hwgmcsGy2tRCZMZPGl5QT/0svHG5CxN3ss9hHqvp+iSub0fUWw4VtQ/IgYPrJWOFuksEQ8=-RZ/4xUlitCwC9HW4cI+C+qlEGF4=-00; qrator_jsid2=v2.0.1789316517.029.b2d0f486fo1brw3F|oTPgW08wEdnVbiFy|bgYz2Yg9SKA2F6tg1CIoIFDzy9rsPso29GN85wBzzCm2klVCluq35T2SbfS0Lh2nDH7FNcOwuVAmPC1lnVPspYN5MALOnDZTYAgmlkdo56rXTguKq8QgcjyP29usTCTjvulCmEM0YuWirzUjfJlJ2GHgevW8NlZLwlDaNSgFWA4=-MluQzRMp+6EMWyYYYRccKJ1yHUM=",
+      "origin": "https://www.ligastavok.ru",
+      "referer": "https://www.ligastavok.ru/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "accept": "application/json",
+      "content-type": "application/json",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0",
+      "sec-ch-ua-platform": "\"Windows\"",
+      "x-application-name": "mobile",
+      "x-req-id": "2e5f8a1e-bdac-ff5b-bdb9-78d9ebe2b42a"
+    }
+  },
+  {
+    "url": "https://lds-api-sites.ligastavok.ru/rest/events/v8/eventsList",
+    "method": "POST",
+    "headers": {
+      "cookie": "qrator_jsr=v2.0.1789316517.029.b2d0f486fo1brw3F|g6pE2bKRKmNnq1fR|uBE8xovsTrG57aSbRbSigVd4MONZLH8p6s3n8hwgmcsGy2tRCZMZPGl5QT/0svHG5CxN3ss9hHqvp+iSub0fUWw4VtQ/IgYPrJWOFuksEQ8=-RZ/4xUlitCwC9HW4cI+C+qlEGF4=-00; qrator_jsid2=v2.0.1789316517.029.b2d0f486fo1brw3F|oTPgW08wEdnVbiFy|bgYz2Yg9SKA2F6tg1CIoIFDzy9rsPso29GN85wBzzCm2klVCluq35T2SbfS0Lh2nDH7FNcOwuVAmPC1lnVPspYN5MALOnDZTYAgmlkdo56rXTguKq8QgcjyP29usTCTjvulCmEM0YuWirzUjfJlJ2GHgevW8NlZLwlDaNSgFWA4=-MluQzRMp+6EMWyYYYRccKJ1yHUM=",
+      "origin": "https://www.ligastavok.ru",
+      "referer": "https://www.ligastavok.ru/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "accept": "application/json",
+      "content-type": "application/json",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0",
+      "sec-ch-ua-platform": "\"Windows\"",
+      "x-application-name": "mobile",
+      "x-req-id": "3d1b3219-b347-205c-6ab9-bb47a36edab2"
+    }
+  },
+  {
+    "url": "https://lds-api-sites.ligastavok.ru/rest/events/v2/filter",
+    "method": "POST",
+    "headers": {
+      "cookie": "qrator_jsr=v2.0.1789316517.029.b2d0f486fo1brw3F|g6pE2bKRKmNnq1fR|uBE8xovsTrG57aSbRbSigVd4MONZLH8p6s3n8hwgmcsGy2tRCZMZPGl5QT/0svHG5CxN3ss9hHqvp+iSub0fUWw4VtQ/IgYPrJWOFuksEQ8=-RZ/4xUlitCwC9HW4cI+C+qlEGF4=-00; qrator_jsid2=v2.0.1789316517.029.b2d0f486fo1brw3F|oTPgW08wEdnVbiFy|bgYz2Yg9SKA2F6tg1CIoIFDzy9rsPso29GN85wBzzCm2klVCluq35T2SbfS0Lh2nDH7FNcOwuVAmPC1lnVPspYN5MALOnDZTYAgmlkdo56rXTguKq8QgcjyP29usTCTjvulCmEM0YuWirzUjfJlJ2GHgevW8NlZLwlDaNSgFWA4=-MluQzRMp+6EMWyYYYRccKJ1yHUM=",
+      "origin": "https://www.ligastavok.ru",
+      "referer": "https://www.ligastavok.ru/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "accept": "application/json",
+      "content-type": "application/json",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0",
+      "sec-ch-ua-platform": "\"Windows\"",
+      "x-application-name": "mobile",
+      "x-req-id": "8f293a5f-f510-f054-640f-b0c48b9f2bf9"
+    }
+  },
+  {
+    "url": "https://api.ligastavok.ru/rest/content/v1/hotplates?count=20",
+    "method": "GET",
+    "headers": {
+      "cookie": "qrator_jsr=v2.0.1789316517.029.b2d0f486fo1brw3F|g6pE2bKRKmNnq1fR|uBE8xovsTrG57aSbRbSigVd4MONZLH8p6s3n8hwgmcsGy2tRCZMZPGl5QT/0svHG5CxN3ss9hHqvp+iSub0fUWw4VtQ/IgYPrJWOFuksEQ8=-RZ/4xUlitCwC9HW4cI+C+qlEGF4=-00; qrator_jsid2=v2.0.1789316517.029.b2d0f486fo1brw3F|oTPgW08wEdnVbiFy|bgYz2Yg9SKA2F6tg1CIoIFDzy9rsPso29GN85wBzzCm2klVCluq35T2SbfS0Lh2nDH7FNcOwuVAmPC1lnVPspYN5MALOnDZTYAgmlkdo56rXTguKq8QgcjyP29usTCTjvulCmEM0YuWirzUjfJlJ2GHgevW8NlZLwlDaNSgFWA4=-MluQzRMp+6EMWyYYYRccKJ1yHUM=",
+      "origin": "https://www.ligastavok.ru",
+      "referer": "https://www.ligastavok.ru/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "accept": "application/json",
+      "content-type": "application/json",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0",
+      "sec-ch-ua-platform": "\"Windows\"",
+      "x-application-name": "mobile",
+      "x-req-id": "474bd2ed-93f0-f255-85da-fe7b8b707769"
+    }
+  },
+  {
+    "url": "https://lds-api-sites.ligastavok.ru/rest/events/v8/actionLines",
+    "method": "POST",
+    "headers": {
+      "cookie": "qrator_jsr=v2.0.1789316517.029.b2d0f486fo1brw3F|g6pE2bKRKmNnq1fR|uBE8xovsTrG57aSbRbSigVd4MONZLH8p6s3n8hwgmcsGy2tRCZMZPGl5QT/0svHG5CxN3ss9hHqvp+iSub0fUWw4VtQ/IgYPrJWOFuksEQ8=-RZ/4xUlitCwC9HW4cI+C+qlEGF4=-00; qrator_jsid2=v2.0.1789316517.029.b2d0f486fo1brw3F|oTPgW08wEdnVbiFy|bgYz2Yg9SKA2F6tg1CIoIFDzy9rsPso29GN85wBzzCm2klVCluq35T2SbfS0Lh2nDH7FNcOwuVAmPC1lnVPspYN5MALOnDZTYAgmlkdo56rXTguKq8QgcjyP29usTCTjvulCmEM0YuWirzUjfJlJ2GHgevW8NlZLwlDaNSgFWA4=-MluQzRMp+6EMWyYYYRccKJ1yHUM=",
+      "origin": "https://www.ligastavok.ru",
+      "referer": "https://www.ligastavok.ru/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "accept": "application/json",
+      "content-type": "application/json",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0",
+      "sec-ch-ua-platform": "\"Windows\"",
+      "x-application-name": "mobile",
+      "x-req-id": "6c777e58-fb1c-c744-e29f-f9868c30dede"
+    }
+  },
+  {
+    "url": "https://api.ligastavok.ru/rest/content/v1/techAnnouncements",
+    "method": "POST",
+    "headers": {
+      "cookie": "qrator_jsr=v2.0.1789316517.029.b2d0f486fo1brw3F|g6pE2bKRKmNnq1fR|uBE8xovsTrG57aSbRbSigVd4MONZLH8p6s3n8hwgmcsGy2tRCZMZPGl5QT/0svHG5CxN3ss9hHqvp+iSub0fUWw4VtQ/IgYPrJWOFuksEQ8=-RZ/4xUlitCwC9HW4cI+C+qlEGF4=-00; qrator_jsid2=v2.0.1789316517.029.b2d0f486fo1brw3F|oTPgW08wEdnVbiFy|bgYz2Yg9SKA2F6tg1CIoIFDzy9rsPso29GN85wBzzCm2klVCluq35T2SbfS0Lh2nDH7FNcOwuVAmPC1lnVPspYN5MALOnDZTYAgmlkdo56rXTguKq8QgcjyP29usTCTjvulCmEM0YuWirzUjfJlJ2GHgevW8NlZLwlDaNSgFWA4=-MluQzRMp+6EMWyYYYRccKJ1yHUM=",
+      "origin": "https://www.ligastavok.ru",
+      "referer": "https://www.ligastavok.ru/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "accept": "application/json",
+      "content-type": "application/json",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0",
+      "sec-ch-ua-platform": "\"Windows\"",
+      "x-application-name": "mobile",
+      "x-req-id": "b0074cb0-6ae3-6833-78e0-131ef0141c98"
+    }
+  },
+  {
+    "url": "https://api.ligastavok.ru/rest/content/v1/selectStaticTextBlocks",
+    "method": "POST",
+    "headers": {
+      "cookie": "qrator_jsr=v2.0.1789316517.029.b2d0f486fo1brw3F|g6pE2bKRKmNnq1fR|uBE8xovsTrG57aSbRbSigVd4MONZLH8p6s3n8hwgmcsGy2tRCZMZPGl5QT/0svHG5CxN3ss9hHqvp+iSub0fUWw4VtQ/IgYPrJWOFuksEQ8=-RZ/4xUlitCwC9HW4cI+C+qlEGF4=-00; qrator_jsid2=v2.0.1789316517.029.b2d0f486fo1brw3F|oTPgW08wEdnVbiFy|bgYz2Yg9SKA2F6tg1CIoIFDzy9rsPso29GN85wBzzCm2klVCluq35T2SbfS0Lh2nDH7FNcOwuVAmPC1lnVPspYN5MALOnDZTYAgmlkdo56rXTguKq8QgcjyP29usTCTjvulCmEM0YuWirzUjfJlJ2GHgevW8NlZLwlDaNSgFWA4=-MluQzRMp+6EMWyYYYRccKJ1yHUM=",
+      "origin": "https://www.ligastavok.ru",
+      "referer": "https://www.ligastavok.ru/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "accept": "application/json",
+      "content-type": "application/json",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0",
+      "sec-ch-ua-platform": "\"Windows\"",
+      "x-application-name": "mobile",
+      "x-req-id": "f7d516a7-0a72-6f82-ca92-0dde4d82c7fc"
+    }
+  },
+  {
+    "url": "https://lds-api-sites.ligastavok.ru/rest/events/v8/eventsList",
+    "method": "POST",
+    "headers": {
+      "cookie": "qrator_jsr=v2.0.1789316517.029.b2d0f486fo1brw3F|g6pE2bKRKmNnq1fR|uBE8xovsTrG57aSbRbSigVd4MONZLH8p6s3n8hwgmcsGy2tRCZMZPGl5QT/0svHG5CxN3ss9hHqvp+iSub0fUWw4VtQ/IgYPrJWOFuksEQ8=-RZ/4xUlitCwC9HW4cI+C+qlEGF4=-00; qrator_jsid2=v2.0.1789316517.029.b2d0f486fo1brw3F|oTPgW08wEdnVbiFy|bgYz2Yg9SKA2F6tg1CIoIFDzy9rsPso29GN85wBzzCm2klVCluq35T2SbfS0Lh2nDH7FNcOwuVAmPC1lnVPspYN5MALOnDZTYAgmlkdo56rXTguKq8QgcjyP29usTCTjvulCmEM0YuWirzUjfJlJ2GHgevW8NlZLwlDaNSgFWA4=-MluQzRMp+6EMWyYYYRccKJ1yHUM=",
+      "origin": "https://www.ligastavok.ru",
+      "referer": "https://www.ligastavok.ru/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "accept": "application/json",
+      "content-type": "application/json",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0",
+      "sec-ch-ua-platform": "\"Windows\"",
+      "x-application-name": "mobile",
+      "x-req-id": "c3889ce0-b9db-2284-6cc1-684868d32de3"
+    }
+  },
+  {
+    "url": "https://lds-api-sites.ligastavok.ru/rest/events/v2/filter",
+    "method": "POST",
+    "headers": {
+      "cookie": "qrator_jsr=v2.0.1789316517.029.b2d0f486fo1brw3F|g6pE2bKRKmNnq1fR|uBE8xovsTrG57aSbRbSigVd4MONZLH8p6s3n8hwgmcsGy2tRCZMZPGl5QT/0svHG5CxN3ss9hHqvp+iSub0fUWw4VtQ/IgYPrJWOFuksEQ8=-RZ/4xUlitCwC9HW4cI+C+qlEGF4=-00; qrator_jsid2=v2.0.1789316517.029.b2d0f486fo1brw3F|oTPgW08wEdnVbiFy|bgYz2Yg9SKA2F6tg1CIoIFDzy9rsPso29GN85wBzzCm2klVCluq35T2SbfS0Lh2nDH7FNcOwuVAmPC1lnVPspYN5MALOnDZTYAgmlkdo56rXTguKq8QgcjyP29usTCTjvulCmEM0YuWirzUjfJlJ2GHgevW8NlZLwlDaNSgFWA4=-MluQzRMp+6EMWyYYYRccKJ1yHUM=",
+      "origin": "https://www.ligastavok.ru",
+      "referer": "https://www.ligastavok.ru/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "accept": "application/json",
+      "content-type": "application/json",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0",
+      "sec-ch-ua-platform": "\"Windows\"",
+      "x-application-name": "mobile",
+      "x-req-id": "4a2fcc43-fc64-1943-1950-5bbe94ad1dd4"
+    }
+  },
+  {
+    "url": "https://lds-api-sites.ligastavok.ru/rest/events/v8/eventsList",
+    "method": "POST",
+    "headers": {
+      "cookie": "qrator_jsr=v2.0.1789316517.029.b2d0f486fo1brw3F|g6pE2bKRKmNnq1fR|uBE8xovsTrG57aSbRbSigVd4MONZLH8p6s3n8hwgmcsGy2tRCZMZPGl5QT/0svHG5CxN3ss9hHqvp+iSub0fUWw4VtQ/IgYPrJWOFuksEQ8=-RZ/4xUlitCwC9HW4cI+C+qlEGF4=-00; qrator_jsid2=v2.0.1789316517.029.b2d0f486fo1brw3F|oTPgW08wEdnVbiFy|bgYz2Yg9SKA2F6tg1CIoIFDzy9rsPso29GN85wBzzCm2klVCluq35T2SbfS0Lh2nDH7FNcOwuVAmPC1lnVPspYN5MALOnDZTYAgmlkdo56rXTguKq8QgcjyP29usTCTjvulCmEM0YuWirzUjfJlJ2GHgevW8NlZLwlDaNSgFWA4=-MluQzRMp+6EMWyYYYRccKJ1yHUM=",
+      "origin": "https://www.ligastavok.ru",
+      "referer": "https://www.ligastavok.ru/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "accept": "application/json",
+      "content-type": "application/json",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0",
+      "sec-ch-ua-platform": "\"Windows\"",
+      "x-application-name": "mobile",
+      "x-req-id": "10a5ed03-7bc9-c2b1-d67d-bd7e225c37f1"
+    }
+  },
+  {
+    "url": "https://lds-api-sites.ligastavok.ru/rest/events/v2/filter",
+    "method": "POST",
+    "headers": {
+      "cookie": "qrator_jsr=v2.0.1789316517.029.b2d0f486fo1brw3F|g6pE2bKRKmNnq1fR|uBE8xovsTrG57aSbRbSigVd4MONZLH8p6s3n8hwgmcsGy2tRCZMZPGl5QT/0svHG5CxN3ss9hHqvp+iSub0fUWw4VtQ/IgYPrJWOFuksEQ8=-RZ/4xUlitCwC9HW4cI+C+qlEGF4=-00; qrator_jsid2=v2.0.1789316517.029.b2d0f486fo1brw3F|oTPgW08wEdnVbiFy|bgYz2Yg9SKA2F6tg1CIoIFDzy9rsPso29GN85wBzzCm2klVCluq35T2SbfS0Lh2nDH7FNcOwuVAmPC1lnVPspYN5MALOnDZTYAgmlkdo56rXTguKq8QgcjyP29usTCTjvulCmEM0YuWirzUjfJlJ2GHgevW8NlZLwlDaNSgFWA4=-MluQzRMp+6EMWyYYYRccKJ1yHUM=",
+      "origin": "https://www.ligastavok.ru",
+      "referer": "https://www.ligastavok.ru/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "accept": "application/json",
+      "content-type": "application/json",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0",
+      "sec-ch-ua-platform": "\"Windows\"",
+      "x-application-name": "mobile",
+      "x-req-id": "a24c717f-75b4-4034-e905-315354a27f89"
+    }
+  },
+  {
+    "url": "https://www.ligastavok.ru/api/fl/idgib-w-ligastavok",
+    "method": "GET",
+    "headers": {
+      "accept": "*/*",
+      "cookie": "qrator_jsr=v2.0.1789316517.029.b2d0f486fo1brw3F|g6pE2bKRKmNnq1fR|uBE8xovsTrG57aSbRbSigVd4MONZLH8p6s3n8hwgmcsGy2tRCZMZPGl5QT/0svHG5CxN3ss9hHqvp+iSub0fUWw4VtQ/IgYPrJWOFuksEQ8=-RZ/4xUlitCwC9HW4cI+C+qlEGF4=-00; qrator_jsid2=v2.0.1789316517.029.b2d0f486fo1brw3F|oTPgW08wEdnVbiFy|bgYz2Yg9SKA2F6tg1CIoIFDzy9rsPso29GN85wBzzCm2klVCluq35T2SbfS0Lh2nDH7FNcOwuVAmPC1lnVPspYN5MALOnDZTYAgmlkdo56rXTguKq8QgcjyP29usTCTjvulCmEM0YuWirzUjfJlJ2GHgevW8NlZLwlDaNSgFWA4=-MluQzRMp+6EMWyYYYRccKJ1yHUM=; ab-test-nardsLanding=orANFMZsmQvGxnKQo-VCI; ab-test-redirectNew=g_7ie8veGt9yCbaT9jg5Q; ab-test-bonus-offer-type=uJEYFaPrrsc3b9PVIhEYe; ls-current-theme=light; web-vitals-ls=true; __zzatgib-w-ligastavok=MDA0dBA=Fz2+aQ==; __zzatgib-w-ligastavok=MDA0dBA=Fz2+aQ==",
+      "referer": "https://www.ligastavok.ru/live",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "baggage": "sentry-environment=production,sentry-release=c5a106aa__bf_pb_28756__1034608,sentry-public_key=010aefd2eb2b30e7712b4c040863667b,sentry-trace_id=ddd648850c8e4fb492fa736a60652151,sentry-sample_rate=0.1,sentry-sampled=false",
+      "sec-ch-prefers-color-scheme": "light",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0",
+      "sec-ch-ua-platform": "\"Windows\"",
+      "sentry-trace": "ddd648850c8e4fb492fa736a60652151-8808ed02550990da-0",
+      "x-cfids": "-"
+    }
+  },
+  {
+    "url": "https://www.ligastavok.ru/api/fl?u=60559170-7cda-11ef-802a-2de31a000000&cfidsgib-w-ligastavok=oq0gx%2BxNfWQbzUO2gFpSzMwFOiJIFdBgW5JncBYdCUBEILRreYM%2BpvizfasJEEHW5pWMeFEUFaoei%2BB4t1LVEm22JdbG%2FBiEQSALVg%2BapwjbmQoEe5jFNbdzQPq3yFb%2FppGLckHDOZ%2BmyK6ETPBVAsiH",
+    "method": "POST",
+    "headers": {
+      "accept": "*/*",
+      "content-type": "text/plain;charset=UTF-8",
+      "cookie": "qrator_jsr=v2.0.1789316517.029.b2d0f486fo1brw3F|g6pE2bKRKmNnq1fR|uBE8xovsTrG57aSbRbSigVd4MONZLH8p6s3n8hwgmcsGy2tRCZMZPGl5QT/0svHG5CxN3ss9hHqvp+iSub0fUWw4VtQ/IgYPrJWOFuksEQ8=-RZ/4xUlitCwC9HW4cI+C+qlEGF4=-00; qrator_jsid2=v2.0.1789316517.029.b2d0f486fo1brw3F|oTPgW08wEdnVbiFy|bgYz2Yg9SKA2F6tg1CIoIFDzy9rsPso29GN85wBzzCm2klVCluq35T2SbfS0Lh2nDH7FNcOwuVAmPC1lnVPspYN5MALOnDZTYAgmlkdo56rXTguKq8QgcjyP29usTCTjvulCmEM0YuWirzUjfJlJ2GHgevW8NlZLwlDaNSgFWA4=-MluQzRMp+6EMWyYYYRccKJ1yHUM=; ab-test-nardsLanding=orANFMZsmQvGxnKQo-VCI; ab-test-redirectNew=g_7ie8veGt9yCbaT9jg5Q; ab-test-bonus-offer-type=uJEYFaPrrsc3b9PVIhEYe; ls-current-theme=light; web-vitals-ls=true; __zzatgib-w-ligastavok=MDA0dBA=Fz2+aQ==; __zzatgib-w-ligastavok=MDA0dBA=Fz2+aQ==; cfidsgib-w-ligastavok=oq0gx+xNfWQbzUO2gFpSzMwFOiJIFdBgW5JncBYdCUBEILRreYM+pvizfasJEEHW5pWMeFEUFaoei+B4t1LVEm22JdbG/BiEQSALVg+apwjbmQoEe5jFNbdzQPq3yFb/ppGLckHDOZ+myK6ETPBVAsiH; cfidsgib-w-ligastavok=oq0gx+xNfWQbzUO2gFpSzMwFOiJIFdBgW5JncBYdCUBEILRreYM+pvizfasJEEHW5pWMeFEUFaoei+B4t1LVEm22JdbG/BiEQSALVg+apwjbmQoEe5jFNbdzQPq3yFb/ppGLckHDOZ+myK6ETPBVAsiH; cfidsgib-w-ligastavok=oq0gx+xNfWQbzUO2gFpSzMwFOiJIFdBgW5JncBYdCUBEILRreYM+pvizfasJEEHW5pWMeFEUFaoei+B4t1LVEm22JdbG/BiEQSALVg+apwjbmQoEe5jFNbdzQPq3yFb/ppGLckHDOZ+myK6ETPBVAsiH",
+      "origin": "https://www.ligastavok.ru",
+      "referer": "https://www.ligastavok.ru/live",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "baggage": "sentry-environment=production,sentry-release=c5a106aa__bf_pb_28756__1034608,sentry-public_key=010aefd2eb2b30e7712b4c040863667b,sentry-trace_id=ddd648850c8e4fb492fa736a60652151,sentry-sample_rate=0.1,sentry-sampled=false",
+      "sec-ch-prefers-color-scheme": "light",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0",
+      "sec-ch-ua-platform": "\"Windows\"",
+      "sentry-trace": "ddd648850c8e4fb492fa736a60652151-a784db228deea687-0"
+    }
+  },
+  {
+    "url": "https://www.ligastavok.ru/api/fl?u=60559170-7cda-11ef-802a-2de31a000000&cfidsgib-w-ligastavok=WMHtzmhLttoY%2BFHeYjhjdkmAyGvkqhhtwOGQDewlFUBnmwbt2Fj0xcaDb0%2FBCjJaGc4oDz9xuB5tD9jDROtCHA9JPPwhNHAihGWQByAmE4pzzFzLxs76gMuaF7KNws2C0G%2BzK2hqIA%2B1FKupQr%2BfaE5GgxR5kAz8kqL3",
+    "method": "POST",
+    "headers": {
+      "accept": "*/*",
+      "content-type": "text/plain;charset=UTF-8",
+      "cookie": "qrator_jsr=v2.0.1789316517.029.b2d0f486fo1brw3F|g6pE2bKRKmNnq1fR|uBE8xovsTrG57aSbRbSigVd4MONZLH8p6s3n8hwgmcsGy2tRCZMZPGl5QT/0svHG5CxN3ss9hHqvp+iSub0fUWw4VtQ/IgYPrJWOFuksEQ8=-RZ/4xUlitCwC9HW4cI+C+qlEGF4=-00; qrator_jsid2=v2.0.1789316517.029.b2d0f486fo1brw3F|oTPgW08wEdnVbiFy|bgYz2Yg9SKA2F6tg1CIoIFDzy9rsPso29GN85wBzzCm2klVCluq35T2SbfS0Lh2nDH7FNcOwuVAmPC1lnVPspYN5MALOnDZTYAgmlkdo56rXTguKq8QgcjyP29usTCTjvulCmEM0YuWirzUjfJlJ2GHgevW8NlZLwlDaNSgFWA4=-MluQzRMp+6EMWyYYYRccKJ1yHUM=; ab-test-nardsLanding=orANFMZsmQvGxnKQo-VCI; ab-test-redirectNew=g_7ie8veGt9yCbaT9jg5Q; ab-test-bonus-offer-type=uJEYFaPrrsc3b9PVIhEYe; ls-current-theme=light; web-vitals-ls=true; __zzatgib-w-ligastavok=MDA0dBA=Fz2+aQ==; __zzatgib-w-ligastavok=MDA0dBA=Fz2+aQ==; _ym_debug=0; gsscgib-w-ligastavok=gINeTIJS/PbQIt3c4UvY9GFQK43wg6FPffws/roIs2jqTRemJGg+eMDCb2WmmQbxSkU+3M9OlupUaHDSf776DFCq57vTu39fxxGVkx7z2eLOGY+MvpnxNvml2wgwCKalmwyY4k+f8ECDxItAfsCUXaAhyPYmKdcB+XnE/7e0vUu1xdXDaaynvJlAsIUYfHtJHBvrMTZuh8Qy3wLgBHaD77v9tDfb+2dNfWvbtUQGx19hXEfutNnMbzXL+MiI3PHt2mQw8zp/; cfidsgib-w-ligastavok=WMHtzmhLttoY+FHeYjhjdkmAyGvkqhhtwOGQDewlFUBnmwbt2Fj0xcaDb0/BCjJaGc4oDz9xuB5tD9jDROtCHA9JPPwhNHAihGWQByAmE4pzzFzLxs76gMuaF7KNws2C0G+zK2hqIA+1FKupQr+faE5GgxR5kAz8kqL3; cfidsgib-w-ligastavok=WMHtzmhLttoY+FHeYjhjdkmAyGvkqhhtwOGQDewlFUBnmwbt2Fj0xcaDb0/BCjJaGc4oDz9xuB5tD9jDROtCHA9JPPwhNHAihGWQByAmE4pzzFzLxs76gMuaF7KNws2C0G+zK2hqIA+1FKupQr+faE5GgxR5kAz8kqL3; cfidsgib-w-ligastavok=WMHtzmhLttoY+FHeYjhjdkmAyGvkqhhtwOGQDewlFUBnmwbt2Fj0xcaDb0/BCjJaGc4oDz9xuB5tD9jDROtCHA9JPPwhNHAihGWQByAmE4pzzFzLxs76gMuaF7KNws2C0G+zK2hqIA+1FKupQr+faE5GgxR5kAz8kqL3; gsscgib-w-ligastavok=gINeTIJS/PbQIt3c4UvY9GFQK43wg6FPffws/roIs2jqTRemJGg+eMDCb2WmmQbxSkU+3M9OlupUaHDSf776DFCq57vTu39fxxGVkx7z2eLOGY+MvpnxNvml2wgwCKalmwyY4k+f8ECDxItAfsCUXaAhyPYmKdcB+XnE/7e0vUu1xdXDaaynvJlAsIUYfHtJHBvrMTZuh8Qy3wLgBHaD77v9tDfb+2dNfWvbtUQGx19hXEfutNnMbzXL+MiI3PHt2mQw8zp/; gsscgib-w-ligastavok=gINeTIJS/PbQIt3c4UvY9GFQK43wg6FPffws/roIs2jqTRemJGg+eMDCb2WmmQbxSkU+3M9OlupUaHDSf776DFCq57vTu39fxxGVkx7z2eLOGY+MvpnxNvml2wgwCKalmwyY4k+f8ECDxItAfsCUXaAhyPYmKdcB+XnE/7e0vUu1xdXDaaynvJlAsIUYfHtJHBvrMTZuh8Qy3wLgBHaD77v9tDfb+2dNfWvbtUQGx19hXEfutNnMbzXL+MiI3PHt2mQw8zp/; _ga=GA1.1.421494064.1789316528; _ym_uid=1789316528245946885; _ym_d=1789316528; _ga_Y35SX19KN6=GS2.1.s1789316527$o1$g1$t1789316528$j59$l0$h166700697",
+      "origin": "https://www.ligastavok.ru",
+      "referer": "https://www.ligastavok.ru/live",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "baggage": "sentry-environment=production,sentry-release=c5a106aa__bf_pb_28756__1034608,sentry-public_key=010aefd2eb2b30e7712b4c040863667b,sentry-trace_id=ddd648850c8e4fb492fa736a60652151,sentry-sample_rate=0.1,sentry-sampled=false",
+      "sec-ch-prefers-color-scheme": "light",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0",
+      "sec-ch-ua-platform": "\"Windows\"",
+      "sentry-trace": "ddd648850c8e4fb492fa736a60652151-bad9b06c6f3ae0d5-0"
+    }
+  }
+]

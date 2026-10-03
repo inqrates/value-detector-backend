@@ -1,0 +1,227 @@
+[
+  {
+    "url": "https://zenit.win/ajax/locale/get?name=default",
+    "method": "GET",
+    "body": null,
+    "headers": {
+      "accept": "application/json, text/plain, */*",
+      "cookie": "imprint=0945a2abfac46dbeca57ed64cb9c337e",
+      "referer": "https://zenit.win/live",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "frontversion": "1.72.1",
+      "imprinthash": "0945a2abfac46dbeca57ed64cb9c337e",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0",
+      "sec-ch-ua-platform": "\"Windows\"",
+      "sentry-trace": "5427198bdcb54286ad4533c3210ce472-8b6eb545a7e78adc-0"
+    }
+  },
+  {
+    "url": "https://zenit.win/ajax/data/get?timezone=1",
+    "method": "GET",
+    "body": null,
+    "headers": {
+      "accept": "application/json, text/plain, */*",
+      "cookie": "imprint=0945a2abfac46dbeca57ed64cb9c337e",
+      "referer": "https://zenit.win/live",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "frontversion": "1.72.1",
+      "imprinthash": "0945a2abfac46dbeca57ed64cb9c337e",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0",
+      "sec-ch-ua-platform": "\"Windows\"",
+      "sentry-trace": "5427198bdcb54286ad4533c3210ce472-898f33d41e85b39e-0"
+    }
+  },
+  {
+    "url": "https://zenit.win/ajax/account/data?force=0&host=zenit.win",
+    "method": "GET",
+    "body": null,
+    "headers": {
+      "accept": "application/json, text/plain, */*",
+      "cookie": "imprint=0945a2abfac46dbeca57ed64cb9c337e",
+      "referer": "https://zenit.win/live",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "frontversion": "1.72.1",
+      "imprinthash": "0945a2abfac46dbeca57ed64cb9c337e",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0",
+      "sec-ch-ua-platform": "\"Windows\"",
+      "sentry-trace": "5427198bdcb54286ad4533c3210ce472-b6cab3f488688724-0"
+    }
+  },
+  {
+    "url": "https://zenit.win/ajax/company/support/get_channel",
+    "method": "GET",
+    "body": null,
+    "headers": {
+      "accept": "application/json, text/plain, */*",
+      "cookie": "imprint=0945a2abfac46dbeca57ed64cb9c337e",
+      "referer": "https://zenit.win/live",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "frontversion": "1.72.1",
+      "imprinthash": "0945a2abfac46dbeca57ed64cb9c337e",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0",
+      "sec-ch-ua-platform": "\"Windows\"",
+      "sentry-trace": "5427198bdcb54286ad4533c3210ce472-968d04ffb80b615f-0"
+    }
+  },
+  {
+    "url": "https://zenit.win/ajax/seo/get_page_seo_tags",
+    "method": "POST",
+    "body": {
+      "page": "/live"
+    },
+    "headers": {
+      "accept": "application/json, text/plain, */*",
+      "content-type": "application/x-www-form-urlencoded",
+      "cookie": "imprint=0945a2abfac46dbeca57ed64cb9c337e",
+      "origin": "https://zenit.win",
+      "referer": "https://zenit.win/live",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "frontversion": "1.72.1",
+      "imprinthash": "0945a2abfac46dbeca57ed64cb9c337e",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0",
+      "sec-ch-ua-platform": "\"Windows\"",
+      "sentry-trace": "5427198bdcb54286ad4533c3210ce472-82b05f7052f45dc0-0"
+    }
+  },
+  {
+    "url": "https://zenit.win/ajax/account/data/custom",
+    "method": "POST",
+    "body": {
+      "timeZoneIANA": "Asia/Yekaterinburg"
+    },
+    "headers": {
+      "accept": "application/json, text/plain, */*",
+      "content-type": "application/x-www-form-urlencoded",
+      "cookie": "imprint=0945a2abfac46dbeca57ed64cb9c337e; lang=1; timezone=3; PHPSESSID=0B4A1F2A09833904CA20561F1C5A8270B5FE785534CC1A582D48685C46EC3D31D348E5BAE09939FF; user_logged_in=0",
+      "origin": "https://zenit.win",
+      "referer": "https://zenit.win/live",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "frontversion": "1.72.1",
+      "imprinthash": "0945a2abfac46dbeca57ed64cb9c337e",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0",
+      "sec-ch-ua-platform": "\"Windows\"",
+      "sentry-trace": "5427198bdcb54286ad4533c3210ce472-9ca16e26ba9b4870-0"
+    }
+  },
+  {
+    "url": "https://zenit.win/pay/api/v1/references/icons?site_region=2&type=2",
+    "method": "GET",
+    "body": null,
+    "headers": {
+      "accept": "application/json, text/plain, */*",
+      "cookie": "imprint=0945a2abfac46dbeca57ed64cb9c337e; lang=1; timezone=3; PHPSESSID=0B4A1F2A09833904CA20561F1C5A8270B5FE785534CC1A582D48685C46EC3D31D348E5BAE09939FF; user_logged_in=0",
+      "referer": "https://zenit.win/live",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "frontversion": "1.72.1",
+      "imprinthash": "0945a2abfac46dbeca57ed64cb9c337e",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0",
+      "sec-ch-ua-platform": "\"Windows\"",
+      "sentry-trace": "5427198bdcb54286ad4533c3210ce472-963403760cfe69fa-0"
+    }
+  },
+  {
+    "url": "https://zenit.win/ajax/locale/get?name=promo",
+    "method": "GET",
+    "body": null,
+    "headers": {
+      "accept": "application/json, text/plain, */*",
+      "cookie": "imprint=0945a2abfac46dbeca57ed64cb9c337e; lang=1; timezone=3; PHPSESSID=0B4A1F2A09833904CA20561F1C5A8270B5FE785534CC1A582D48685C46EC3D31D348E5BAE09939FF; user_logged_in=0",
+      "referer": "https://zenit.win/live",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "frontversion": "1.72.1",
+      "imprinthash": "0945a2abfac46dbeca57ed64cb9c337e",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0",
+      "sec-ch-ua-platform": "\"Windows\"",
+      "sentry-trace": "5427198bdcb54286ad4533c3210ce472-a6ed301e1390e078-0"
+    }
+  },
+  {
+    "url": "https://zenit.win/ajax/locale/get?name=company",
+    "method": "GET",
+    "body": null,
+    "headers": {
+      "accept": "application/json, text/plain, */*",
+      "cookie": "imprint=0945a2abfac46dbeca57ed64cb9c337e; lang=1; timezone=3; user_logged_in=0; PHPSESSID=0B4A1F2A09883404DF78979A3DE0332B44E27CAE04058040491CF6CB3DFBC474FEF7F10A8A40DEA7",
+      "referer": "https://zenit.win/live",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "frontversion": "1.72.1",
+      "imprinthash": "0945a2abfac46dbeca57ed64cb9c337e",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0",
+      "sec-ch-ua-platform": "\"Windows\"",
+      "sentry-trace": "5427198bdcb54286ad4533c3210ce472-8fa7aced3c3fb8c1-0"
+    }
+  },
+  {
+    "url": "https://zenit.win/ajax/live/video/get_list",
+    "method": "GET",
+    "body": null,
+    "headers": {
+      "accept": "application/json, text/plain, */*",
+      "cookie": "imprint=0945a2abfac46dbeca57ed64cb9c337e; lang=1; user_logged_in=0; PHPSESSID=0B4A1F2A09833904CA20561F1C5A8270B5FE785534CC1A582D48685C46EC3D31D348E5BAE09939FF; timezone=5",
+      "referer": "https://zenit.win/live",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "frontversion": "1.72.1",
+      "imprinthash": "0945a2abfac46dbeca57ed64cb9c337e",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0",
+      "sec-ch-ua-platform": "\"Windows\""
+    }
+  },
+  {
+    "url": "https://zenit.win/ajax/line/left_menu/get?lang_id=1&sort_mode=2&tournaments_mode=1",
+    "method": "GET",
+    "body": null,
+    "headers": {
+      "accept": "application/json, text/plain, */*",
+      "cookie": "imprint=0945a2abfac46dbeca57ed64cb9c337e; lang=1; user_logged_in=0; PHPSESSID=0B4A1F2A09833904CA20561F1C5A8270B5FE785534CC1A582D48685C46EC3D31D348E5BAE09939FF; timezone=5",
+      "referer": "https://zenit.win/live",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "frontversion": "1.72.1",
+      "imprinthash": "0945a2abfac46dbeca57ed64cb9c337e",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0",
+      "sec-ch-ua-platform": "\"Windows\""
+    }
+  },
+  {
+    "url": "https://zenit.win/ajax/banners/sport",
+    "method": "GET",
+    "body": null,
+    "headers": {
+      "accept": "application/json, text/plain, */*",
+      "cookie": "imprint=0945a2abfac46dbeca57ed64cb9c337e; lang=1; user_logged_in=0; PHPSESSID=0B4A1F2A09833904CA20561F1C5A8270B5FE785534CC1A582D48685C46EC3D31D348E5BAE09939FF; timezone=5",
+      "referer": "https://zenit.win/live",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "frontversion": "1.72.1",
+      "imprinthash": "0945a2abfac46dbeca57ed64cb9c337e",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0",
+      "sec-ch-ua-platform": "\"Windows\""
+    }
+  },
+  {
+    "url": "https://zenit.win/ajax/promo/promocode/get_promo_for_region",
+    "method": "GET",
+    "body": null,
+    "headers": {
+      "accept": "application/json, text/plain, */*",
+      "cookie": "imprint=0945a2abfac46dbeca57ed64cb9c337e; lang=1; user_logged_in=0; PHPSESSID=0B4A1F2A09833904CA20561F1C5A8270B5FE785534CC1A582D48685C46EC3D31D348E5BAE09939FF; timezone=5",
+      "referer": "https://zenit.win/live",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "frontversion": "1.72.1",
+      "imprinthash": "0945a2abfac46dbeca57ed64cb9c337e",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0",
+      "sec-ch-ua-platform": "\"Windows\""
+    }
+  }
+]

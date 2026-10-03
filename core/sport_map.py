@@ -83,6 +83,63 @@ FONBET = {
     },
 }
 
+# ============================================================
+# PARI (полный клон Fonbet — те же ID спортов и структура)
+# ============================================================
+PARI = {
+    TABLE_TENNIS: {
+        "ids": [3088],
+        "aliases": ["table-tennis"],
+        "name": "Настольный теннис",
+        "url_slug": "table-tennis",
+    },
+    VOLLEYBALL: {
+        "ids": [9],
+        "aliases": ["volleyball"],
+        "name": "Волейбол",
+        "url_slug": "volleyball",
+    },
+    BASKETBALL: {
+        "ids": [3],
+        "aliases": ["basketball"],
+        "name": "Баскетбол",
+        "url_slug": "basketball",
+        "exclude_category_ids": [119],
+    },
+    CYBER_BASKETBALL: {
+        "ids": [3],
+        "aliases": ["basketball"],
+        "name": "Кибербаскетбол",
+        "url_slug": "basketball",
+        "category_ids": [119],
+    },
+    FOOTBALL: {
+        "ids": [1],
+        "aliases": ["football"],
+        "name": "Футбол",
+        "url_slug": "football",
+        "exclude_category_ids": [118],
+    },
+    HOCKEY: {
+        "ids": [2],
+        "aliases": ["hockey"],
+        "name": "Хоккей",
+        "url_slug": "hockey",
+        "exclude_category_ids": [165],
+    },
+    TENNIS: {
+        "ids": [4],
+        "aliases": ["tennis"],
+        "name": "Теннис",
+        "url_slug": "tennis",
+    },
+    CYBERSPORT: {
+        "ids": [29086],
+        "aliases": ["esports"],
+        "name": "Киберспорт",
+        "url_slug": "esports",
+    },
+}
 
 # ============================================================
 # BETCITY
@@ -144,7 +201,7 @@ LIGASTAVOK = {
     TABLE_TENNIS:     {"ids": [1246], "name": "Настольный теннис", "url_slug": "table-tennis"},
     VOLLEYBALL:       {"ids": [128],  "name": "Волейбол",         "url_slug": "volleyball"},
     BASKETBALL:       {"ids": [25],   "name": "Баскетбол",        "url_slug": "basketball"},
-    CYBER_BASKETBALL: {"ids": [23139],"name": "Кибербаскетбол",   "url_slug": "cyberbasketball"},
+    CYBER_BASKETBALL: {"ids": [23139],"name": "Кибербаскетбол",   "url_slug": "kiberbasketbol"},
     CYBERSPORT:       {"ids": [10014],"name": "Киберспорт",       "url_slug": "cybersport"},
     FOOTBALL:         {"ids": [33],   "name": "Футбол",           "url_slug": "soccer"},
     HOCKEY:           {"ids": [31],   "name": "Хоккей",           "url_slug": "ice-hockey"},
@@ -176,11 +233,10 @@ LEON = {
 # ============================================================
 WINLINE = {
     TABLE_TENNIS:     {"ids": [20],  "name": "Настольный теннис", "url_slug": "nastolijnyj_tennis"},
-    VOLLEYBALL:       {"ids": [23],  "name": "Волейбол",         "url_slug": "volleyball"},
-    BASKETBALL:       {"ids": [2],   "name": "Баскетбол",        "url_slug": "basketball"},
-    CYBER_BASKETBALL: {"ids": [193], "name": "Кибербаскетбол",   "url_slug": "cyberbasketball"},
+    VOLLEYBALL:       {"ids": [23],  "name": "Волейбол",         "url_slug": "volejbol"},
+    BASKETBALL:       {"ids": [2],   "name": "Баскетбол",        "url_slug": "basketbol"},
+    CYBER_BASKETBALL: {"ids": [193], "name": "Кибербаскетбол",   "url_slug": "basketbol"},
 }
-
 
 # ============================================================
 # MARATHON
@@ -226,6 +282,7 @@ SPORT_MAP = {
     "leon": LEON,
     "winline": WINLINE,
     "marathon": MARATHON,
+    "pari": PARI,
 }
 
 

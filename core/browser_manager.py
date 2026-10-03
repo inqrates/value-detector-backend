@@ -44,20 +44,83 @@ class BrowserManager:
                         '--no-sandbox',
                         '--disable-dev-shm-usage',
                         '--start-maximized',
+
                         # ---- АНТИСОН: отключаем троттлинг фоновых вкладок ----
                         '--disable-background-timer-throttling',
                         '--disable-backgrounding-occluded-windows',
                         '--disable-renderer-backgrounding',
                         '--disable-features=CalculateNativeWinOcclusion,IntensiveWakeUpThrottling',
                         '--disable-ipc-flooding-protection',
+
+                        # ---- ЭКОНОМИЯ ПАМЯТИ ----
+                        # Не загружать и не рендерить картинки (в SPA это десятки МБ)
+                        '--blink-settings=imagesEnabled=false',
+                        '--disable-images',
+
+                        # Отключить GPU-процесс и его буферы (~500 МБ на 9 вкладок)
+                        '--disable-gpu',
+                        '--disable-gpu-compositing',
+                        '--disable-software-rasterizer',
+
+                        # Ограничить V8 heap на вкладку (защита от утечек SPA)
+                        '--js-flags=--max-old-space-size=256',
+
+                        # Не держать в кэше лишние ресурсы
+                        '--disk-cache-size=1',
+                        '--media-cache-size=1',
+                        '--disable-application-cache',
+                        '--disable-offline-load-stale-cache',
                     ]
                 )
                 self._context = await self._browser.new_context(
                     viewport={'width': VIEWPORT_WIDTH, 'height': VIEWPORT_HEIGHT},
                     no_viewport=False,
+                    # Не грузить картинки и медиа на уровне контекста тоже
+                    ignore_https_errors=True,
                 )
-                logger.info("✅ Общий браузер и контекст запущены")
+
+                # Дополнительный фильтр: обрывать запросы к картинкам/шрифтам/медиа
+                # на уровне контекста (быстрее чем через page.route).
+                try:
+                    await self._context.route(
+                        "**/*",
+                        self._route_handler,
+                    )
+                except Exception as e:
+                    logger.warning(f"⚠️ Не удалось установить route-фильтр: {e}")
+
+                logger.info("✅ Общий браузер и контекст запущены (оптимизация памяти)")
             return self._browser
+
+    @staticmethod
+    async def _route_handler(route, request):
+        """
+        Блокируем загрузку ресурсов, которые жрут память и трафик,
+        но не нужны для перехвата API: картинки, медиа, шрифты, стили
+        сторонних трекеров.
+        """
+        try:
+            rtype = request.resource_type
+            if rtype in ("image", "media", "font"):
+                await route.abort()
+                return
+            # Блокируем явные рекламные/аналитические домены
+            url = request.url
+            block_markers = (
+                "mc.yandex.ru", "google-analytics", "googletagmanager",
+                "doubleclick.net", "facebook.net", "vk.com/rtrg",
+                "top-fwz1.mail.ru", "adservice.google",
+            )
+            if any(m in url for m in block_markers):
+                await route.abort()
+                return
+            await route.continue_()
+        except Exception:
+            # Не валим запрос из-за ошибок фильтра
+            try:
+                await route.continue_()
+            except Exception:
+                pass
 
     async def new_page(self) -> Page:
         await self.get_browser()

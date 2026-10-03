@@ -1,0 +1,2955 @@
+[
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/webStaticRed/website/2.9.70/bootstrap.js",
+    "method": "GET",
+    "resource_type": "script",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/webStaticRed/website/2.9.70/fonts/importFonts.css",
+    "method": "GET",
+    "resource_type": "stylesheet",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/webStaticRed/website/2.9.70/95525.js",
+    "method": "GET",
+    "resource_type": "script",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/webStaticRed/website/2.9.70/42080.js",
+    "method": "GET",
+    "resource_type": "script",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/webStaticRed/website/2.9.70/70981.js",
+    "method": "GET",
+    "resource_type": "script",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/webStaticRed/website/2.9.70/50480.css",
+    "method": "GET",
+    "resource_type": "stylesheet",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/webStaticRed/website/2.9.70/50480.js",
+    "method": "GET",
+    "resource_type": "script",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/webStaticRed/website/2.9.70/95831.js",
+    "method": "GET",
+    "resource_type": "other",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-purpose": "prefetch",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/webStaticRed/website/2.9.70/40818.js",
+    "method": "GET",
+    "resource_type": "other",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-purpose": "prefetch",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/webStaticRed/website/2.9.70/config-243bcc28478399dd69ec9b66bbde9002.json",
+    "method": "GET",
+    "resource_type": "fetch",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/webStaticRed/website/2.9.70/95831.js",
+    "method": "GET",
+    "resource_type": "script",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/webStaticRed/website/2.9.70/40818.css",
+    "method": "GET",
+    "resource_type": "stylesheet",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/webStaticRed/website/2.9.70/40818.js",
+    "method": "GET",
+    "resource_type": "script",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/webStaticRed/website/2.9.70/locale/site/locale.bk.ru.json",
+    "method": "GET",
+    "resource_type": "fetch",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://clientsapi-lb54-w.bk6bba-resources.com/getApiState",
+    "method": "POST",
+    "resource_type": "fetch",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://clientsapi-lb61-w.bk6bba-resources.com/getApiState",
+    "method": "POST",
+    "resource_type": "fetch",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://line-lb61-w.bk6bba-resources.com/getApiState",
+    "method": "POST",
+    "resource_type": "fetch",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://line-lb54-w.bk6bba-resources.com/getApiState",
+    "method": "POST",
+    "resource_type": "fetch",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://fastviewdata.bk6bba-resources.com/getDeviceIdCookie",
+    "method": "GET",
+    "resource_type": "xhr",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://clientsapi-lb61-w.bk6bba-resources.com/geoIp/checkGeoAccess",
+    "method": "POST",
+    "resource_type": "xhr",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/webStaticRed/website/2.9.70/mobileCommon.css",
+    "method": "GET",
+    "resource_type": "stylesheet",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/webStaticRed/website/2.9.70/mobileCommon.js",
+    "method": "GET",
+    "resource_type": "script",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/webStaticRed/website/2.9.70/controls.css",
+    "method": "GET",
+    "resource_type": "stylesheet",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/webStaticRed/website/2.9.70/controls.js",
+    "method": "GET",
+    "resource_type": "script",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/webStaticRed/website/2.9.70/desktopCommon.css",
+    "method": "GET",
+    "resource_type": "stylesheet",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/webStaticRed/website/2.9.70/desktopCommon.js",
+    "method": "GET",
+    "resource_type": "script",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/webStaticRed/website/2.9.70/36172.js",
+    "method": "GET",
+    "resource_type": "script",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/webStaticRed/website/2.9.70/40364.js",
+    "method": "GET",
+    "resource_type": "script",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/webStaticRed/website/2.9.70/51239.js",
+    "method": "GET",
+    "resource_type": "script",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/webStaticRed/website/2.9.70/190.js",
+    "method": "GET",
+    "resource_type": "script",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/webStaticRed/website/2.9.70/19212.js",
+    "method": "GET",
+    "resource_type": "script",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/webStaticRed/website/2.9.70/91260.js",
+    "method": "GET",
+    "resource_type": "script",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/webStaticRed/website/2.9.70/12033.js",
+    "method": "GET",
+    "resource_type": "script",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/webStaticRed/website/2.9.70/widget.desktop.app.css",
+    "method": "GET",
+    "resource_type": "stylesheet",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/webStaticRed/website/2.9.70/widget.desktop.app.js",
+    "method": "GET",
+    "resource_type": "script",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://fastviewdata.bk6bba-resources.com/getCredentials",
+    "method": "POST",
+    "resource_type": "xhr",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "content-type": "text/plain;charset=UTF-8",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://clientsapi-lb61-w.bk6bba-resources.com/client/defaultProfile",
+    "method": "POST",
+    "resource_type": "xhr",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "content-type": "text/plain;charset=UTF-8",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://clientsapi-lb54-w.bk6bba-resources.com/content/getContentFromVersion",
+    "method": "POST",
+    "resource_type": "xhr",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "content-type": "text/plain;charset=UTF-8",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/webStaticRed/website/2.9.70/mobile.responsible.selfExclusion.warning.css",
+    "method": "GET",
+    "resource_type": "stylesheet",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/webStaticRed/website/2.9.70/mobile.responsible.selfExclusion.warning.js",
+    "method": "GET",
+    "resource_type": "script",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/webStaticRed/website/2.9.70/7567.js",
+    "method": "GET",
+    "resource_type": "script",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/webStaticRed/website/2.9.70/73606.js",
+    "method": "GET",
+    "resource_type": "script",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/webStaticRed/website/2.9.70/93376.js",
+    "method": "GET",
+    "resource_type": "script",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/webStaticRed/website/2.9.70/98410.js",
+    "method": "GET",
+    "resource_type": "script",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/webStaticRed/website/2.9.70/85037.js",
+    "method": "GET",
+    "resource_type": "script",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/webStaticRed/website/2.9.70/39317.js",
+    "method": "GET",
+    "resource_type": "script",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/webStaticRed/website/2.9.70/8158.js",
+    "method": "GET",
+    "resource_type": "script",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/webStaticRed/website/2.9.70/27891.js",
+    "method": "GET",
+    "resource_type": "script",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/webStaticRed/website/2.9.70/22168.js",
+    "method": "GET",
+    "resource_type": "script",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/webStaticRed/website/2.9.70/70066.js",
+    "method": "GET",
+    "resource_type": "script",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/webStaticRed/website/2.9.70/99543.css",
+    "method": "GET",
+    "resource_type": "stylesheet",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/webStaticRed/website/2.9.70/99543.js",
+    "method": "GET",
+    "resource_type": "script",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/webStaticRed/website/2.9.70/3563.js",
+    "method": "GET",
+    "resource_type": "script",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/webStaticRed/website/2.9.70/21704.js",
+    "method": "GET",
+    "resource_type": "script",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/webStaticRed/website/2.9.70/desktop.sport.js",
+    "method": "GET",
+    "resource_type": "script",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/webStaticRed/website/2.9.70/desktop.sportSearchDialog.css",
+    "method": "GET",
+    "resource_type": "stylesheet",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/webStaticRed/website/2.9.70/desktop.sportSearchDialog.js",
+    "method": "GET",
+    "resource_type": "script",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/webStaticRed/website/2.9.70/desktop.couponPanel.css",
+    "method": "GET",
+    "resource_type": "stylesheet",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/webStaticRed/website/2.9.70/desktop.couponPanel.js",
+    "method": "GET",
+    "resource_type": "script",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://clientsapi-lb54-w.bk6bba-resources.com/content/getContentFromVersion",
+    "method": "POST",
+    "resource_type": "xhr",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "content-type": "text/plain;charset=UTF-8",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/webStaticRed/website/2.9.70/11835.js",
+    "method": "GET",
+    "resource_type": "script",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/webStaticRed/website/2.9.70/8828.js",
+    "method": "GET",
+    "resource_type": "script",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/webStaticRed/website/2.9.70/35996.js",
+    "method": "GET",
+    "resource_type": "script",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/webStaticRed/website/2.9.70/47759.js",
+    "method": "GET",
+    "resource_type": "script",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/webStaticRed/website/2.9.70/34871.js",
+    "method": "GET",
+    "resource_type": "script",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/webStaticRed/website/2.9.70/71374.js",
+    "method": "GET",
+    "resource_type": "script",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/webStaticRed/website/2.9.70/61038.js",
+    "method": "GET",
+    "resource_type": "script",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/webStaticRed/website/2.9.70/widget.desktop.header.css",
+    "method": "GET",
+    "resource_type": "stylesheet",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/webStaticRed/website/2.9.70/widget.desktop.header.js",
+    "method": "GET",
+    "resource_type": "script",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://clientsapi-lb54-w.bk6bba-resources.com/getScopeSettings",
+    "method": "POST",
+    "resource_type": "xhr",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "content-type": "text/plain;charset=UTF-8",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/webStaticRed/website/2.9.70/3109.js",
+    "method": "GET",
+    "resource_type": "script",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/webStaticRed/website/2.9.70/69718.js",
+    "method": "GET",
+    "resource_type": "script",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/webStaticRed/website/2.9.70/1085.js",
+    "method": "GET",
+    "resource_type": "script",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/webStaticRed/website/2.9.70/desktop.translations.css",
+    "method": "GET",
+    "resource_type": "stylesheet",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/webStaticRed/website/2.9.70/desktop.translations.js",
+    "method": "GET",
+    "resource_type": "script",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/webStaticRed/website/2.9.70/89620.js",
+    "method": "GET",
+    "resource_type": "script",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/webStaticRed/website/2.9.70/93751.css",
+    "method": "GET",
+    "resource_type": "stylesheet",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/webStaticRed/website/2.9.70/93751.js",
+    "method": "GET",
+    "resource_type": "script",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/webStaticRed/website/2.9.70/44552.js",
+    "method": "GET",
+    "resource_type": "script",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/webStaticRed/website/2.9.70/12704.js",
+    "method": "GET",
+    "resource_type": "script",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/webStaticRed/website/2.9.70/37807.js",
+    "method": "GET",
+    "resource_type": "script",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/webStaticRed/website/2.9.70/83055.js",
+    "method": "GET",
+    "resource_type": "script",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/webStaticRed/website/2.9.70/30067.js",
+    "method": "GET",
+    "resource_type": "script",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/webStaticRed/website/2.9.70/82095.js",
+    "method": "GET",
+    "resource_type": "script",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/webStaticRed/website/2.9.70/5039.js",
+    "method": "GET",
+    "resource_type": "script",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/webStaticRed/website/2.9.70/desktop.couponControl.js",
+    "method": "GET",
+    "resource_type": "script",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/webStaticRed/website/2.9.70/37881.js",
+    "method": "GET",
+    "resource_type": "script",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/webStaticRed/website/2.9.70/15369.js",
+    "method": "GET",
+    "resource_type": "script",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/webStaticRed/website/2.9.70/58370.js",
+    "method": "GET",
+    "resource_type": "script",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/webStaticRed/website/2.9.70/76119.js",
+    "method": "GET",
+    "resource_type": "script",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/webStaticRed/website/2.9.70/34727.js",
+    "method": "GET",
+    "resource_type": "script",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/webStaticRed/website/2.9.70/57815.js",
+    "method": "GET",
+    "resource_type": "script",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/webStaticRed/website/2.9.70/widget.desktop.coupons.bonusBannerSlider.css",
+    "method": "GET",
+    "resource_type": "stylesheet",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/webStaticRed/website/2.9.70/widget.desktop.coupons.bonusBannerSlider.js",
+    "method": "GET",
+    "resource_type": "script",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/webStaticRed/website/2.9.70/53645.js",
+    "method": "GET",
+    "resource_type": "script",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/webStaticRed/website/2.9.70/widget.desktop.coupons.loyaltyBannerSlider.css",
+    "method": "GET",
+    "resource_type": "stylesheet",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/webStaticRed/website/2.9.70/widget.desktop.coupons.loyaltyBannerSlider.js",
+    "method": "GET",
+    "resource_type": "script",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/webStaticRed/website/2.9.70/desktop.topEventsControl.css",
+    "method": "GET",
+    "resource_type": "stylesheet",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/webStaticRed/website/2.9.70/desktop.topEventsControl.js",
+    "method": "GET",
+    "resource_type": "script",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/ContentRed/website/resources/logo/desktop_header_logo.svg",
+    "method": "GET",
+    "resource_type": "fetch",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/ContentCommon/website/resources/giftFill.svg",
+    "method": "GET",
+    "resource_type": "fetch",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/ContentCommon/website/resources/header/help_filled.svg",
+    "method": "GET",
+    "resource_type": "fetch",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/ContentCommon/website/resources/searchThick.svg",
+    "method": "GET",
+    "resource_type": "fetch",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/ContentCommon/website/resources/header/settings_filled.svg",
+    "method": "GET",
+    "resource_type": "fetch",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/ContentCommon/website/resources/header/world_filled.svg",
+    "method": "GET",
+    "resource_type": "fetch",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/webStaticRed/website/2.9.70/fonts/Inter-cyrillic.woff2",
+    "method": "GET",
+    "resource_type": "font",
+    "headers": {
+      "origin": "https://fon.bet",
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://cdn-ec.bk6bba-resources.com/webStaticRed/website/2.9.70/fonts/importFonts.css",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/webStaticRed/website/2.9.70/fonts/Inter-latin.woff2",
+    "method": "GET",
+    "resource_type": "font",
+    "headers": {
+      "origin": "https://fon.bet",
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://cdn-ec.bk6bba-resources.com/webStaticRed/website/2.9.70/fonts/importFonts.css",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://line-lb61-w.bk6bba-resources.com/ma/bookmakerPromo/promos?lang=ru&version=0&scopeMarket=1600",
+    "method": "GET",
+    "resource_type": "xhr",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/ContentCommon/website/resources/coupon/tickets.svg",
+    "method": "GET",
+    "resource_type": "fetch",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/ContentCommon/website/resources/settingsFilled.svg",
+    "method": "GET",
+    "resource_type": "fetch",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/ContentCommon/website/resources/chevron.svg",
+    "method": "GET",
+    "resource_type": "fetch",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://line-lb54-w.bk6bba-resources.com/ma/events/listLight?lang=ru&place=live&scopeMarket=1600",
+    "method": "GET",
+    "resource_type": "xhr",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://line-lb61-w.bk6bba-resources.com/ma/events/listBase?lang=ru&scopeMarket=1600",
+    "method": "GET",
+    "resource_type": "xhr",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://clientsapi-lb54-w.bk6bba-resources.com/loyalty/getNoAuthAvailableActions",
+    "method": "POST",
+    "resource_type": "xhr",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "content-type": "text/plain;charset=UTF-8",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://line-lb54-w.bk6bba-resources.com/ma/line/factorsCatalog/independentFactors?version=0&lang=ru&sysId=21&scopeMarket=1600",
+    "method": "GET",
+    "resource_type": "xhr",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://line-lb54-w.bk6bba-resources.com/ma/line/factorsCatalog/sportBasicFactors?version=0&lang=ru&systemType=desktop",
+    "method": "GET",
+    "resource_type": "xhr",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://line-lb54-w.bk6bba-resources.com/ma/oraExt/sportKinds?version=0&lang=en&sysId=21",
+    "method": "GET",
+    "resource_type": "xhr",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://line-lb61-w.bk6bba-resources.com/ma/line/factorsCatalog/specialTables?version=0&lang=ru&sysId=21",
+    "method": "GET",
+    "resource_type": "xhr",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://line-lb61-w.bk6bba-resources.com/ma/line/factorsCatalog/tables?version=0&lang=ru&sysId=21",
+    "method": "GET",
+    "resource_type": "xhr",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://line-lb54-w.bk6bba-resources.com/ma/sportEvent/sportCategories?version=0&lang=ru&scopeMarket=1600",
+    "method": "GET",
+    "resource_type": "xhr",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://line-lb54-w.bk6bba-resources.com/ma/sportEvent/geoCategories?version=0&lang=ru&scopeMarket=1600",
+    "method": "GET",
+    "resource_type": "xhr",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://clientsapi-lb54-w.bk6bba-resources.com/serverTime",
+    "method": "GET",
+    "resource_type": "xhr",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://clientsapi-lb54-w.bk6bba-resources.com/content/getContentFromVersion",
+    "method": "POST",
+    "resource_type": "xhr",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "content-type": "text/plain;charset=UTF-8",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/ContentCommon/website/resources/sport/sports/sport_football.svg",
+    "method": "GET",
+    "resource_type": "fetch",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/ContentCommon/website/resources/sport/sports/sport_hockey.svg",
+    "method": "GET",
+    "resource_type": "fetch",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/ContentCommon/website/resources/sport/sports/sport_tennis.svg",
+    "method": "GET",
+    "resource_type": "fetch",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/ContentCommon/website/resources/sport/sports/sport_basketball.svg",
+    "method": "GET",
+    "resource_type": "fetch",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/ContentCommon/website/resources/sport/sports/sport_esports.svg",
+    "method": "GET",
+    "resource_type": "fetch",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/ContentCommon/website/resources/filter.svg",
+    "method": "GET",
+    "resource_type": "fetch",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/ContentCommon/website/resources/timer.svg",
+    "method": "GET",
+    "resource_type": "fetch",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/ContentCommon/website/resources/sport/translation/translation_tv_2.svg",
+    "method": "GET",
+    "resource_type": "fetch",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/ContentCommon/website/resources/favorites.svg",
+    "method": "GET",
+    "resource_type": "fetch",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/ContentCommon/website/resources/shield.svg",
+    "method": "GET",
+    "resource_type": "fetch",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/ContentCommon/website/resources/statistics.svg",
+    "method": "GET",
+    "resource_type": "fetch",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/ContentCommon/website/resources/sport/translation/translation_mc_soccer.svg",
+    "method": "GET",
+    "resource_type": "fetch",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/ContentCommon/website/resources/compass.svg",
+    "method": "GET",
+    "resource_type": "fetch",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/ContentCommon/website/resources/toBottomArrow.svg",
+    "method": "GET",
+    "resource_type": "fetch",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/ContentCommon/website/resources/sport/competitionDefault.svg",
+    "method": "GET",
+    "resource_type": "fetch",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/ContentCommon/website/resources/sport/translation/volumeUp.svg",
+    "method": "GET",
+    "resource_type": "fetch",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://line-lb54-w.bk6bba-resources.com/ma/line/logos",
+    "method": "POST",
+    "resource_type": "xhr",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "content-type": "text/plain;charset=UTF-8",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/webStaticRed/website/2.9.70/widget.desktop.appUpdate.css",
+    "method": "GET",
+    "resource_type": "stylesheet",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/webStaticRed/website/2.9.70/widget.desktop.appUpdate.js",
+    "method": "GET",
+    "resource_type": "script",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/webStaticRed/website/2.9.70/78640.js",
+    "method": "GET",
+    "resource_type": "script",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/webStaticRed/website/2.9.70/desktop.footer.css",
+    "method": "GET",
+    "resource_type": "stylesheet",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/webStaticRed/website/2.9.70/desktop.footer.js",
+    "method": "GET",
+    "resource_type": "script",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/webStaticRed/website/2.9.70/9561.js",
+    "method": "GET",
+    "resource_type": "script",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/webStaticRed/website/2.9.70/21360.js",
+    "method": "GET",
+    "resource_type": "script",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/webStaticRed/website/2.9.70/widget.desktop.acceptTerms.css",
+    "method": "GET",
+    "resource_type": "stylesheet",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/webStaticRed/website/2.9.70/widget.desktop.acceptTerms.js",
+    "method": "GET",
+    "resource_type": "script",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/webStaticRed/website/2.9.70/24240.js",
+    "method": "GET",
+    "resource_type": "script",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/webStaticRed/website/2.9.70/desktop.rulesAgree.css",
+    "method": "GET",
+    "resource_type": "stylesheet",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/webStaticRed/website/2.9.70/desktop.rulesAgree.js",
+    "method": "GET",
+    "resource_type": "script",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/webStaticRed/website/2.9.70/37970.js",
+    "method": "GET",
+    "resource_type": "script",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/webStaticRed/website/2.9.70/79061.js",
+    "method": "GET",
+    "resource_type": "script",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/webStaticRed/website/2.9.70/31698.js",
+    "method": "GET",
+    "resource_type": "script",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/webStaticRed/website/2.9.70/20886.js",
+    "method": "GET",
+    "resource_type": "script",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/webStaticRed/website/2.9.70/79536.js",
+    "method": "GET",
+    "resource_type": "script",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/webStaticRed/website/2.9.70/15347.css",
+    "method": "GET",
+    "resource_type": "stylesheet",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/webStaticRed/website/2.9.70/15347.js",
+    "method": "GET",
+    "resource_type": "script",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/webStaticRed/website/2.9.70/71298.js",
+    "method": "GET",
+    "resource_type": "script",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/webStaticRed/website/2.9.70/43815.css",
+    "method": "GET",
+    "resource_type": "stylesheet",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/webStaticRed/website/2.9.70/43815.js",
+    "method": "GET",
+    "resource_type": "script",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/webStaticRed/website/2.9.70/25541.css",
+    "method": "GET",
+    "resource_type": "stylesheet",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/webStaticRed/website/2.9.70/25541.js",
+    "method": "GET",
+    "resource_type": "script",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/webStaticRed/website/2.9.70/regIdentNotifyDesktop.css",
+    "method": "GET",
+    "resource_type": "stylesheet",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/webStaticRed/website/2.9.70/regIdentNotifyDesktop.js",
+    "method": "GET",
+    "resource_type": "script",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/webStaticRed/website/2.9.70/desktop.account.fastRequests.js",
+    "method": "GET",
+    "resource_type": "script",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/webStaticRed/website/2.9.70/21201.js",
+    "method": "GET",
+    "resource_type": "script",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/webStaticRed/website/2.9.70/widget.chat.liveTex.js",
+    "method": "GET",
+    "resource_type": "script",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/webStaticRed/website/2.9.70/desktop.chatButton.css",
+    "method": "GET",
+    "resource_type": "stylesheet",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/webStaticRed/website/2.9.70/desktop.chatButton.js",
+    "method": "GET",
+    "resource_type": "script",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/webStaticRed/website/2.9.70/desktop.onBoarding.css",
+    "method": "GET",
+    "resource_type": "stylesheet",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/webStaticRed/website/2.9.70/desktop.onBoarding.js",
+    "method": "GET",
+    "resource_type": "script",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/webStaticRed/website/2.9.70/74752.js",
+    "method": "GET",
+    "resource_type": "script",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/webStaticRed/website/2.9.70/56714.js",
+    "method": "GET",
+    "resource_type": "script",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/webStaticRed/website/2.9.70/desktop.account.loginDialog.css",
+    "method": "GET",
+    "resource_type": "stylesheet",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/webStaticRed/website/2.9.70/desktop.account.loginDialog.js",
+    "method": "GET",
+    "resource_type": "script",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/webStaticRed/website/2.9.70/yandexMetrika.js",
+    "method": "GET",
+    "resource_type": "script",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/webStaticRed/website/2.9.70/28655.js",
+    "method": "GET",
+    "resource_type": "script",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/webStaticRed/website/2.9.70/desktop.differentPhoneNotice.css",
+    "method": "GET",
+    "resource_type": "stylesheet",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/webStaticRed/website/2.9.70/desktop.differentPhoneNotice.js",
+    "method": "GET",
+    "resource_type": "script",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/webStaticRed/website/2.9.70/desktop.limitsWatcher.css",
+    "method": "GET",
+    "resource_type": "stylesheet",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/webStaticRed/website/2.9.70/desktop.limitsWatcher.js",
+    "method": "GET",
+    "resource_type": "script",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/webStaticRed/website/2.9.70/widget.emailTracker.js",
+    "method": "GET",
+    "resource_type": "script",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/webStaticCommon/loyalty/universal/banners/v4/manifest.json",
+    "method": "GET",
+    "resource_type": "fetch",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://clientsapi-lb54-w.bk6bba-resources.com/content/getContentFromVersion",
+    "method": "POST",
+    "resource_type": "xhr",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "content-type": "text/plain;charset=UTF-8",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://line-lb54-w.bk6bba-resources.com/ma/line/factorsCatalog/eventViewTables?version=0&lang=ru&sysId=21",
+    "method": "GET",
+    "resource_type": "xhr",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/ContentCommon/Logotypes/CompetitionLogos/Football/rpl_new.svg",
+    "method": "GET",
+    "resource_type": "fetch",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/ContentCommon/Logotypes/CompetitionLogos/Football/pl_new-965.svg",
+    "method": "GET",
+    "resource_type": "fetch",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/ContentCommon/Logotypes/CompetitionLogos/Football/LaLiga_new.svg",
+    "method": "GET",
+    "resource_type": "fetch",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/ContentCommon/Logotypes/CompetitionLogos/Football/italia_seria_a_new.svg",
+    "method": "GET",
+    "resource_type": "fetch",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/ContentCommon/Logotypes/CompetitionLogos/Football/bl_new.svg",
+    "method": "GET",
+    "resource_type": "fetch",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/ContentCommon/Logotypes/TeamLogos/Football/Russia/Spartak_Moscow-new.png",
+    "method": "GET",
+    "resource_type": "fetch",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/ContentCommon/Logotypes/TeamLogos/Football/Russia/new300/Rostov.png",
+    "method": "GET",
+    "resource_type": "fetch",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/webStaticRed/website/2.9.70/chat.liveTex.js",
+    "method": "GET",
+    "resource_type": "script",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/ContentCommon/website/resources/chat.svg",
+    "method": "GET",
+    "resource_type": "fetch",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/webStaticCommon/loyalty/universal/banners/v4/RewardingFromCommunication/4.28.36/RewardingFromCommunication.js",
+    "method": "GET",
+    "resource_type": "script",
+    "headers": {
+      "origin": "https://fon.bet",
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/webStaticCommon/loyalty/universal/banners/v4/Announcement/4.28.36/Announcement.js",
+    "method": "GET",
+    "resource_type": "script",
+    "headers": {
+      "origin": "https://fon.bet",
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/webStaticCommon/loyalty/universal/banners/v4/SportTournament/4.28.36/SportTournament.js",
+    "method": "GET",
+    "resource_type": "script",
+    "headers": {
+      "origin": "https://fon.bet",
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://clientsapi-lb61-w.bk6bba-resources.com/content/getActualContent",
+    "method": "POST",
+    "resource_type": "xhr",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "content-type": "text/plain;charset=UTF-8",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/ContentCommon/Logotypes/CompetitionLogos/Football/rpl_new.svg",
+    "method": "GET",
+    "resource_type": "image",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/ContentCommon/Logotypes/CompetitionLogos/Football/pl_new-965.svg",
+    "method": "GET",
+    "resource_type": "image",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/ContentCommon/Logotypes/CompetitionLogos/Football/LaLiga_new.svg",
+    "method": "GET",
+    "resource_type": "image",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/ContentCommon/Logotypes/CompetitionLogos/Football/italia_seria_a_new.svg",
+    "method": "GET",
+    "resource_type": "image",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/ContentCommon/Logotypes/CompetitionLogos/Football/bl_new.svg",
+    "method": "GET",
+    "resource_type": "image",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/ContentCommon/Logotypes/TeamLogos/Football/Russia/Spartak_Moscow-new.png",
+    "method": "GET",
+    "resource_type": "image",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/ContentCommon/Logotypes/TeamLogos/Football/Russia/new300/Rostov.png",
+    "method": "GET",
+    "resource_type": "image",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/webStaticCommon/loyalty/universal/banners/v4/RewardingFromCommunication/4.28.36/controls.css",
+    "method": "GET",
+    "resource_type": "stylesheet",
+    "headers": {
+      "origin": "https://fon.bet",
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/webStaticCommon/loyalty/universal/banners/v4/RewardingFromCommunication/4.28.36/controls.js",
+    "method": "GET",
+    "resource_type": "script",
+    "headers": {
+      "origin": "https://fon.bet",
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/webStaticCommon/loyalty/universal/banners/v4/RewardingFromCommunication/4.28.36/product.css",
+    "method": "GET",
+    "resource_type": "stylesheet",
+    "headers": {
+      "origin": "https://fon.bet",
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/webStaticCommon/loyalty/universal/banners/v4/RewardingFromCommunication/4.28.36/product.js",
+    "method": "GET",
+    "resource_type": "script",
+    "headers": {
+      "origin": "https://fon.bet",
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/webStaticCommon/loyalty/universal/banners/v4/Announcement/4.28.36/controls.css",
+    "method": "GET",
+    "resource_type": "stylesheet",
+    "headers": {
+      "origin": "https://fon.bet",
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/webStaticCommon/loyalty/universal/banners/v4/Announcement/4.28.36/controls.js",
+    "method": "GET",
+    "resource_type": "script",
+    "headers": {
+      "origin": "https://fon.bet",
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/webStaticCommon/loyalty/universal/banners/v4/Announcement/4.28.36/product.css",
+    "method": "GET",
+    "resource_type": "stylesheet",
+    "headers": {
+      "origin": "https://fon.bet",
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/webStaticCommon/loyalty/universal/banners/v4/Announcement/4.28.36/product.js",
+    "method": "GET",
+    "resource_type": "script",
+    "headers": {
+      "origin": "https://fon.bet",
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/webStaticCommon/loyalty/universal/banners/v4/SportTournament/4.28.36/controls.css",
+    "method": "GET",
+    "resource_type": "stylesheet",
+    "headers": {
+      "origin": "https://fon.bet",
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/webStaticCommon/loyalty/universal/banners/v4/SportTournament/4.28.36/controls.js",
+    "method": "GET",
+    "resource_type": "script",
+    "headers": {
+      "origin": "https://fon.bet",
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/webStaticCommon/loyalty/universal/banners/v4/SportTournament/4.28.36/product.css",
+    "method": "GET",
+    "resource_type": "stylesheet",
+    "headers": {
+      "origin": "https://fon.bet",
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/webStaticCommon/loyalty/universal/banners/v4/SportTournament/4.28.36/product.js",
+    "method": "GET",
+    "resource_type": "script",
+    "headers": {
+      "origin": "https://fon.bet",
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/webStaticCommon/loyalty/universal/banners/v4/RewardingFromCommunication/4.28.36/viewForMobile.css",
+    "method": "GET",
+    "resource_type": "stylesheet",
+    "headers": {
+      "origin": "https://fon.bet",
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/webStaticCommon/loyalty/universal/banners/v4/RewardingFromCommunication/4.28.36/viewForMobile.js",
+    "method": "GET",
+    "resource_type": "script",
+    "headers": {
+      "origin": "https://fon.bet",
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/webStaticCommon/loyalty/universal/banners/v4/Announcement/4.28.36/viewForMobile.css",
+    "method": "GET",
+    "resource_type": "stylesheet",
+    "headers": {
+      "origin": "https://fon.bet",
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/webStaticCommon/loyalty/universal/banners/v4/Announcement/4.28.36/viewForMobile.js",
+    "method": "GET",
+    "resource_type": "script",
+    "headers": {
+      "origin": "https://fon.bet",
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/webStaticCommon/loyalty/universal/banners/v4/SportTournament/4.28.36/viewForUniversalNew.css",
+    "method": "GET",
+    "resource_type": "stylesheet",
+    "headers": {
+      "origin": "https://fon.bet",
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/webStaticCommon/loyalty/universal/banners/v4/SportTournament/4.28.36/viewForUniversalNew.js",
+    "method": "GET",
+    "resource_type": "script",
+    "headers": {
+      "origin": "https://fon.bet",
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://clientsapi-lb61-w.bk6bba-resources.com/content/getContentFromVersion",
+    "method": "POST",
+    "resource_type": "xhr",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "content-type": "text/plain;charset=UTF-8",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://clientsapi-lb54-w.bk6bba-resources.com/analytics/clickStreamList",
+    "method": "POST",
+    "resource_type": "xhr",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "content-type": "text/plain;charset=UTF-8",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/ContentRed/CRM_Actions/new_files_fon/1/890h400_jpg_webp_80kb-3.webp",
+    "method": "GET",
+    "resource_type": "image",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/ContentRed/CRM_Actions/Promo_2025/October/fonpass/Fonpass_22/Banner_890h320.jpeg",
+    "method": "GET",
+    "resource_type": "image",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/ContentRed/CRM_2026/Tournaments/New_creo_check/Fonbet_Hockey_1200x600_px.jpg",
+    "method": "GET",
+    "resource_type": "image",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/ContentRed/CRM_2026/Tournaments/New_creo_check/US_Open_1200x600.jpg",
+    "method": "GET",
+    "resource_type": "image",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/ContentRed/CRM_2026/Tournaments/New_creo_check/NEW_1200x600_CyberFON.webp",
+    "method": "GET",
+    "resource_type": "image",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/ContentRed/CRM_2026/Tournaments/Volleyball/1200x600_Vol.jpg",
+    "method": "GET",
+    "resource_type": "image",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/ContentRed/CRM_2026/Tournaments/New_creo_check/1200x600_New_Basketball_60_Kb_JPG_WEBP.jpg",
+    "method": "GET",
+    "resource_type": "image",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/ContentRed/CRM_2026/Tournaments/New_creo_check/WC2/Fonbet_Pingpong_1200x600_px.jpg",
+    "method": "GET",
+    "resource_type": "image",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/ContentRed/CRM_2026/Tournaments/New_creo_check/simulatornew_1200h600.webp",
+    "method": "GET",
+    "resource_type": "image",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://line-lb61-w.bk6bba-resources.com/ma/events/list?lang=ru&version=84413543194&scopeMarket=1600",
+    "method": "GET",
+    "resource_type": "xhr",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://line-lb54-w.bk6bba-resources.com/ma/events/list?lang=ru&version=84413548616&scopeMarket=1600",
+    "method": "GET",
+    "resource_type": "xhr",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/ContentCommon/Logotypes/TeamLogos/Football/England/ManchesterUnited.png",
+    "method": "GET",
+    "resource_type": "fetch",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/ContentCommon/Logotypes/TeamLogos/Football/Manchester_City_logo_2016.png",
+    "method": "GET",
+    "resource_type": "fetch",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/ContentCommon/Logotypes/TeamLogos/Football/England/ManchesterUnited.png",
+    "method": "GET",
+    "resource_type": "image",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://cdn-ec.bk6bba-resources.com/ContentCommon/Logotypes/TeamLogos/Football/Manchester_City_logo_2016.png",
+    "method": "GET",
+    "resource_type": "image",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  },
+  {
+    "url": "https://line-lb54-w.bk6bba-resources.com/ma/events/list?lang=ru&version=84413555458&scopeMarket=1600",
+    "method": "GET",
+    "resource_type": "xhr",
+    "headers": {
+      "sec-ch-ua-platform": "\"Windows\"",
+      "referer": "https://fon.bet/",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "sec-ch-ua": "\"Chromium\";v=\"151\", \"Not=A?Brand\";v=\"99\"",
+      "sec-ch-ua-mobile": "?0"
+    }
+  }
+]

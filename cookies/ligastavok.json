@@ -1,0 +1,64 @@
+{
+  "cookies": [
+    {
+      "name": "qrator_jsr",
+      "value": "v2.0.1789978061.668.b2d0ff1eTH8mVyb3|Nqf7teoFANMSCcmz|cOmDvSGd1L5XAoCHKxsjQSVR8Rs+BjFetDRDFLwvYvpImshLygu8Qo/HsD4mjPMWOmFYMUHpyohavfGPyfzswJ8WBAPr1tU8Qmp/zhgRx+A=-2k8YyoudEuQM9c6DQjnJxlLVbQ8=-00",
+      "domain": ".ligastavok.ru",
+      "path": "/",
+      "expires": 1789978362.222647,
+      "httpOnly": false,
+      "secure": true,
+      "sameSite": "None"
+    },
+    {
+      "name": "qrator_jsid2",
+      "value": "v2.0.1789978061.668.b2d0ff1eTH8mVyb3|YjDH4eyDbvOUWedN|wqNxlGIVZyJzrE1ihgHE5IxBTChrGXK2eJZ4FdG57QmrSkeueWrtzWJJ/69J+Wt9Jh/wEyfqBAmjXVvtuj28rVEheS7MqpsVrosAHWynw10AUmDTzt3jg/kCEXSHSzsYsOqWDiCxMHz7AEpyaI156zhy2Gk/RAlfGDR1aV1awrU=-ao1ctdGRCt3j65ptcT102wK9VhU=",
+      "domain": ".ligastavok.ru",
+      "path": "/",
+      "expires": 1789979063.727264,
+      "httpOnly": true,
+      "secure": true,
+      "sameSite": "None"
+    },
+    {
+      "name": "ab-test-nardsLanding",
+      "value": "vqGXRmEjhVJOE3CPXV_ap",
+      "domain": "www.ligastavok.ru",
+      "path": "/",
+      "expires": 1790582867,
+      "httpOnly": false,
+      "secure": false,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "ab-test-redirectNew",
+      "value": "BikwpcbGSVu4kGuZzbXd1",
+      "domain": "www.ligastavok.ru",
+      "path": "/",
+      "expires": 1790582867,
+      "httpOnly": false,
+      "secure": false,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "ab-test-bonus-offer-type",
+      "value": "SxDmR9V4y_YS8fHmRMi0W",
+      "domain": "www.ligastavok.ru",
+      "path": "/",
+      "expires": 1790582867,
+      "httpOnly": false,
+      "secure": false,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "ls-current-theme",
+      "value": "light",
+      "domain": "www.ligastavok.ru",
+      "path": "/",
+      "expires": 1805530068,
+      "httpOnly": false,
+      "secure": false,
+      "sameSite": "Lax"
+    }
+  ]
+}

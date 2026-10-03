@@ -1,14 +1,23 @@
-# parsers/fonbet_api.py
+# parsers/pari_api.py
 """
-Fonbet — HTTP-парсер через curl_cffi (без Playwright).
+Pari — HTTP-парсер через curl_cffi.
 
-Механика (по аналогии с Playwright-версией, эндпоинты те же):
-  1. GET /ma/events/listBase       — полный снапшот (prematch+live)
-  2. GET /ma/events/list?version=X — дельта, X = packetVersion
-  3. Повторять (2) каждые POLL_INTERVAL; раз в 5 мин обновлять снапшот
+Технически — полный клон Fonbet (та же платформа pb06e2/bk6bba-resources).
+Отличия от Fonbet:
+  - Домен:   line-lb51-w.pb06e2-resources.com  (у Fonbet — bk6bba)
+  - Снапшот: /events/listLight?place=live&scopeMarket=2300
+             (у Fonbet — /ma/events/listBase?scopeMarket=1600)
+  - Дельта:  /events/list?version=X&scopeMarket=2300
+  - scopeMarket: 2300 (у Fonbet 1600)
 
-Логика разбора (sports, eventMiscs, customFactors, дерево, фильтр по parentId)
-скопирована из старой Playwright-версии 1-в-1.
+Логика разбора (sports, eventMiscs, customFactors, дерево, factor codes)
+идентична fonbet_api.py — код скопирован без изменений.
+
+Проверено (снифер):
+  - Отдаёт ~150-270 KB JSON без cookies
+  - sportId 3088/9/3/29086 — как у Fonbet
+  - Факторы 921/922/923/927/928/930/931 — как у Fonbet
+  - eventMiscs: score1/score2/comment/liveDelay — как у Fonbet
 """
 import asyncio
 import logging
@@ -23,28 +32,36 @@ from core.sport_map import get_sport_config, get_url_slug, format_phase
 logger = logging.getLogger(__name__)
 
 
-class FonbetApiParser:
-    bk_id = "fonbet"
+class PariApiParser:
+    bk_id = "pari"
 
-    CLUSTER = "line-lb54-w.bk6bba-resources.com"
+    # У Fonbet было: line-lb54-w.bk6bba-resources.com
+    # У Pari:         line-lb51-w.pb06e2-resources.com
+    CLUSTER = "line-lb51-w.pb06e2-resources.com"
     BASE = f"https://{CLUSTER}"
 
-    LIST_BASE_URL = f"{BASE}/ma/events/listBase"
-    LIST_DELTA_URL = f"{BASE}/ma/events/list"
+    # Снапшот live (у Fonbet был /ma/events/listBase — прематч+лайв)
+    # У Pari: listLight отдаёт только live — как раз то, что нам нужно
+    LIST_LIGHT_URL = f"{BASE}/events/listLight"
+
+    # Дельта
+    LIST_DELTA_URL = f"{BASE}/events/list"
 
     HEADERS = {
         "accept": "application/json, text/plain, */*",
         "accept-language": "ru-RU,ru;q=0.9",
-        "origin": "https://fon.bet",
-        "referer": "https://fon.bet/",
+        "origin": "https://pari.ru",
+        "referer": "https://pari.ru/",
         "sec-fetch-site": "same-site",
         "sec-fetch-mode": "cors",
         "sec-fetch-dest": "empty",
     }
 
     IMPERSONATE = "chrome150"
-    POLL_INTERVAL = 0.5         # как часто дёргать дельту
+    POLL_INTERVAL = 0.5
     SNAPSHOT_INTERVAL = 300.0   # раз в 5 мин — полный снапшот
+
+    SCOPE_MARKET = 2300         # у Fonbet было 1600
 
     def __init__(self, detector=None, aggregator=None, enabled_sports=None):
         self.detector = detector
@@ -52,7 +69,7 @@ class FonbetApiParser:
         self.enabled_sports = enabled_sports or ["table_tennis"]
         self.is_running = False
 
-        # ── Кэши (те же имена, что в старом парсере и ждёт main.py) ──
+        # ── Кэши (те же имена, что ждёт main.py и global_cache_cleaner) ──
         self._events_cache: Dict[int, dict] = {}
         self._factors_cache: Dict[int, list] = {}
         self._live_cache: Dict[int, dict] = {}
@@ -90,7 +107,6 @@ class FonbetApiParser:
     # ============================================================
     async def start(self):
         await self._ensure_session()
-        # Первый снапшот — сразу, чтобы наполнить справочник
         await self._fetch_snapshot()
 
     async def stop(self):
@@ -106,14 +122,12 @@ class FonbetApiParser:
     async def run(self):
         self.is_running = True
         await self.start()
-        logger.info(f"[{self.bk_id}] 🚀 HTTP-парсер Fonbet запущен (без Playwright)")
+        logger.info(f"[{self.bk_id}] 🚀 HTTP-парсер Pari запущен")
 
         while self.is_running:
             t0 = time.monotonic()
-
             try:
                 now = time.time()
-                # Раз в SNAPSHOT_INTERVAL — обновляем снапшот
                 if now - self._last_snapshot_at >= self.SNAPSHOT_INTERVAL:
                     await self._fetch_snapshot()
                 else:
@@ -126,7 +140,6 @@ class FonbetApiParser:
             except Exception as e:
                 logger.error(f"[{self.bk_id}] Ошибка опроса: {e}", exc_info=True)
                 await asyncio.sleep(3)
-                # Переснять снапшот на всякий случай
                 try:
                     await self._fetch_snapshot()
                 except Exception:
@@ -142,11 +155,20 @@ class FonbetApiParser:
     # Запросы
     # ============================================================
     async def _fetch_snapshot(self):
+        """
+        Снапшот live через /events/listLight.
+        В отличие от Fonbet (listBase), у Pari это только live-события —
+        идеально для after-goal.
+        """
         try:
             r = await self._session.get(
-                self.LIST_BASE_URL,
+                self.LIST_LIGHT_URL,
                 headers=self.HEADERS,
-                params={"lang": "ru", "scopeMarket": "1600"},
+                params={
+                    "lang": "ru",
+                    "place": "live",
+                    "scopeMarket": str(self.SCOPE_MARKET),
+                },
             )
         except Exception as e:
             logger.warning(f"[{self.bk_id}] snapshot error: {e}")
@@ -157,6 +179,7 @@ class FonbetApiParser:
             return
 
         data = r.json()
+        # packetVersion может отсутствовать в listLight — тогда vtag из данных
         self._packet_version = data.get("packetVersion")
         self._last_snapshot_at = time.time()
 
@@ -168,8 +191,11 @@ class FonbetApiParser:
         self._process_events(data)
 
     async def _fetch_delta(self):
+        """
+        Дельта /events/list?version=X.
+        Если version неизвестен — форсим снапшот.
+        """
         if not self._packet_version:
-            # Нет версии — значит снапшот не удался, форсим его
             await self._fetch_snapshot()
             return
 
@@ -180,7 +206,7 @@ class FonbetApiParser:
                 params={
                     "lang": "ru",
                     "version": str(self._packet_version),
-                    "scopeMarket": "1600",
+                    "scopeMarket": str(self.SCOPE_MARKET),
                 },
             )
         except Exception as e:
@@ -196,12 +222,11 @@ class FonbetApiParser:
         if new_pv:
             self._packet_version = new_pv
 
-        # Обрабатываем только если есть что-то новое
         if data.get("events") or data.get("sports") or data.get("eventMiscs"):
             self._process_events(data)
 
     # ============================================================
-    # Аккумулятор sports[] (копия из старого парсера)
+    # Аккумулятор sports[] — КОПИЯ ИЗ FONBET
     # ============================================================
     def _accumulate_sports(self, sports: list) -> bool:
         changed = False
@@ -258,7 +283,6 @@ class FonbetApiParser:
         )
 
     def _find_root_sport_id(self, sport_id: int) -> Optional[int]:
-        """По листовому sport_id находит корневой (3088 для НТ, 3 для баскета и т.п.)."""
         if sport_id is None:
             return None
         for root_id, tree in self._tree_by_root.items():
@@ -267,7 +291,7 @@ class FonbetApiParser:
         return None
 
     # ============================================================
-    # events/list — основная обработка (копия из старого парсера)
+    # events/list — разбор (КОПИЯ ИЗ FONBET)
     # ============================================================
     def _process_events(self, data: dict):
         sports = data.get("sports", [])
@@ -365,7 +389,7 @@ class FonbetApiParser:
             self._last_update_time[eid] = time.time()
 
     # ============================================================
-    # sport_key события (копия)
+    # sport_key события (КОПИЯ)
     # ============================================================
     def _resolve_sport_key(self, sport_id, sport_category_id) -> Optional[str]:
         if sport_id is None:
@@ -391,7 +415,7 @@ class FonbetApiParser:
         return None
 
     # ============================================================
-    # parse_comment (копия, без изменений)
+    # parse_comment (КОПИЯ)
     # ============================================================
     def _parse_comment(self, comment: str, sport_key: str,
                        children_miscs: list = None,
@@ -406,7 +430,6 @@ class FonbetApiParser:
         if not comment:
             comment = ""
 
-        # НТ — оригинальная логика
         if sport_key == "table_tennis":
             pairs = re.findall(r'\d+[*]?-\d+[*]?', comment)
             if pairs:
@@ -417,7 +440,6 @@ class FonbetApiParser:
                     result["sub2"] = int(parts[1]) if parts[1].isdigit() else 0
             return result
 
-        # Волейбол / пляжный волейбол
         if sport_key in ("volleyball", "beach_volleyball"):
             if comment:
                 first_bracket = re.search(r'\(([^)]+)\)', comment)
@@ -457,7 +479,6 @@ class FonbetApiParser:
                 result["phase_name"] = format_phase(sport_key, active_idx)
             return result
 
-        # Баскетбол
         if sport_key in ("basketball", "cyber_basketball"):
             if comment:
                 first_bracket = re.search(r'\(([^)]+)\)', comment)
@@ -490,7 +511,7 @@ class FonbetApiParser:
         return result
 
     # ============================================================
-    # parse_factors (копия)
+    # parse_factors (КОПИЯ — коды 921/923/930/931 идентичны)
     # ============================================================
     def _parse_factors(self, factors: list) -> dict:
         import re
@@ -555,7 +576,7 @@ class FonbetApiParser:
         return result
 
     # ============================================================
-    # Отправка (копия из старого, с адаптацией под HTTP-кэш)
+    # Отправка (КОПИЯ, с parc.ru URL)
     # ============================================================
     async def _try_send_matches(self):
         current_time = time.time()
@@ -579,7 +600,6 @@ class FonbetApiParser:
             if not has_live_data:
                 continue
 
-            # Кэфы
             factors = self._factors_cache.get(eid, [])
             parsed = self._parse_factors(factors)
 
@@ -607,7 +627,6 @@ class FonbetApiParser:
             if current_time - last_sent < 1.0:
                 continue
 
-            # miscs детей — для fallback
             children_miscs = []
             if sport_key in ("basketball", "cyber_basketball", "volleyball", "beach_volleyball"):
                 children_eids = [
@@ -633,7 +652,6 @@ class FonbetApiParser:
                 phase_num = (s1 or 0) + (s2 or 0) + 1
                 phase_name = format_phase(sport_key, phase_num)
 
-            # Итоговый score
             if sport_key in ("basketball", "cyber_basketball"):
                 if score_info["total1"] or score_info["total2"]:
                     final_score1 = score_info["total1"]
@@ -655,17 +673,14 @@ class FonbetApiParser:
             if event.get('_last_sent') == current_state:
                 continue
 
-            
-            # URL матча — проверенный универсальный формат для всех видов спорта:
-            #   /live/{sport_slug}/category/x/{sport_id}/{event_id}
-            # где x — заглушка (Fonbet игнорирует alias категории),
-            #     sport_id — листовой sportId события (55118, 146304, 134749, ...).
-            # Проверено в test_fonbet_debug4.py — работает 9/9.
+            # URL матча Pari — формат как у Fonbet:
+            #   https://pari.ru/live/{sport_slug}/.../{sport_id}/{eid}
+            # Проверим на живом матче — потом уточним.
             url_slug = get_url_slug(self.bk_id, sport_key) or 'table-tennis'
-            match_url = f"https://fon.bet/live/{url_slug}/category/x/{sport_id}/{eid}"
+            match_url = f"https://pari.ru/live/{url_slug}"
 
             match = Match(
-                bk_id='fonbet',
+                bk_id=self.bk_id,
                 match_id=str(eid),
                 player1=event['player1'],
                 player2=event['player2'],

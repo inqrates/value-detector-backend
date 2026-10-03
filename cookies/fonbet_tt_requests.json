@@ -1,0 +1,361 @@
+{
+  "https://line-lb54-w.bk6bba-resources.com/ma/oraExt/sportKinds?version=0&lang=en&sysId=21": {
+    "url": "https://line-lb54-w.bk6bba-resources.com/ma/oraExt/sportKinds?version=0&lang=en&sysId=21",
+    "status": 200,
+    "size": 21316,
+    "keys": [
+      "request",
+      "result",
+      "lang",
+      "version",
+      "sportKinds"
+    ],
+    "events_count": 0,
+    "sports_count": 0,
+    "packetVersion": null
+  },
+  "https://line-lb61-w.bk6bba-resources.com/ma/sportEvent/geoCategories?version=0&lang=ru&scopeMarket=1600": {
+    "url": "https://line-lb61-w.bk6bba-resources.com/ma/sportEvent/geoCategories?version=0&lang=ru&scopeMarket=1600",
+    "status": 200,
+    "size": 24415,
+    "keys": [
+      "request",
+      "result",
+      "lang",
+      "version",
+      "geoCategoryGroups",
+      "geoCategories"
+    ],
+    "events_count": 0,
+    "sports_count": 0,
+    "packetVersion": null
+  },
+  "https://line-lb61-w.bk6bba-resources.com/ma/line/factorsCatalog/sportBasicFactors?version=0&lang=ru&systemType=desktop": {
+    "url": "https://line-lb61-w.bk6bba-resources.com/ma/line/factorsCatalog/sportBasicFactors?version=0&lang=ru&systemType=desktop",
+    "status": 200,
+    "size": 78109,
+    "keys": [
+      "request",
+      "result",
+      "lang",
+      "version",
+      "configs"
+    ],
+    "events_count": 0,
+    "sports_count": 0,
+    "packetVersion": null
+  },
+  "https://line-lb61-w.bk6bba-resources.com/ma/line/factorsCatalog/tables?version=0&lang=ru&sysId=21": {
+    "url": "https://line-lb61-w.bk6bba-resources.com/ma/line/factorsCatalog/tables?version=0&lang=ru&sysId=21",
+    "status": 200,
+    "size": 793996,
+    "keys": [
+      "request",
+      "result",
+      "lang",
+      "version",
+      "groups"
+    ],
+    "events_count": 0,
+    "sports_count": 0,
+    "packetVersion": null
+  },
+  "https://line-lb61-w.bk6bba-resources.com/ma/line/factorsCatalog/specialTables?version=0&lang=ru&sysId=21": {
+    "url": "https://line-lb61-w.bk6bba-resources.com/ma/line/factorsCatalog/specialTables?version=0&lang=ru&sysId=21",
+    "status": 200,
+    "size": 77360,
+    "keys": [
+      "request",
+      "result",
+      "lang",
+      "version",
+      "specialTables"
+    ],
+    "events_count": 0,
+    "sports_count": 0,
+    "packetVersion": null
+  },
+  "https://line-lb54-w.bk6bba-resources.com/ma/events/listBase?lang=ru&scopeMarket=1600": {
+    "url": "https://line-lb54-w.bk6bba-resources.com/ma/events/listBase?lang=ru&scopeMarket=1600",
+    "status": 200,
+    "size": 9323068,
+    "keys": [
+      "packetVersion",
+      "fromVersion",
+      "catalogTablesVersion",
+      "catalogSpecialTablesVersion",
+      "catalogEventViewVersion",
+      "sportBasicMarketsVersion",
+      "sportBasicFactorsVersion",
+      "independentFactorsVersion",
+      "factorsVersion",
+      "comboFactorsVersion",
+      "sportKindsVersion",
+      "topCompetitionsVersion",
+      "eventSmartFiltersVersion",
+      "geoCategoriesVersion",
+      "sportCategoriesVersion",
+      "publicPromos",
+      "topParameters",
+      "tournamentInfos",
+      "sports",
+      "events",
+      "topEvents",
+      "eventBlocks",
+      "eventMiscs",
+      "liveEventInfos",
+      "customFactors"
+    ],
+    "events_count": 8951,
+    "sports_count": 734,
+    "packetVersion": 84413781622
+  },
+  "https://line-lb61-w.bk6bba-resources.com/ma/line/logos": {
+    "url": "https://line-lb61-w.bk6bba-resources.com/ma/line/logos",
+    "status": 200,
+    "size": 1012867,
+    "keys": [
+      "result",
+      "lang",
+      "teams",
+      "competitions",
+      "sportKinds",
+      "teamLogos",
+      "competitionLogos",
+      "sportKindLogos"
+    ],
+    "events_count": 0,
+    "sports_count": 0,
+    "packetVersion": null
+  },
+  "https://line-lb61-w.bk6bba-resources.com/ma/line/factorsCatalog/independentFactors?version=0&lang=ru&sysId=21&scopeMarket=1600": {
+    "url": "https://line-lb61-w.bk6bba-resources.com/ma/line/factorsCatalog/independentFactors?version=0&lang=ru&sysId=21&scopeMarket=1600",
+    "status": 200,
+    "size": 830284,
+    "keys": [
+      "request",
+      "result",
+      "lang",
+      "version",
+      "factorsVersion",
+      "independentFactors",
+      "allFactors",
+      "md5"
+    ],
+    "events_count": 0,
+    "sports_count": 0,
+    "packetVersion": null
+  },
+  "https://line-lb61-w.bk6bba-resources.com/ma/oraExt/sportKinds?version=0&lang=en&sysId=21": {
+    "url": "https://line-lb61-w.bk6bba-resources.com/ma/oraExt/sportKinds?version=0&lang=en&sysId=21",
+    "status": 200,
+    "size": 21316,
+    "keys": [
+      "request",
+      "result",
+      "lang",
+      "version",
+      "sportKinds"
+    ],
+    "events_count": 0,
+    "sports_count": 0,
+    "packetVersion": null
+  },
+  "https://line-lb54-w.bk6bba-resources.com/ma/sportEvent/sportCategories?version=0&lang=ru&scopeMarket=1600": {
+    "url": "https://line-lb54-w.bk6bba-resources.com/ma/sportEvent/sportCategories?version=0&lang=ru&scopeMarket=1600",
+    "status": 200,
+    "size": 100578,
+    "keys": [
+      "request",
+      "result",
+      "lang",
+      "version",
+      "sportCategories"
+    ],
+    "events_count": 0,
+    "sports_count": 0,
+    "packetVersion": null
+  },
+  "https://line-lb61-w.bk6bba-resources.com/ma/line/factorsCatalog/eventViewTables?version=0&lang=ru&sysId=21": {
+    "url": "https://line-lb61-w.bk6bba-resources.com/ma/line/factorsCatalog/eventViewTables?version=0&lang=ru&sysId=21",
+    "status": 200,
+    "size": 10379420,
+    "keys": [
+      "request",
+      "result",
+      "lang",
+      "version",
+      "configs"
+    ],
+    "events_count": 0,
+    "sports_count": 0,
+    "packetVersion": null
+  },
+  "https://line-lb61-w.bk6bba-resources.com/ma/events/list?lang=ru&version=84413781622&scopeMarket=1600": {
+    "url": "https://line-lb61-w.bk6bba-resources.com/ma/events/list?lang=ru&version=84413781622&scopeMarket=1600",
+    "status": 200,
+    "size": 468740,
+    "keys": [
+      "packetVersion",
+      "fromVersion",
+      "catalogTablesVersion",
+      "catalogSpecialTablesVersion",
+      "catalogEventViewVersion",
+      "sportBasicMarketsVersion",
+      "sportBasicFactorsVersion",
+      "independentFactorsVersion",
+      "factorsVersion",
+      "comboFactorsVersion",
+      "sportKindsVersion",
+      "topCompetitionsVersion",
+      "eventSmartFiltersVersion",
+      "geoCategoriesVersion",
+      "sportCategoriesVersion",
+      "publicPromos",
+      "tournamentInfos",
+      "sports",
+      "events",
+      "eventBlocks",
+      "eventMiscs",
+      "liveEventInfos",
+      "customFactors"
+    ],
+    "events_count": 91,
+    "sports_count": 74,
+    "packetVersion": 84413786910
+  },
+  "https://line-lb54-w.bk6bba-resources.com/ma/bookmakerPromo/promos?lang=ru&version=0&scopeMarket=1600": {
+    "url": "https://line-lb54-w.bk6bba-resources.com/ma/bookmakerPromo/promos?lang=ru&version=0&scopeMarket=1600",
+    "status": 200,
+    "size": 10483,
+    "keys": [
+      "request",
+      "result",
+      "lang",
+      "version",
+      "progressiveExpress",
+      "insuredExpress",
+      "increasedFactor"
+    ],
+    "events_count": 0,
+    "sports_count": 0,
+    "packetVersion": null
+  },
+  "https://line-lb61-w.bk6bba-resources.com/ma/events/list?lang=ru&version=84413786910&scopeMarket=1600": {
+    "url": "https://line-lb61-w.bk6bba-resources.com/ma/events/list?lang=ru&version=84413786910&scopeMarket=1600",
+    "status": 200,
+    "size": 312943,
+    "keys": [
+      "packetVersion",
+      "fromVersion",
+      "catalogTablesVersion",
+      "catalogSpecialTablesVersion",
+      "catalogEventViewVersion",
+      "sportBasicMarketsVersion",
+      "sportBasicFactorsVersion",
+      "independentFactorsVersion",
+      "factorsVersion",
+      "comboFactorsVersion",
+      "sportKindsVersion",
+      "topCompetitionsVersion",
+      "eventSmartFiltersVersion",
+      "geoCategoriesVersion",
+      "sportCategoriesVersion",
+      "publicPromos",
+      "tournamentInfos",
+      "sports",
+      "events",
+      "eventBlocks",
+      "eventMiscs",
+      "liveEventInfos",
+      "customFactors"
+    ],
+    "events_count": 34,
+    "sports_count": 36,
+    "packetVersion": 84413789367
+  },
+  "https://line-lb54-w.bk6bba-resources.com/ma/line/logos": {
+    "url": "https://line-lb54-w.bk6bba-resources.com/ma/line/logos",
+    "status": 200,
+    "size": 1012213,
+    "keys": [
+      "result",
+      "lang",
+      "teams",
+      "competitions",
+      "sportKinds",
+      "teamLogos",
+      "competitionLogos",
+      "sportKindLogos"
+    ],
+    "events_count": 0,
+    "sports_count": 0,
+    "packetVersion": null
+  },
+  "https://line-lb54-w.bk6bba-resources.com/ma/events/list?lang=ru&version=84413800123&scopeMarket=1600": {
+    "url": "https://line-lb54-w.bk6bba-resources.com/ma/events/list?lang=ru&version=84413800123&scopeMarket=1600",
+    "status": 200,
+    "size": 204224,
+    "keys": [
+      "packetVersion",
+      "fromVersion",
+      "catalogTablesVersion",
+      "catalogSpecialTablesVersion",
+      "catalogEventViewVersion",
+      "sportBasicMarketsVersion",
+      "sportBasicFactorsVersion",
+      "independentFactorsVersion",
+      "factorsVersion",
+      "comboFactorsVersion",
+      "sportKindsVersion",
+      "topCompetitionsVersion",
+      "eventSmartFiltersVersion",
+      "geoCategoriesVersion",
+      "sportCategoriesVersion",
+      "publicPromos",
+      "tournamentInfos",
+      "sports",
+      "events",
+      "eventBlocks",
+      "eventMiscs",
+      "liveEventInfos",
+      "customFactors"
+    ],
+    "events_count": 14,
+    "sports_count": 15,
+    "packetVersion": 84413802520
+  },
+  "https://line-lb61-w.bk6bba-resources.com/ma/events/list?lang=ru&version=84413805535&scopeMarket=1600": {
+    "url": "https://line-lb61-w.bk6bba-resources.com/ma/events/list?lang=ru&version=84413805535&scopeMarket=1600",
+    "status": 200,
+    "size": 296130,
+    "keys": [
+      "packetVersion",
+      "fromVersion",
+      "catalogTablesVersion",
+      "catalogSpecialTablesVersion",
+      "catalogEventViewVersion",
+      "sportBasicMarketsVersion",
+      "sportBasicFactorsVersion",
+      "independentFactorsVersion",
+      "factorsVersion",
+      "comboFactorsVersion",
+      "sportKindsVersion",
+      "topCompetitionsVersion",
+      "eventSmartFiltersVersion",
+      "geoCategoriesVersion",
+      "sportCategoriesVersion",
+      "publicPromos",
+      "tournamentInfos",
+      "sports",
+      "events",
+      "eventBlocks",
+      "eventMiscs",
+      "liveEventInfos",
+      "customFactors"
+    ],
+    "events_count": 45,
+    "sports_count": 46,
+    "packetVersion": 84413808635
+  }
+}

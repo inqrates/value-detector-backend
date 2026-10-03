@@ -1,39 +1,28 @@
 # parsers/winline_api.py
 """
-Winline API-парсер с поддержкой мультиспорта (НТ / волейбол / баскетбол / кибербаскет).
+Winline — WS-парсер через websockets (без Playwright).
 
-Особенности:
-  - Единый WebSocket wss.winline.ru/data_ng, бинарные фреймы.
-  - Декодирование через parsers.decoder.DataNgDecoder.
-  - Вид спорта — по event.sportId:
-      20  → table_tennis
-      23  → volleyball
-      2   → basketball
-      193 → cyber_basketball  (Кибер NBA)
-      153 → cyber_basketball  (ESport NBA2K, страховка)
+Handshake: 5 текстовых команд сразу после connect:
+  "lang", "AA==", "data", "WINLINE", "getdate"
 
-Формат данных:
-  event.score      = "1:0"                    — партии/сеты/общий счёт
-  event.setScores  = "11:9 - 4:3"             — части через " - ", последняя = активная
-  event.time       = "2сет" / "1Ч 9:59"       — фаза (для баскетбола "NЧ")
-  event.state      = 1 (идёт), 2, 3 (завершено)
+Данные: бинарные gzip-кадры → DataNgDecoder (уже есть).
 
-Кэфы (market → значения):
-  market='1' type=1        → П1/П2 (values=[П1, П2])
-  market='Больше' type=4   → тотал матча (values=[ТБ, ТМ], coeff=линия)
-  market='Больше' type=71  → тотал партии/четверти
-  market='1' type=3        → фора матча (values=[Ф1, Ф2], coeff=линия)
+Heartbeat: Winline НЕ отвечает на стандартный WS-ping (websockets шлёт его
+автоматически каждые 20 сек), из-за чего сервер рвёт соединение с 1011.
+Решение — отключить встроенный ping и слать свой heartbeat через "getdate"
+каждые 20 секунд. Winline на getdate отвечает всегда.
 """
 import asyncio
+import json
 import logging
 import re
 import time
-from typing import Dict, Optional, List
-from playwright.async_api import WebSocket
+from pathlib import Path
+from typing import Dict, List, Optional
+
+import websockets
+
 from core.models import Match
-from parsers.base import BaseParser
-from core.browser_manager import browser_manager
-from config import PAGE_LOAD_TIMEOUT, PAGE_STABILIZE_TIME, ZOOM, SPORT_URLS
 from core.sport_map import (
     get_url_slug, format_phase,
     TABLE_TENNIS, VOLLEYBALL, BASKETBALL, CYBER_BASKETBALL,
@@ -42,73 +31,276 @@ from parsers.decoder import DataNgDecoder, WebSocketDecodeError
 
 logger = logging.getLogger(__name__)
 
+COOKIES_PATH = Path("cookies/winline.json")
 
-class WinlineApiParser(BaseParser):
-    # sportId (Winline) → sport_key
+
+class WinlineApiParser:
+    bk_id = "winline"
+
+    WS_URL = "wss://wss.winline.ru/data_ng?client=newsite&nb=true"
+
+    HANDSHAKE_FRAMES = ["lang", "AA==", "data", "WINLINE", "getdate"]
+
+    # sportId → sport_key
     SPORT_IDS = {
         20:  TABLE_TENNIS,
         23:  VOLLEYBALL,
         2:   BASKETBALL,
-        193: CYBER_BASKETBALL,    # Кибер NBA
-        153: CYBER_BASKETBALL,    # ESport NBA2K
+        193: CYBER_BASKETBALL,
+        153: CYBER_BASKETBALL,
     }
 
-    def __init__(self, detector=None, aggregator=None, enabled_sports=None):
-        super().__init__('winline', detector=detector, aggregator=aggregator)
+    IMPERSONATE_UA = (
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+        "AppleWebKit/537.36 (KHTML, like Gecko) "
+        "Chrome/150.0.0.0 Safari/537.36"
+    )
 
+    WS_RECONNECT_DELAY = 2.0       # после штатного закрытия — быстро
+    WS_RECONNECT_DELAY_MAX = 30.0  # после серии ошибок
+    CLEANUP_TTL = 60.0
+    HEARTBEAT_INTERVAL = 20.0      # getdate каждые 20 сек
+
+    def __init__(self, detector=None, aggregator=None, enabled_sports=None):
+        self.detector = detector
+        self.aggregator = aggregator
         self.enabled_sports = enabled_sports or [
             TABLE_TENNIS, VOLLEYBALL, BASKETBALL, CYBER_BASKETBALL,
         ]
-
-        # Общий лайв Winline (одна страница на все виды)
-        self.url = SPORT_URLS.get("_all", {}).get("winline", self.url)
-        logger.info(f"[{self.bk_id}] Используем общий лайв: {self.url}")
+        self.is_running = False
 
         self._decoder = DataNgDecoder()
 
         # Кэши
-        self._events_cache: Dict[int, dict] = {}         # event_id → merged event
-        self._lines_cache: Dict[int, Dict[int, dict]] = {}  # event_id → {line_id: line}
+        self._events_cache: Dict[int, dict] = {}
+        self._lines_cache: Dict[int, Dict[int, dict]] = {}
         self._first_seen: Dict[int, float] = {}
         self._last_sent_time: Dict[int, float] = {}
+        self._last_update_time: Dict[int, float] = {}
 
-        self.is_running = False
-        self._frame_count = 0
+        self._ws = None
+        self._cookie_header = ""
+
+        # Статистика реконнектов (для дебага)
+        self._reconnects_total = 0
+        self._reconnects_fast = 0      # штатные close → быстрый reconnect
+        self._reconnects_error = 0     # аномальные → медленный reconnect
 
     # ============================================================
-    # Запуск
+    # Cookies
+    # ============================================================
+    def _load_cookies_header(self) -> str:
+        if not COOKIES_PATH.exists():
+            return ""
+        try:
+            data = json.loads(COOKIES_PATH.read_text(encoding="utf-8"))
+            cookies = data.get("cookies", [])
+            return "; ".join(
+                f"{c['name']}={c['value']}" for c in cookies
+                if c.get("name") and c.get("value")
+            )
+        except Exception:
+            return ""
+
+    # ============================================================
+    # Жизненный цикл
     # ============================================================
     async def start(self):
-        if self.page is None or self.page.is_closed():
-            self.page = await browser_manager.new_page()
-            self.page.on("websocket", self._handle_websocket)
+        self._cookie_header = self._load_cookies_header()
+        logger.info(f"[{self.bk_id}] 🍪 Cookies: {'да' if self._cookie_header else 'нет'}")
 
-            logger.info(f"[{self.bk_id}] Загрузка страницы {self.url}")
-            await self.page.goto(self.url, wait_until='domcontentloaded',
-                                 timeout=PAGE_LOAD_TIMEOUT)
-            await self.page.wait_for_timeout(PAGE_STABILIZE_TIME)
-            await self.page.evaluate(f"document.body.style.zoom = '{int(ZOOM * 100)}%'")
-            await self.page.wait_for_timeout(500)
+    async def stop(self):
+        self.is_running = False
+        if self._ws is not None:
+            try:
+                await self._ws.close()
+            except Exception:
+                pass
+            self._ws = None
+        logger.info(f"[{self.bk_id}] 🛑 Остановка WS-парсера...")
 
-            logger.info(f"[{self.bk_id}] ✅ Страница загружена, перехват WS активен")
+    async def run(self):
+        self.is_running = True
+        await self.start()
+        logger.info(f"[{self.bk_id}] 🚀 WS-парсер Winline запущен (без Playwright)")
 
-    def _handle_websocket(self, ws: WebSocket):
-        logger.info(f"[{self.bk_id}] 🔌 WebSocket: {ws.url}")
-        if 'wss.winline.ru/data_ng' in ws.url:
-            ws.on("framereceived", self._on_frame)
+        ws_task = asyncio.create_task(self._ws_loop())
+        send_task = asyncio.create_task(self._send_loop())
 
-    def _on_frame(self, frame):
-        self._frame_count += 1
         try:
-            payload = frame if isinstance(frame, (bytes, bytearray)) else (
-                frame.payload if hasattr(frame, 'payload') else None
+            await asyncio.gather(ws_task, send_task)
+        except asyncio.CancelledError:
+            pass
+        finally:
+            ws_task.cancel()
+            send_task.cancel()
+            try:
+                await asyncio.gather(ws_task, send_task, return_exceptions=True)
+            except Exception:
+                pass
+
+    # ============================================================
+    # WS-цикл с реконнектом
+    # ============================================================
+    async def _ws_loop(self):
+        delay = self.WS_RECONNECT_DELAY
+        while self.is_running:
+            try:
+                closed_cleanly = await self._ws_connect_and_listen()
+
+                if not self.is_running:
+                    break
+
+                if closed_cleanly:
+                    # Штатное закрытие (сервер, keepalive, EOF) — быстрый reconnect
+                    self._reconnects_fast += 1
+                    delay = self.WS_RECONNECT_DELAY
+                    logger.info(
+                        f"[{self.bk_id}] WS закрыт → реконнект через {delay:.1f}с "
+                        f"(штатных: {self._reconnects_fast}, "
+                        f"ошибок: {self._reconnects_error})"
+                    )
+                else:
+                    # Аномалия — exponential backoff
+                    self._reconnects_error += 1
+                    delay = min(delay * 2, self.WS_RECONNECT_DELAY_MAX)
+                    logger.warning(
+                        f"[{self.bk_id}] WS аномально закрыт → "
+                        f"реконнект через {delay:.1f}с"
+                    )
+
+            except asyncio.CancelledError:
+                break
+            except Exception as e:
+                if not self.is_running:
+                    break
+                self._reconnects_error += 1
+                delay = min(delay * 2, self.WS_RECONNECT_DELAY_MAX)
+                logger.warning(
+                    f"[{self.bk_id}] WS ошибка ({type(e).__name__}): {e} → "
+                    f"реконнект через {delay:.1f}с"
+                )
+
+            if not self.is_running:
+                break
+            await asyncio.sleep(delay)
+
+    async def _ws_connect_and_listen(self) -> bool:
+        """
+        Возвращает True если закрытие штатное (сервер/EOF/сеть),
+        False если аномалия (ошибка протокола).
+        """
+        headers = [
+            ("User-Agent", self.IMPERSONATE_UA),
+            ("Origin", "https://winline.ru"),
+        ]
+        if self._cookie_header:
+            headers.append(("Cookie", self._cookie_header))
+
+        logger.info(f"[{self.bk_id}] 🔌 WS подключаемся...")
+
+        # ВАЖНО: ping_interval=None — отключаем стандартный WS-ping.
+        # Winline на него не отвечает, из-за этого прилетает 1011.
+        # Вместо этого — свой heartbeat через "getdate".
+        async with websockets.connect(
+            self.WS_URL,
+            additional_headers=headers,
+            max_size=50 * 1024 * 1024,
+            ping_interval=None,
+            ping_timeout=None,
+            close_timeout=5,
+        ) as ws:
+            self._ws = ws
+            logger.info(f"[{self.bk_id}] ✅ WS подключён")
+
+            # Handshake
+            for cmd in self.HANDSHAKE_FRAMES:
+                try:
+                    await ws.send(cmd)
+                    await asyncio.sleep(0.05)
+                except Exception as e:
+                    logger.warning(f"[{self.bk_id}] handshake {cmd!r}: {e}")
+                    return False
+
+            logger.info(f"[{self.bk_id}] 📤 Handshake отправлен")
+
+            # Запускаем heartbeat (getdate каждые 20 сек)
+            hb_task = asyncio.create_task(self._heartbeat_loop(ws))
+
+            try:
+                async for frame in ws:
+                    if not self.is_running:
+                        break
+                    try:
+                        self._on_frame(frame)
+                    except Exception as e:
+                        logger.debug(f"[{self.bk_id}] frame: {e}")
+            except websockets.ConnectionClosed as e:
+                # 1011, 1000, 1006 — все штатные варианты после handshake
+                # Логируем на INFO, без стека
+                logger.info(
+                    f"[{self.bk_id}] WS закрыт сервером: "
+                    f"code={e.code}, reason={e.reason!r}"
+                )
+                return True
+            except websockets.ConnectionClosedError as e:
+                # Аномальное закрытие — логируем но не крашим
+                logger.info(
+                    f"[{self.bk_id}] WS аномально закрыт: "
+                    f"code={e.code}, reason={e.reason!r}"
+                )
+                return True   # всё равно переподключаемся быстро — это не сеть
+            except (ConnectionResetError, BrokenPipeError, OSError) as e:
+                logger.info(f"[{self.bk_id}] WS сетевой сбой: {type(e).__name__}")
+                return True
+            finally:
+                hb_task.cancel()
+                try:
+                    await hb_task
+                except asyncio.CancelledError:
+                    pass
+                except Exception:
+                    pass
+
+        self._ws = None
+        return True
+
+    async def _heartbeat_loop(self, ws):
+        """
+        Раз в HEARTBEAT_INTERVAL шлём "getdate".
+        Winline всегда отвечает на это — соединение остаётся живым.
+        """
+        while True:
+            try:
+                await asyncio.sleep(self.HEARTBEAT_INTERVAL)
+                if ws.closed:
+                    break
+                await ws.send("getdate")
+                logger.debug(f"[{self.bk_id}] heartbeat sent")
+            except asyncio.CancelledError:
+                break
+            except websockets.ConnectionClosed:
+                break
+            except Exception as e:
+                logger.debug(f"[{self.bk_id}] heartbeat: {e}")
+                break
+
+    # ============================================================
+    # Обработка кадра
+    # ============================================================
+    def _on_frame(self, payload):
+        if isinstance(payload, str):
+            return  # text-фреймов после handshake не ожидаем
+        try:
+            data = payload if isinstance(payload, (bytes, bytearray)) else (
+                payload.payload if hasattr(payload, "payload") else None
             )
-            if not payload:
+            if not data:
                 return
 
-            decoded = self._decoder.decode(payload)
+            decoded = self._decoder.decode(bytes(data))
             if decoded is None:
-                return  # menu (step 16)
+                return  # menu
 
             items = decoded if isinstance(decoded, list) else [decoded]
             for item in items:
@@ -118,14 +310,13 @@ class WinlineApiParser(BaseParser):
                 if t in ("prematch", "live"):
                     self._apply_events(item.get("events") or [])
                     self._apply_lines(item.get("lines") or [])
-
         except WebSocketDecodeError:
             pass
         except Exception as e:
-            logger.debug(f"[{self.bk_id}] кадр: {e}")
+            logger.debug(f"[{self.bk_id}] decode: {e}")
 
     # ============================================================
-    # События
+    # Применение events / lines
     # ============================================================
     def _apply_events(self, events: list):
         for ev in events:
@@ -144,10 +335,6 @@ class WinlineApiParser(BaseParser):
 
             old = self._events_cache.get(eid)
 
-            # ── Фильтр prematch ──
-            # Не храним события без признаков live: state=None,
-            # score пустой/'-:-', time пустой. Их тысячи — память и CPU.
-            # Когда матч начнётся, придёт новое событие со state != None.
             state = ev.get("state")
             score_raw = (ev.get("score") or "").strip()
             time_raw = (ev.get("time") or "").strip()
@@ -159,13 +346,15 @@ class WinlineApiParser(BaseParser):
             )
 
             if not has_live_data and old is None:
-                continue  # чистый prematch, ещё не видели как live — не храним
+                continue
 
             merged = {**(old or {}), **ev}
             self._events_cache[eid] = merged
 
             if eid not in self._first_seen:
                 self._first_seen[eid] = time.time()
+
+            self._last_update_time[eid] = time.time()
 
     def _apply_lines(self, lines: list):
         for ln in lines:
@@ -183,23 +372,21 @@ class WinlineApiParser(BaseParser):
 
             old = bucket.get(lid, {})
             bucket[lid] = {**old, **ln}
+            self._last_update_time[eid] = time.time()
 
     # ============================================================
-    # Парсинг события → Match
+    # Парсинг event → Match
     # ============================================================
     def _parse_event(self, eid: int, ev: dict) -> Optional[dict]:
-                # Пропускаем prematch: у него нет ни score, ни time
         score_raw = (ev.get("score") or "").strip()
         time_raw = (ev.get("time") or "").strip()
         state = ev.get("state")
 
-        # state=None → точно prematch
         if state is None:
             return None
-
-        # score пустой или '-:-' И time пустое → ещё не начался
-        if (score_raw in ("", "-:-") and not time_raw):
+        if score_raw in ("", "-:-") and not time_raw:
             return None
+
         sport_id = ev.get("sportId")
         sport_key = self.SPORT_IDS.get(sport_id)
         if not sport_key or sport_key not in self.enabled_sports:
@@ -212,14 +399,12 @@ class WinlineApiParser(BaseParser):
         if not p1 or not p2:
             return None
 
-                # score "X:Y" (уже отфильтровали пустые выше)
         try:
             a, b = score_raw.split(":", 1)
             score1, score2 = int(a), int(b)
         except ValueError:
             score1 = score2 = 0
 
-        # setScores "A:B - C:D - E:F"
         set_scores_str = ev.get("setScores") or ""
         sub1 = sub2 = 0
         parts = []
@@ -232,20 +417,16 @@ class WinlineApiParser(BaseParser):
                 except ValueError:
                     pass
 
-        # phase_num
         if sport_key in (BASKETBALL, CYBER_BASKETBALL):
             time_str = ev.get("time") or ""
-            m = re.search(r'(\d+)\s*Ч', time_str)
+            m = re.search(r"(\d+)\s*Ч", time_str)
             if m:
                 phase_num = int(m.group(1))
             else:
-                # fallback: количество частей в setScores
                 phase_num = len(parts) if parts else 1
         else:
-            # НТ / волейбол: фаза = сумма партий/сетов + 1
             phase_num = score1 + score2 + 1
 
-        # Кэфы из lines
         lines = self._lines_cache.get(eid, {})
         odds1 = odds2 = 0.0
         total_line = total_over = total_under = 0.0
@@ -259,28 +440,25 @@ class WinlineApiParser(BaseParser):
             if not isinstance(values, list) or len(values) < 2:
                 continue
 
-            # П1/П2 — market='1', type=1 (основной)
-            if market == '1' and mtype == 1 and len(values) >= 2:
+            if market == "1" and mtype == 1 and len(values) >= 2:
                 try:
                     odds1 = float(values[0])
                     odds2 = float(values[1])
                 except (ValueError, TypeError):
                     pass
 
-            # Тотал матча — market='Больше', type=4
-            elif market == 'Больше' and mtype == 4:
+            elif market == "Больше" and mtype == 4:
                 try:
                     total_over = float(values[0])
                     total_under = float(values[1])
                     if coeff:
-                        total_line = float(str(coeff).replace(',', '.'))
+                        total_line = float(str(coeff).replace(",", "."))
                 except (ValueError, TypeError):
                     pass
 
-            # Фора матча — market='1', type=3 (best effort)
-            elif market == '1' and mtype == 3 and h1 == 0.0 and h_o1 == 0.0:
+            elif market == "1" and mtype == 3 and h1 == 0.0 and h_o1 == 0.0:
                 try:
-                    line_val = float(str(coeff).replace(',', '.'))
+                    line_val = float(str(coeff).replace(",", "."))
                     h1 = line_val
                     h_o1 = float(values[0])
                     h2 = -line_val
@@ -289,30 +467,38 @@ class WinlineApiParser(BaseParser):
                     pass
 
         return {
-            'sport': sport_key,
-            'player1': p1,
-            'player2': p2,
-            'score1': score1, 'score2': score2,
-            'sub1': sub1, 'sub2': sub2,
-            'phase_num': phase_num,
-            'tournament': ev.get('championship') or 'Winline',
-            'odds1': odds1, 'odds2': odds2,
-            'total_line': total_line,
-            'total_over': total_over,
-            'total_under': total_under,
-            'handicap1': h1, 'handicap2': h2,
-            'handicap_odds1': h_o1, 'handicap_odds2': h_o2,
+            "sport": sport_key,
+            "player1": p1,
+            "player2": p2,
+            "score1": score1, "score2": score2,
+            "sub1": sub1, "sub2": sub2,
+            "phase_num": phase_num,
+            "tournament": ev.get("championship") or "Winline",
+            "odds1": odds1, "odds2": odds2,
+            "total_line": total_line,
+            "total_over": total_over,
+            "total_under": total_under,
+            "handicap1": h1, "handicap2": h2,
+            "handicap_odds1": h_o1, "handicap_odds2": h_o2,
         }
 
     # ============================================================
-    # Отправка в detector
+    # Основной цикл отправки
     # ============================================================
+    async def _send_loop(self):
+        while self.is_running:
+            try:
+                await self._try_send_matches()
+                await self._cleanup_old()
+            except Exception as e:
+                logger.error(f"[{self.bk_id}] send loop: {e}", exc_info=True)
+            await asyncio.sleep(1.0)
+
     async def _try_send_matches(self):
         sent = 0
         current_time = time.time()
 
         for eid, ev in list(self._events_cache.items()):
-            # Пропускаем завершённые
             if ev.get("state") in (3, 4):
                 continue
 
@@ -320,11 +506,10 @@ class WinlineApiParser(BaseParser):
             if not parsed:
                 continue
 
-            sport_key = parsed['sport']
+            sport_key = parsed["sport"]
 
             first_seen = self._first_seen.get(eid, current_time)
-            # Правило проекта: не фильтровать по кэфам, но дать 15с grace
-            if parsed['odds1'] == 0 and parsed['odds2'] == 0:
+            if parsed["odds1"] == 0 and parsed["odds2"] == 0:
                 if current_time - first_seen < 15:
                     continue
 
@@ -333,42 +518,41 @@ class WinlineApiParser(BaseParser):
                 continue
 
             current_state = (
-                parsed['score1'], parsed['score2'],
-                parsed['sub1'], parsed['sub2'],
-                parsed['phase_num'],
-                parsed['odds1'], parsed['odds2'],
-                parsed['total_line'], parsed['total_over'], parsed['total_under'],
-                parsed['handicap1'], parsed['handicap2'],
-                parsed['handicap_odds1'], parsed['handicap_odds2'],
+                parsed["score1"], parsed["score2"],
+                parsed["sub1"], parsed["sub2"],
+                parsed["phase_num"],
+                parsed["odds1"], parsed["odds2"],
+                parsed["total_line"], parsed["total_over"], parsed["total_under"],
+                parsed["handicap1"], parsed["handicap2"],
+                parsed["handicap_odds1"], parsed["handicap_odds2"],
             )
-            if ev.get('_last_sent') == current_state:
+            if ev.get("_last_sent") == current_state:
                 continue
 
-            phase_name = format_phase(sport_key, parsed['phase_num'])
+            phase_name = format_phase(sport_key, parsed["phase_num"])
 
-            # URL матча — короткий ID-only (Winline SPA редиректит)
-            slug = get_url_slug('winline', sport_key) or 'nastolijnyj_tennis'
+            slug = get_url_slug(self.bk_id, sport_key) or "nastolijnyj_tennis"
             match_url = f"https://winline.ru/live/sport/{slug}/{eid}"
 
             match = Match(
-                bk_id='winline',
+                bk_id=self.bk_id,
                 match_id=str(eid),
-                player1=parsed['player1'],
-                player2=parsed['player2'],
-                score1=parsed['score1'],
-                score2=parsed['score2'],
-                sub_score1=parsed['sub1'],
-                sub_score2=parsed['sub2'],
-                tournament=parsed['tournament'],
-                odds1=parsed['odds1'],
-                odds2=parsed['odds2'],
-                total_line=parsed['total_line'],
-                total_over=parsed['total_over'],
-                total_under=parsed['total_under'],
-                handicap1=parsed['handicap1'],
-                handicap2=parsed['handicap2'],
-                handicap_odds1=parsed['handicap_odds1'],
-                handicap_odds2=parsed['handicap_odds2'],
+                player1=parsed["player1"],
+                player2=parsed["player2"],
+                score1=parsed["score1"],
+                score2=parsed["score2"],
+                sub_score1=parsed["sub1"],
+                sub_score2=parsed["sub2"],
+                tournament=parsed["tournament"],
+                odds1=parsed["odds1"],
+                odds2=parsed["odds2"],
+                total_line=parsed["total_line"],
+                total_over=parsed["total_over"],
+                total_under=parsed["total_under"],
+                handicap1=parsed["handicap1"],
+                handicap2=parsed["handicap2"],
+                handicap_odds1=parsed["handicap_odds1"],
+                handicap_odds2=parsed["handicap_odds2"],
                 timestamp=current_time,
                 raw_time=phase_name,
                 sport=sport_key,
@@ -380,7 +564,7 @@ class WinlineApiParser(BaseParser):
             if self.aggregator:
                 self.aggregator.update(match)
 
-            ev['_last_sent'] = current_state
+            ev["_last_sent"] = current_state
             self._last_sent_time[eid] = current_time
             sent += 1
 
@@ -391,47 +575,21 @@ class WinlineApiParser(BaseParser):
                 f"К: {match.odds1}/{match.odds2}"
             )
 
-        # Чистка старых events (не видели >60с)
-        ttl = 60.0
+        if sent:
+            logger.info(
+                f"[{self.bk_id}] ✅ Отправлено: {sent} "
+                f"(в кеше events: {len(self._events_cache)})"
+            )
+
+    async def _cleanup_old(self):
+        now = time.time()
         for eid in list(self._events_cache.keys()):
-            if current_time - self._first_seen.get(eid, current_time) > ttl:
-                if current_time - self._last_sent_time.get(eid, 0) > ttl:
+            if now - self._first_seen.get(eid, now) > self.CLEANUP_TTL:
+                if now - self._last_sent_time.get(eid, 0) > self.CLEANUP_TTL:
                     self._events_cache.pop(eid, None)
                     self._lines_cache.pop(eid, None)
                     self._first_seen.pop(eid, None)
                     self._last_sent_time.pop(eid, None)
 
-        if sent:
-            logger.info(f"[{self.bk_id}] ✅ Отправлено: {sent} (в кеше: {len(self._events_cache)})")
-
-    # ============================================================
-    # Loop
-    # ============================================================
     async def parse(self) -> List[Match]:
         return []
-
-    async def run(self):
-        self.is_running = True
-        logger.info(f"[{self.bk_id}] 🚀 API-парсер Winline (WebSocket) запущен")
-        await self.start()
-
-        while self.is_running:
-            try:
-                await asyncio.sleep(1)
-                await self._try_send_matches()
-            except asyncio.CancelledError:
-                break
-            except Exception as e:
-                logger.error(f"[{self.bk_id}] Критическая ошибка: {e}", exc_info=True)
-                await self.stop()
-                await asyncio.sleep(5)
-
-    async def stop(self):
-        self.is_running = False
-        if self.page and not self.page.is_closed():
-            try:
-                self.page.remove_listener("websocket", self._handle_websocket)
-            except Exception:
-                pass
-            await browser_manager.close_page(self.page)
-        logger.info(f"[{self.bk_id}] 🛑 Остановка парсера...")
