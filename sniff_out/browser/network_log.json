@@ -1,0 +1,1492 @@
+[
+  {
+    "ts": 1790861891.500048,
+    "method": "GET",
+    "url": "https://line-lb54-w.bk6bba-resources.com/ma/line/factorsCatalog/eventViewTables?version=0&lang=ru&sysId=21",
+    "host": "line-lb54-w.bk6bba-resources.com",
+    "type": "xhr",
+    "status": 200,
+    "size": 10379423,
+    "preview": "{\"request\": \"factorsCatalog/eventViewTables\", \"result\": \"eventViewTables\", \"lang\": \"ru\", \"version\": 1745326802, \"configs\": [{\"id\": \"1\", \"place\": \"line\", \"sports\": [\"40479\", \"40480\", \"40481\"], \"tabs\": [], \"tableInTabGroups\": [], \"tables\": [], \"specialTables\": []}, {\"id\": \"2\", \"place\": \"live\", \"sports"
+  },
+  {
+    "ts": 1790861889.3520064,
+    "method": "POST",
+    "url": "https://line-lb54-w.bk6bba-resources.com/ma/line/logos",
+    "host": "line-lb54-w.bk6bba-resources.com",
+    "type": "xhr",
+    "status": 200,
+    "size": 1256323,
+    "preview": "{\"result\": \"logos\", \"lang\": \"ru\", \"teams\": {\"0\": \"none\", \"350663\": \"80124\", \"351301\": \"94936\", \"352461\": \"77895\", \"354339\": \"2206\", \"356981\": \"99938\", \"357067\": \"59140\", \"357075\": \"56630\", \"357112\": \"41222\", \"357417\": \"47784\", \"357436\": \"49515\", \"357445\": \"56378\", \"357547\": \"43802\", \"357550\": \"62188"
+  },
+  {
+    "ts": 1790861888.7758236,
+    "method": "GET",
+    "url": "https://line-lb54-w.bk6bba-resources.com/ma/line/factorsCatalog/independentFactors?version=0&lang=ru&sysId=21&scopeMarket=1600",
+    "host": "line-lb54-w.bk6bba-resources.com",
+    "type": "xhr",
+    "status": 200,
+    "size": 830284,
+    "preview": "{\"request\": \"factorsCatalog/independentFactors\", \"result\": \"independentFactors\", \"lang\": \"ru\", \"version\": 1706316381, \"factorsVersion\": 84439453922, \"independentFactors\": [{\"id\": \"7\", \"sports\": [\"1\"], \"group1\": {\"eventKind\": \"1\", \"factors\": [\"688\", \"691\", \"7312\", \"7309\", \"697\", \"1541\", \"1720\", \"9986"
+  },
+  {
+    "ts": 1790861889.038049,
+    "method": "GET",
+    "url": "https://line-lb54-w.bk6bba-resources.com/ma/line/factorsCatalog/tables?version=0&lang=ru&sysId=21",
+    "host": "line-lb54-w.bk6bba-resources.com",
+    "type": "xhr",
+    "status": 200,
+    "size": 793996,
+    "preview": "{\"request\": \"factorsCatalog/tables\", \"result\": \"tables\", \"lang\": \"ru\", \"version\": 1724151144, \"groups\": [{\"name\": \"Основные ставки\", \"tables\": [{\"num\": 0, \"sortByParam\": true, \"rows\": [[{\"name\": \"Следующая ошибка\"}, {\"name\": \"%1\"}, {\"name\": \"%2\"}, {\"name\": \"Никто\"}], [{\"name\": \"%P-я ошибка\"}, {\"kind"
+  },
+  {
+    "ts": 1790861885.217074,
+    "method": "GET",
+    "url": "https://cdn-ec.bk6bba-resources.ru/webStaticRed/website/2.10.96/config-8ae6913a5c56f0a26fcfb18696e89725.json",
+    "host": "cdn-ec.bk6bba-resources.ru",
+    "type": "fetch",
+    "status": 200,
+    "size": 696571,
+    "preview": "{\"common\": {\"siteAlias\": \"red\", \"scopeMarket\": 1600, \"languages\": [{\"isoCode\": \"ru\", \"isoCode3\": \"rus\", \"fileName\": \"locale.bk.ru.json\", \"caption\": \"Русский\", \"iconResourceName\": \"langIcon_ru\", \"rendertron\": \"true\"}, {\"isoCode\": \"en\", \"isoCode3\": \"eng\", \"fileName\": \"locale.bk.en.json\", \"caption\": \"E"
+  },
+  {
+    "ts": 1790861885.2538993,
+    "method": "GET",
+    "url": "https://cdn-ec.bk6bba-resources.ru/webStaticRed/website/2.10.96/locale/site/locale.bk.ru.json",
+    "host": "cdn-ec.bk6bba-resources.ru",
+    "type": "fetch",
+    "status": 200,
+    "size": 403800,
+    "preview": "{\"code\": \"ru\", \"name\": \"Русский\", \"key\": \"rus\", \"currencyShort\": {\"RUB\": \"РУБ\", \"USD\": \"USD\"}, \"main\": {\"emptyList\": \"Список пуст\", \"yes\": \"Да\", \"no\": \"Нет\", \"save\": \"Сохранить\", \"time\": {\"today\": \"Сегодня\", \"forWeek\": \"За неделю\", \"forMonth\": \"За месяц\", \"forThreeMonth\": \"За 3 месяца\", \"forAllTime\""
+  },
+  {
+    "ts": 1790861888.0338893,
+    "method": "POST",
+    "url": "https://clientsapi-lb54-w.bk6bba-resources.com/loyalty/getPublicPromos",
+    "host": "clientsapi-lb54-w.bk6bba-resources.com",
+    "type": "xhr",
+    "status": 200,
+    "size": 261412,
+    "preview": "{\"result\": \"actionInfoList\", \"viewKeysVersion\": \"0\", \"list\": [], \"viewsIdByAlias\": {}, \"zonesIdByAlias\": {}, \"currencies\": [{\"id\": 1, \"sign\": \"₽\"}], \"oldRequest\": {\"result\": \"actionInfoList\", \"list\": [{\"actionId\": \"27694\", \"action\": {\"objectId\": \"27694\", \"version\": \"87633056054\", \"actionId\": \"27694\""
+  },
+  {
+    "ts": 1790861889.5463269,
+    "method": "POST",
+    "url": "https://clientsapi-lb54-w.bk6bba-resources.com/content/getContentFromVersion",
+    "host": "clientsapi-lb54-w.bk6bba-resources.com",
+    "type": "xhr",
+    "status": 200,
+    "size": 217977,
+    "preview": "{\"result\": \"contents\", \"contents\": [{\"items\": [{\"class\": \"Content.CountryFlag\", \"id\": \"120194\", \"version\": \"1194075901\", \"object\": {\"logoVector\": \"/ContentCommon/NewFlags/Abkhazia.svg\", \"logoSmall\": \"/ContentCommon/NewFlags/Abkhazia_16.png\", \"logoMedium\": \"/ContentCommon/NewFlags/Abkhazia_64.png\", \""
+  },
+  {
+    "ts": 1790861887.6499267,
+    "method": "POST",
+    "url": "https://clientsapi-lb54-w.bk6bba-resources.com/content/getContentFromVersion",
+    "host": "clientsapi-lb54-w.bk6bba-resources.com",
+    "type": "xhr",
+    "status": 200,
+    "size": 211658,
+    "preview": "{\"result\": \"contents\", \"contents\": [{\"items\": [{\"class\": \"Content.Setting\", \"id\": \"27902\", \"version\": \"246667302\", \"object\": {\"text\": \"Ставки на <sportName> в Лайве\", \"group\": \"1053\", \"picture\": \"\", \"datetimeOpen\": 1591088205498, \"datetimeClose\": null, \"caption\": \"Вид спорта\", \"datetimePublic\": -220"
+  },
+  {
+    "ts": 1790861887.8011324,
+    "method": "POST",
+    "url": "https://clientsapi-lb54-w.bk6bba-resources.com/content/getContentFromVersion",
+    "host": "clientsapi-lb54-w.bk6bba-resources.com",
+    "type": "xhr",
+    "status": 200,
+    "size": 211658,
+    "preview": "{\"result\": \"contents\", \"contents\": [{\"items\": [{\"class\": \"Content.Setting\", \"id\": \"27902\", \"version\": \"246667302\", \"object\": {\"text\": \"Ставки на <sportName> в Лайве\", \"group\": \"1053\", \"picture\": \"\", \"datetimeOpen\": 1591088205498, \"datetimeClose\": null, \"caption\": \"Вид спорта\", \"datetimePublic\": -220"
+  },
+  {
+    "ts": 1790861957.6809194,
+    "method": "GET",
+    "url": "https://line-lb61-w.bk6bba-resources.com/ma/events/list?lang=ru&version=85614471974&scopeMarket=1600",
+    "host": "line-lb61-w.bk6bba-resources.com",
+    "type": "xhr",
+    "status": 200,
+    "size": 169232,
+    "preview": "{\"packetVersion\": 85614474906, \"fromVersion\": 85614470283, \"catalogTablesVersion\": 1724151144, \"catalogSpecialTablesVersion\": 1743401210, \"catalogEventViewVersion\": 1745326802, \"sportBasicMarketsVersion\": 834446873, \"sportBasicFactorsVersion\": 1732855968, \"independentFactorsVersion\": 1706316381, \"fa"
+  },
+  {
+    "ts": 1790861997.255592,
+    "method": "GET",
+    "url": "https://line-lb54-w.bk6bba-resources.com/ma/events/list?lang=ru&version=85614506206&scopeMarket=1600",
+    "host": "line-lb54-w.bk6bba-resources.com",
+    "type": "xhr",
+    "status": 200,
+    "size": 163715,
+    "preview": "{\"packetVersion\": 85614508738, \"fromVersion\": 85614504035, \"catalogTablesVersion\": 1724151144, \"catalogSpecialTablesVersion\": 1743401210, \"catalogEventViewVersion\": 1745326802, \"sportBasicMarketsVersion\": 834446873, \"sportBasicFactorsVersion\": 1732855968, \"independentFactorsVersion\": 1706316381, \"fa"
+  },
+  {
+    "ts": 1790861960.9805346,
+    "method": "GET",
+    "url": "https://line-lb61-w.bk6bba-resources.com/ma/events/list?lang=ru&version=85614474906&scopeMarket=1600",
+    "host": "line-lb61-w.bk6bba-resources.com",
+    "type": "xhr",
+    "status": 200,
+    "size": 160259,
+    "preview": "{\"packetVersion\": 85614478308, \"fromVersion\": 85614473176, \"catalogTablesVersion\": 1724151144, \"catalogSpecialTablesVersion\": 1743401210, \"catalogEventViewVersion\": 1745326802, \"sportBasicMarketsVersion\": 834446873, \"sportBasicFactorsVersion\": 1732855968, \"independentFactorsVersion\": 1706316381, \"fa"
+  },
+  {
+    "ts": 1790861967.5914736,
+    "method": "GET",
+    "url": "https://line-vk-w.bk6bba-resources.ru/events/list?lang=ru&version=85614480843&scopeMarket=1600",
+    "host": "line-vk-w.bk6bba-resources.ru",
+    "type": "xhr",
+    "status": 200,
+    "size": 159865,
+    "preview": "{\"packetVersion\": 85614483800, \"fromVersion\": 85614479282, \"catalogTablesVersion\": 1724151144, \"catalogSpecialTablesVersion\": 1743401210, \"catalogEventViewVersion\": 1745326802, \"sportBasicMarketsVersion\": 834446873, \"sportBasicFactorsVersion\": 1732855968, \"independentFactorsVersion\": 1706316381, \"fa"
+  },
+  {
+    "ts": 1790861914.787801,
+    "method": "GET",
+    "url": "https://line-vk-w.bk6bba-resources.ru/events/list?lang=ru&version=85614434499&scopeMarket=1600",
+    "host": "line-vk-w.bk6bba-resources.ru",
+    "type": "xhr",
+    "status": 200,
+    "size": 157946,
+    "preview": "{\"packetVersion\": 85614437227, \"fromVersion\": 85614432343, \"catalogTablesVersion\": 1724151144, \"catalogSpecialTablesVersion\": 1743401210, \"catalogEventViewVersion\": 1745326802, \"sportBasicMarketsVersion\": 834446873, \"sportBasicFactorsVersion\": 1732855968, \"independentFactorsVersion\": 1706316381, \"fa"
+  },
+  {
+    "ts": 1790861904.8927286,
+    "method": "GET",
+    "url": "https://line-vk-w.bk6bba-resources.ru/events/list?lang=ru&version=85614426661&scopeMarket=1600",
+    "host": "line-vk-w.bk6bba-resources.ru",
+    "type": "xhr",
+    "status": 200,
+    "size": 156188,
+    "preview": "{\"packetVersion\": 85614428916, \"fromVersion\": 85614424815, \"catalogTablesVersion\": 1724151144, \"catalogSpecialTablesVersion\": 1743401210, \"catalogEventViewVersion\": 1745326802, \"sportBasicMarketsVersion\": 834446873, \"sportBasicFactorsVersion\": 1732855968, \"independentFactorsVersion\": 1706316381, \"fa"
+  },
+  {
+    "ts": 1790861901.5977345,
+    "method": "GET",
+    "url": "https://line-vk-w.bk6bba-resources.ru/events/list?lang=ru&version=85614423991&scopeMarket=1600",
+    "host": "line-vk-w.bk6bba-resources.ru",
+    "type": "xhr",
+    "status": 200,
+    "size": 155936,
+    "preview": "{\"packetVersion\": 85614426661, \"fromVersion\": 85614422564, \"catalogTablesVersion\": 1724151144, \"catalogSpecialTablesVersion\": 1743401210, \"catalogEventViewVersion\": 1745326802, \"sportBasicMarketsVersion\": 834446873, \"sportBasicFactorsVersion\": 1732855968, \"independentFactorsVersion\": 1706316381, \"fa"
+  },
+  {
+    "ts": 1790862000.5921023,
+    "method": "GET",
+    "url": "https://line-vk-w.bk6bba-resources.ru/events/list?lang=ru&version=85614508738&scopeMarket=1600",
+    "host": "line-vk-w.bk6bba-resources.ru",
+    "type": "xhr",
+    "status": 200,
+    "size": 154703,
+    "preview": "{\"packetVersion\": 85614512843, \"fromVersion\": 85614507030, \"catalogTablesVersion\": 1724151144, \"catalogSpecialTablesVersion\": 1743401210, \"catalogEventViewVersion\": 1745326802, \"sportBasicMarketsVersion\": 834446873, \"sportBasicFactorsVersion\": 1732855968, \"independentFactorsVersion\": 1706316381, \"fa"
+  },
+  {
+    "ts": 1790861984.098323,
+    "method": "GET",
+    "url": "https://line-lb54-w.bk6bba-resources.com/ma/events/list?lang=ru&version=85614495484&scopeMarket=1600",
+    "host": "line-lb54-w.bk6bba-resources.com",
+    "type": "xhr",
+    "status": 200,
+    "size": 154573,
+    "preview": "{\"packetVersion\": 85614498343, \"fromVersion\": 85614493785, \"catalogTablesVersion\": 1724151144, \"catalogSpecialTablesVersion\": 1743401210, \"catalogEventViewVersion\": 1745326802, \"sportBasicMarketsVersion\": 834446873, \"sportBasicFactorsVersion\": 1732855968, \"independentFactorsVersion\": 1706316381, \"fa"
+  },
+  {
+    "ts": 1790861954.3837829,
+    "method": "GET",
+    "url": "https://line-lb61-w.bk6bba-resources.com/ma/events/list?lang=ru&version=85614469457&scopeMarket=1600",
+    "host": "line-lb61-w.bk6bba-resources.com",
+    "type": "xhr",
+    "status": 200,
+    "size": 152277,
+    "preview": "{\"packetVersion\": 85614471974, \"fromVersion\": 85614467292, \"catalogTablesVersion\": 1724151144, \"catalogSpecialTablesVersion\": 1743401210, \"catalogEventViewVersion\": 1745326802, \"sportBasicMarketsVersion\": 834446873, \"sportBasicFactorsVersion\": 1732855968, \"independentFactorsVersion\": 1706316381, \"fa"
+  },
+  {
+    "ts": 1790861911.477465,
+    "method": "GET",
+    "url": "https://line-lb61-w.bk6bba-resources.com/ma/events/list?lang=ru&version=85614431426&scopeMarket=1600",
+    "host": "line-lb61-w.bk6bba-resources.com",
+    "type": "xhr",
+    "status": 200,
+    "size": 152190,
+    "preview": "{\"packetVersion\": 85614434499, \"fromVersion\": 85614429874, \"catalogTablesVersion\": 1724151144, \"catalogSpecialTablesVersion\": 1743401210, \"catalogEventViewVersion\": 1745326802, \"sportBasicMarketsVersion\": 834446873, \"sportBasicFactorsVersion\": 1732855968, \"independentFactorsVersion\": 1706316381, \"fa"
+  },
+  {
+    "ts": 1790861980.7738516,
+    "method": "GET",
+    "url": "https://line-lb61-w.bk6bba-resources.com/ma/events/list?lang=ru&version=85614492862&scopeMarket=1600",
+    "host": "line-lb61-w.bk6bba-resources.com",
+    "type": "xhr",
+    "status": 200,
+    "size": 149148,
+    "preview": "{\"packetVersion\": 85614495484, \"fromVersion\": 85614490909, \"catalogTablesVersion\": 1724151144, \"catalogSpecialTablesVersion\": 1743401210, \"catalogEventViewVersion\": 1745326802, \"sportBasicMarketsVersion\": 834446873, \"sportBasicFactorsVersion\": 1732855968, \"independentFactorsVersion\": 1706316381, \"fa"
+  },
+  {
+    "ts": 1790861951.1971688,
+    "method": "GET",
+    "url": "https://line-vk-w.bk6bba-resources.ru/events/list?lang=ru&version=85614466491&scopeMarket=1600",
+    "host": "line-vk-w.bk6bba-resources.ru",
+    "type": "xhr",
+    "status": 200,
+    "size": 149123,
+    "preview": "{\"packetVersion\": 85614469457, \"fromVersion\": 85614465119, \"catalogTablesVersion\": 1724151144, \"catalogSpecialTablesVersion\": 1743401210, \"catalogEventViewVersion\": 1745326802, \"sportBasicMarketsVersion\": 834446873, \"sportBasicFactorsVersion\": 1732855968, \"independentFactorsVersion\": 1706316381, \"fa"
+  },
+  {
+    "ts": 1790861891.6982083,
+    "method": "GET",
+    "url": "https://line-lb54-w.bk6bba-resources.com/ma/events/list?lang=ru&version=85614413498&scopeMarket=1600",
+    "host": "line-lb54-w.bk6bba-resources.com",
+    "type": "xhr",
+    "status": 200,
+    "size": 148575,
+    "preview": "{\"packetVersion\": 85614417374, \"fromVersion\": 85614413102, \"catalogTablesVersion\": 1724151144, \"catalogSpecialTablesVersion\": 1743401210, \"catalogEventViewVersion\": 1745326802, \"sportBasicMarketsVersion\": 834446873, \"sportBasicFactorsVersion\": 1732855968, \"independentFactorsVersion\": 1706316381, \"fa"
+  },
+  {
+    "ts": 1790861964.2682562,
+    "method": "GET",
+    "url": "https://line-lb54-w.bk6bba-resources.com/ma/events/list?lang=ru&version=85614478308&scopeMarket=1600",
+    "host": "line-lb54-w.bk6bba-resources.com",
+    "type": "xhr",
+    "status": 200,
+    "size": 147098,
+    "preview": "{\"packetVersion\": 85614480843, \"fromVersion\": 85614475822, \"catalogTablesVersion\": 1724151144, \"catalogSpecialTablesVersion\": 1743401210, \"catalogEventViewVersion\": 1745326802, \"sportBasicMarketsVersion\": 834446873, \"sportBasicFactorsVersion\": 1732855968, \"independentFactorsVersion\": 1706316381, \"fa"
+  },
+  {
+    "ts": 1790861987.3883314,
+    "method": "GET",
+    "url": "https://line-vk-w.bk6bba-resources.ru/events/list?lang=ru&version=85614498343&scopeMarket=1600",
+    "host": "line-vk-w.bk6bba-resources.ru",
+    "type": "xhr",
+    "status": 200,
+    "size": 143852,
+    "preview": "{\"packetVersion\": 85614501125, \"fromVersion\": 85614496750, \"catalogTablesVersion\": 1724151144, \"catalogSpecialTablesVersion\": 1743401210, \"catalogEventViewVersion\": 1745326802, \"sportBasicMarketsVersion\": 834446873, \"sportBasicFactorsVersion\": 1732855968, \"independentFactorsVersion\": 1706316381, \"fa"
+  },
+  {
+    "ts": 1790861924.684985,
+    "method": "GET",
+    "url": "https://line-lb61-w.bk6bba-resources.com/ma/events/list?lang=ru&version=85614443071&scopeMarket=1600",
+    "host": "line-lb61-w.bk6bba-resources.com",
+    "type": "xhr",
+    "status": 200,
+    "size": 142214,
+    "preview": "{\"packetVersion\": 85614446502, \"fromVersion\": 85614440901, \"catalogTablesVersion\": 1724151144, \"catalogSpecialTablesVersion\": 1743401210, \"catalogEventViewVersion\": 1745326802, \"sportBasicMarketsVersion\": 834446873, \"sportBasicFactorsVersion\": 1732855968, \"independentFactorsVersion\": 1706316381, \"fa"
+  },
+  {
+    "ts": 1790861918.0785575,
+    "method": "GET",
+    "url": "https://line-vk-w.bk6bba-resources.ru/events/list?lang=ru&version=85614437227&scopeMarket=1600",
+    "host": "line-vk-w.bk6bba-resources.ru",
+    "type": "xhr",
+    "status": 200,
+    "size": 137636,
+    "preview": "{\"packetVersion\": 85614439893, \"fromVersion\": 85614435027, \"catalogTablesVersion\": 1724151144, \"catalogSpecialTablesVersion\": 1743401210, \"catalogEventViewVersion\": 1745326802, \"sportBasicMarketsVersion\": 834446873, \"sportBasicFactorsVersion\": 1732855968, \"independentFactorsVersion\": 1706316381, \"fa"
+  },
+  {
+    "ts": 1790861898.292045,
+    "method": "GET",
+    "url": "https://line-vk-w.bk6bba-resources.ru/events/list?lang=ru&version=85614421223&scopeMarket=1600",
+    "host": "line-vk-w.bk6bba-resources.ru",
+    "type": "xhr",
+    "status": 200,
+    "size": 136482,
+    "preview": "{\"packetVersion\": 85614423991, \"fromVersion\": 85614419601, \"catalogTablesVersion\": 1724151144, \"catalogSpecialTablesVersion\": 1743401210, \"catalogEventViewVersion\": 1745326802, \"sportBasicMarketsVersion\": 834446873, \"sportBasicFactorsVersion\": 1732855968, \"independentFactorsVersion\": 1706316381, \"fa"
+  },
+  {
+    "ts": 1790861908.1982052,
+    "method": "GET",
+    "url": "https://line-lb61-w.bk6bba-resources.com/ma/events/list?lang=ru&version=85614428916&scopeMarket=1600",
+    "host": "line-lb61-w.bk6bba-resources.com",
+    "type": "xhr",
+    "status": 200,
+    "size": 132444,
+    "preview": "{\"packetVersion\": 85614431426, \"fromVersion\": 85614427441, \"catalogTablesVersion\": 1724151144, \"catalogSpecialTablesVersion\": 1743401210, \"catalogEventViewVersion\": 1745326802, \"sportBasicMarketsVersion\": 834446873, \"sportBasicFactorsVersion\": 1732855968, \"independentFactorsVersion\": 1706316381, \"fa"
+  },
+  {
+    "ts": 1790861927.9764156,
+    "method": "GET",
+    "url": "https://line-lb61-w.bk6bba-resources.com/ma/events/list?lang=ru&version=85614446502&scopeMarket=1600",
+    "host": "line-lb61-w.bk6bba-resources.com",
+    "type": "xhr",
+    "status": 200,
+    "size": 132245,
+    "preview": "{\"packetVersion\": 85614449449, \"fromVersion\": 85614444788, \"catalogTablesVersion\": 1724151144, \"catalogSpecialTablesVersion\": 1743401210, \"catalogEventViewVersion\": 1745326802, \"sportBasicMarketsVersion\": 834446873, \"sportBasicFactorsVersion\": 1732855968, \"independentFactorsVersion\": 1706316381, \"fa"
+  },
+  {
+    "ts": 1790861993.9453235,
+    "method": "GET",
+    "url": "https://line-lb54-w.bk6bba-resources.com/ma/events/list?lang=ru&version=85614503642&scopeMarket=1600",
+    "host": "line-lb54-w.bk6bba-resources.com",
+    "type": "xhr",
+    "status": 200,
+    "size": 127873,
+    "preview": "{\"packetVersion\": 85614506206, \"fromVersion\": 85614501993, \"catalogTablesVersion\": 1724151144, \"catalogSpecialTablesVersion\": 1743401210, \"catalogEventViewVersion\": 1745326802, \"sportBasicMarketsVersion\": 834446873, \"sportBasicFactorsVersion\": 1732855968, \"independentFactorsVersion\": 1706316381, \"fa"
+  },
+  {
+    "ts": 1790861990.648541,
+    "method": "GET",
+    "url": "https://line-lb54-w.bk6bba-resources.com/ma/events/list?lang=ru&version=85614501125&scopeMarket=1600",
+    "host": "line-lb54-w.bk6bba-resources.com",
+    "type": "xhr",
+    "status": 200,
+    "size": 126054,
+    "preview": "{\"packetVersion\": 85614503642, \"fromVersion\": 85614499515, \"catalogTablesVersion\": 1724151144, \"catalogSpecialTablesVersion\": 1743401210, \"catalogEventViewVersion\": 1745326802, \"sportBasicMarketsVersion\": 834446873, \"sportBasicFactorsVersion\": 1732855968, \"independentFactorsVersion\": 1706316381, \"fa"
+  },
+  {
+    "ts": 1790861977.489633,
+    "method": "GET",
+    "url": "https://line-vk-w.bk6bba-resources.ru/events/list?lang=ru&version=85614490078&scopeMarket=1600",
+    "host": "line-vk-w.bk6bba-resources.ru",
+    "type": "xhr",
+    "status": 200,
+    "size": 125769,
+    "preview": "{\"packetVersion\": 85614492862, \"fromVersion\": 85614489027, \"catalogTablesVersion\": 1724151144, \"catalogSpecialTablesVersion\": 1743401210, \"catalogEventViewVersion\": 1745326802, \"sportBasicMarketsVersion\": 834446873, \"sportBasicFactorsVersion\": 1732855968, \"independentFactorsVersion\": 1706316381, \"fa"
+  },
+  {
+    "ts": 1790861944.459324,
+    "method": "GET",
+    "url": "https://line-lb61-w.bk6bba-resources.com/ma/events/list?lang=ru&version=85614461120&scopeMarket=1600",
+    "host": "line-lb61-w.bk6bba-resources.com",
+    "type": "xhr",
+    "status": 200,
+    "size": 121272,
+    "preview": "{\"packetVersion\": 85614464282, \"fromVersion\": 85614459619, \"catalogTablesVersion\": 1724151144, \"catalogSpecialTablesVersion\": 1743401210, \"catalogEventViewVersion\": 1745326802, \"sportBasicMarketsVersion\": 834446873, \"sportBasicFactorsVersion\": 1732855968, \"independentFactorsVersion\": 1706316381, \"fa"
+  },
+  {
+    "ts": 1790861895.0197396,
+    "method": "GET",
+    "url": "https://line-vk-w.bk6bba-resources.ru/events/list?lang=ru&version=85614417374&scopeMarket=1600",
+    "host": "line-vk-w.bk6bba-resources.ru",
+    "type": "xhr",
+    "status": 200,
+    "size": 120315,
+    "preview": "{\"packetVersion\": 85614421223, \"fromVersion\": 85614416089, \"catalogTablesVersion\": 1724151144, \"catalogSpecialTablesVersion\": 1743401210, \"catalogEventViewVersion\": 1745326802, \"sportBasicMarketsVersion\": 834446873, \"sportBasicFactorsVersion\": 1732855968, \"independentFactorsVersion\": 1706316381, \"fa"
+  },
+  {
+    "ts": 1790861937.868175,
+    "method": "GET",
+    "url": "https://line-lb61-w.bk6bba-resources.com/ma/events/list?lang=ru&version=85614455828&scopeMarket=1600",
+    "host": "line-lb61-w.bk6bba-resources.com",
+    "type": "xhr",
+    "status": 200,
+    "size": 118666,
+    "preview": "{\"packetVersion\": 85614458323, \"fromVersion\": 85614454004, \"catalogTablesVersion\": 1724151144, \"catalogSpecialTablesVersion\": 1743401210, \"catalogEventViewVersion\": 1745326802, \"sportBasicMarketsVersion\": 834446873, \"sportBasicFactorsVersion\": 1732855968, \"independentFactorsVersion\": 1706316381, \"fa"
+  },
+  {
+    "ts": 1790861941.1601996,
+    "method": "GET",
+    "url": "https://line-lb61-w.bk6bba-resources.com/ma/events/list?lang=ru&version=85614458323&scopeMarket=1600",
+    "host": "line-lb61-w.bk6bba-resources.com",
+    "type": "xhr",
+    "status": 200,
+    "size": 118315,
+    "preview": "{\"packetVersion\": 85614461120, \"fromVersion\": 85614456674, \"catalogTablesVersion\": 1724151144, \"catalogSpecialTablesVersion\": 1743401210, \"catalogEventViewVersion\": 1745326802, \"sportBasicMarketsVersion\": 834446873, \"sportBasicFactorsVersion\": 1732855968, \"independentFactorsVersion\": 1706316381, \"fa"
+  },
+  {
+    "ts": 1790861921.3811712,
+    "method": "GET",
+    "url": "https://line-vk-w.bk6bba-resources.ru/events/list?lang=ru&version=85614439893&scopeMarket=1600",
+    "host": "line-vk-w.bk6bba-resources.ru",
+    "type": "xhr",
+    "status": 200,
+    "size": 117200,
+    "preview": "{\"packetVersion\": 85614443071, \"fromVersion\": 85614438968, \"catalogTablesVersion\": 1724151144, \"catalogSpecialTablesVersion\": 1743401210, \"catalogEventViewVersion\": 1745326802, \"sportBasicMarketsVersion\": 834446873, \"sportBasicFactorsVersion\": 1732855968, \"independentFactorsVersion\": 1706316381, \"fa"
+  },
+  {
+    "ts": 1790861974.2116666,
+    "method": "GET",
+    "url": "https://line-vk-w.bk6bba-resources.ru/events/list?lang=ru&version=85614487241&scopeMarket=1600",
+    "host": "line-vk-w.bk6bba-resources.ru",
+    "type": "xhr",
+    "status": 200,
+    "size": 116477,
+    "preview": "{\"packetVersion\": 85614490078, \"fromVersion\": 85614485745, \"catalogTablesVersion\": 1724151144, \"catalogSpecialTablesVersion\": 1743401210, \"catalogEventViewVersion\": 1745326802, \"sportBasicMarketsVersion\": 834446873, \"sportBasicFactorsVersion\": 1732855968, \"independentFactorsVersion\": 1706316381, \"fa"
+  },
+  {
+    "ts": 1790861934.5682647,
+    "method": "GET",
+    "url": "https://line-vk-w.bk6bba-resources.ru/events/list?lang=ru&version=85614452552&scopeMarket=1600",
+    "host": "line-vk-w.bk6bba-resources.ru",
+    "type": "xhr",
+    "status": 200,
+    "size": 111911,
+    "preview": "{\"packetVersion\": 85614455828, \"fromVersion\": 85614450388, \"catalogTablesVersion\": 1724151144, \"catalogSpecialTablesVersion\": 1743401210, \"catalogEventViewVersion\": 1745326802, \"sportBasicMarketsVersion\": 834446873, \"sportBasicFactorsVersion\": 1732855968, \"independentFactorsVersion\": 1706316381, \"fa"
+  },
+  {
+    "ts": 1790861889.0475078,
+    "method": "GET",
+    "url": "https://line-lb54-w.bk6bba-resources.com/ma/sportEvent/sportCategories?version=0&lang=ru&scopeMarket=1600",
+    "host": "line-lb54-w.bk6bba-resources.com",
+    "type": "xhr",
+    "status": 200,
+    "size": 101148,
+    "preview": "{\"request\": \"sportEvent/sportCategories\", \"result\": \"sportCategories\", \"lang\": \"ru\", \"version\": 125644593893, \"sportCategories\": [{\"id\": \"501\", \"caption\": \"Laver Cup\", \"tabCaption\": \"\", \"sport\": \"4\", \"sortOrder\": 2, \"icon\": \"/ContentCommon/Logotypes/CompetitionLogos/Tennis/lavercup_new.svg\"}, {\"id\":"
+  },
+  {
+    "ts": 1790861970.8636053,
+    "method": "GET",
+    "url": "https://line-lb61-w.bk6bba-resources.com/ma/events/list?lang=ru&version=85614483800&scopeMarket=1600",
+    "host": "line-lb61-w.bk6bba-resources.com",
+    "type": "xhr",
+    "status": 200,
+    "size": 94184,
+    "preview": "{\"packetVersion\": 85614487241, \"fromVersion\": 85614483800, \"catalogTablesVersion\": 1724151144, \"catalogSpecialTablesVersion\": 1743401210, \"catalogEventViewVersion\": 1745326802, \"sportBasicMarketsVersion\": 834446873, \"sportBasicFactorsVersion\": 1732855968, \"independentFactorsVersion\": 1706316381, \"fa"
+  },
+  {
+    "ts": 1790861947.8147874,
+    "method": "GET",
+    "url": "https://line-vk-w.bk6bba-resources.ru/events/list?lang=ru&version=85614464282&scopeMarket=1600",
+    "host": "line-vk-w.bk6bba-resources.ru",
+    "type": "xhr",
+    "status": 200,
+    "size": 92503,
+    "preview": "{\"packetVersion\": 85614466491, \"fromVersion\": 85614464282, \"catalogTablesVersion\": 1724151144, \"catalogSpecialTablesVersion\": 1743401210, \"catalogEventViewVersion\": 1745326802, \"sportBasicMarketsVersion\": 834446873, \"sportBasicFactorsVersion\": 1732855968, \"independentFactorsVersion\": 1706316381, \"fa"
+  },
+  {
+    "ts": 1790861931.255786,
+    "method": "GET",
+    "url": "https://line-vk-w.bk6bba-resources.ru/events/list?lang=ru&version=85614449449&scopeMarket=1600",
+    "host": "line-vk-w.bk6bba-resources.ru",
+    "type": "xhr",
+    "status": 200,
+    "size": 79628,
+    "preview": "{\"packetVersion\": 85614452552, \"fromVersion\": 85614449449, \"catalogTablesVersion\": 1724151144, \"catalogSpecialTablesVersion\": 1743401210, \"catalogEventViewVersion\": 1745326802, \"sportBasicMarketsVersion\": 834446873, \"sportBasicFactorsVersion\": 1732855968, \"independentFactorsVersion\": 1706316381, \"fa"
+  },
+  {
+    "ts": 1790861888.941258,
+    "method": "GET",
+    "url": "https://line-lb54-w.bk6bba-resources.com/ma/line/factorsCatalog/sportBasicFactors?version=0&lang=ru&systemType=desktop",
+    "host": "line-lb54-w.bk6bba-resources.com",
+    "type": "xhr",
+    "status": 200,
+    "size": 78109,
+    "preview": "{\"request\": \"factorsCatalog/sportBasicFactors\", \"result\": \"sportBasicFactors\", \"lang\": \"ru\", \"version\": 1732855968, \"configs\": [{\"id\": \"55\", \"systemType\": 1, \"sports\": [\"11637\"], \"markets\": [{\"caption\": \"Исходы\", \"marketEventKindsSets\": [{\"forAllEventKinds\": true, \"eventKinds\": [\"1\", \"100501\", \"1005"
+  },
+  {
+    "ts": 1790861888.944326,
+    "method": "GET",
+    "url": "https://line-lb54-w.bk6bba-resources.com/ma/line/factorsCatalog/specialTables?version=0&lang=ru&sysId=21",
+    "host": "line-lb54-w.bk6bba-resources.com",
+    "type": "xhr",
+    "status": 200,
+    "size": 77399,
+    "preview": "{\"request\": \"factorsCatalog/specialTables\", \"result\": \"specialTables\", \"lang\": \"ru\", \"version\": 1743401210, \"specialTables\": [{\"id\": \"42\", \"gridType\": \"forCompetitions\", \"lineCaptionType\": \"1player\", \"eventColumnCaption\": \"Игрок / Команда\", \"caption\": \"Итоги турнира (зимние виды)\", \"lineEventKinds\":"
+  },
+  {
+    "ts": 1790861889.0412276,
+    "method": "GET",
+    "url": "https://line-lb54-w.bk6bba-resources.com/ma/sportEvent/geoCategories?version=0&lang=ru&scopeMarket=1600",
+    "host": "line-lb54-w.bk6bba-resources.com",
+    "type": "xhr",
+    "status": 200,
+    "size": 24415,
+    "preview": "{\"request\": \"sportEvent/geoCategories\", \"result\": \"geoCategories\", \"lang\": \"ru\", \"version\": 212054501415, \"geoCategoryGroups\": [{\"id\": \"1\", \"caption\": \"Африка\"}, {\"id\": \"2\", \"caption\": \"Азия\"}, {\"id\": \"3\", \"caption\": \"Европа\"}, {\"id\": \"4\", \"caption\": \"КОНКАКАФ\"}, {\"id\": \"5\", \"caption\": \"Океания\"}, {"
+  },
+  {
+    "ts": 1790861889.446997,
+    "method": "POST",
+    "url": "https://clientsapi-lb54-w.bk6bba-resources.com/content/getActualContent",
+    "host": "clientsapi-lb54-w.bk6bba-resources.com",
+    "type": "xhr",
+    "status": 200,
+    "size": 23281,
+    "preview": "{\"result\": \"contents\", \"contents\": [{\"items\": [{\"class\": \"Content.Footer\", \"id\": \"55528\", \"version\": \"1194161791\", \"object\": {\"apps\": [{\"class\": \"Content.Service.FooterIcon\", \"object\": {\"sortOrder\": 1, \"url\": \"/apps/ios\", \"iconUrl\": \"/ContentRed/Footer/Apps/apple-grey.svg\", \"iconUrlHover\": \"/Content"
+  },
+  {
+    "ts": 1790861888.9460468,
+    "method": "GET",
+    "url": "https://line-lb54-w.bk6bba-resources.com/ma/oraExt/sportKinds?version=0&lang=en&sysId=21",
+    "host": "line-lb54-w.bk6bba-resources.com",
+    "type": "xhr",
+    "status": 200,
+    "size": 21316,
+    "preview": "{\"request\": \"oraExt/sportKinds\", \"result\": \"sportKinds\", \"lang\": \"en\", \"version\": 1648821891, \"sportKinds\": [{\"id\": \"2\", \"eventKinds\": [\"1\", \"100101\", \"100102\", \"100103\", \"101800\", \"101100\", \"101600\", \"100115\", \"100110\", \"100105\", \"100104\", \"91\", \"910100\", \"910200\", \"910300\", \"910500\", \"910700\", \"91"
+  },
+  {
+    "ts": 1790861887.9338272,
+    "method": "GET",
+    "url": "https://line-lb54-w.bk6bba-resources.com/ma/bookmakerPromo/promos?lang=ru&version=0&scopeMarket=1600",
+    "host": "line-lb54-w.bk6bba-resources.com",
+    "type": "xhr",
+    "status": 200,
+    "size": 10483,
+    "preview": "{\"request\": \"bookmakerPromo/promos\", \"result\": \"promos\", \"lang\": \"ru\", \"version\": 77678297581, \"progressiveExpress\": [{\"id\": \"1\", \"regRule\": {\"everyBetMinValue\": 1010, \"allowAsianFactors\": false, \"asianBetMinValue\": null}, \"calcRule\": {\"items\": [{\"betCount\": 3, \"progK\": 1020}, {\"betCount\": 4, \"progK"
+  },
+  {
+    "ts": 1790861920.000836,
+    "method": "POST",
+    "url": "https://clientsapi-lb54-w.bk6bba-resources.com/loyalty/getPublicPromos",
+    "host": "clientsapi-lb54-w.bk6bba-resources.com",
+    "type": "xhr",
+    "status": 200,
+    "size": 9525,
+    "preview": "{\"result\": \"actionInfoList\", \"viewKeysVersion\": \"0\", \"list\": [], \"viewsIdByAlias\": {}, \"zonesIdByAlias\": {}, \"currencies\": [{\"id\": 1, \"sign\": \"₽\"}], \"oldRequest\": {\"result\": \"actionInfoList\", \"list\": [{\"actionId\": \"27694\"}, {\"actionId\": \"81017\"}, {\"actionId\": \"81913\", \"action\": {\"objectId\": \"81913\","
+  },
+  {
+    "ts": 1790861905.6648357,
+    "method": "GET",
+    "url": "https://cdn-ec.bk6bba-resources.ru/ContentCommon/NewFlags/Circle/Wales.svg",
+    "host": "cdn-ec.bk6bba-resources.ru",
+    "type": "fetch",
+    "status": 200,
+    "size": 8893,
+    "preview": "<?xml version=\"1.0\" encoding=\"iso-8859-1\"?>\r\n<!-- Generator: Adobe Illustrator 24.2.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->\r\n<svg version=\"1.1\" id=\"&#x421;&#x43B;&#x43E;&#x439;_1\"\r\n\t xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" x=\"0px\" y=\"0px\" viewBox"
+  },
+  {
+    "ts": 1790861905.6653469,
+    "method": "GET",
+    "url": "https://cdn-ec.bk6bba-resources.ru/ContentCommon/NewFlags/Circle/Wales.svg",
+    "host": "cdn-ec.bk6bba-resources.ru",
+    "type": "fetch",
+    "status": 200,
+    "size": 8893,
+    "preview": "<?xml version=\"1.0\" encoding=\"iso-8859-1\"?>\r\n<!-- Generator: Adobe Illustrator 24.2.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->\r\n<svg version=\"1.1\" id=\"&#x421;&#x43B;&#x43E;&#x439;_1\"\r\n\t xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" x=\"0px\" y=\"0px\" viewBox"
+  },
+  {
+    "ts": 1790861936.5467904,
+    "method": "GET",
+    "url": "https://cdn-ec.bk6bba-resources.ru/ContentCommon/Logotypes/TeamLogos/Hockey/KHL/new/Torpedo_NNovgorod_new.png",
+    "host": "cdn-ec.bk6bba-resources.ru",
+    "type": "fetch",
+    "status": 200,
+    "size": 8697,
+    "preview": "�PNG\r\n\u001a\n\u0000\u0000\u0000\rIHDR\u0000\u0000\u0000�\u0000\u0000\u0000�\b\u0006\u0000\u0000\u0000��A>\u0000\u0000\u0000\tpHYs\u0000\u0000\u000b\u0013\u0000\u0000\u000b\u0013\u0001\u0000��\u0018\u0000\u0000\u0000\u0001sRGB\u0000��\u001c�\u0000\u0000\u0000\u0004gAMA\u0000\u0000��\u000b�a\u0005\u0000\u0000!�IDATx\u0001�]\r�\u0014��=��.\u0002\u0002V\u0004?N\u001c<�y\t����7�P���\tX����,\t^]�\u0006�K�\n�J�*)@\u0012sub�DOb�+>,��Ev\u0001�\u0005�\u00048HJO�ݘh��d\u0015�]����O��7�=3=�no�2���w��ޙ���}���h���������\u0016��4Qm��ɭT�\u0005��J\b AEG�Br�y������������mn���\n���F^K\u0012m�C-E����\u0014�\u0003��\u0016�\u0000p�+"
+  },
+  {
+    "ts": 1790861889.4000316,
+    "method": "GET",
+    "url": "https://cdn-ec.bk6bba-resources.ru/ContentCommon/Logotypes/CompetitionLogos/Football/2026_FIFA_ASEAN_Cup.webp",
+    "host": "cdn-ec.bk6bba-resources.ru",
+    "type": "fetch",
+    "status": 200,
+    "size": 8638,
+    "preview": "�PNG\r\n\u001a\n\u0000\u0000\u0000\rIHDR\u0000\u0000\u0000H\u0000\u0000\u0000H\b\u0006\u0000\u0000\u0000U��G\u0000\u0000\u0000\u0001sRGB\u0000��\u001c�\u0000\u0000\u0000DeXIfMM\u0000*\u0000\u0000\u0000\b\u0000\u0001�i\u0000\u0004\u0000\u0000\u0000\u0001\u0000\u0000\u0000\u001a\u0000\u0000\u0000\u0000\u0000\u0003�\u0001\u0000\u0003\u0000\u0000\u0000\u0001\u0000\u0001\u0000\u0000�\u0002\u0000\u0004\u0000\u0000\u0000\u0001\u0000\u0000\u0000H�\u0003\u0000\u0004\u0000\u0000\u0000\u0001\u0000\u0000\u0000H\u0000\u0000\u0000\u0000�1F�\u0000\u0000!(IDATx\u0001�|\t�\\�y���63ݳF\u000b\u0012B\u0012�l@\u001a\u001bK�@��\r\u0007�$��\u001c�$v\u0010\u0001ó}\u0012\u000b'9v\f\u000e\"��&/l^bx@@6`#�\u0019�`��h\u0004h�f\u001fI��tO�����N���Y\u00058uN����nU��~�^�\u0016�\u001f.���W����d,M�L�eb�&\u001c�1�v\\�#\u0016���b��ܶ�'|{\u001b�����=QS"
+  },
+  {
+    "ts": 1790861889.4004369,
+    "method": "GET",
+    "url": "https://cdn-ec.bk6bba-resources.ru/ContentCommon/NewFlags/Circle/png/Portugal.png",
+    "host": "cdn-ec.bk6bba-resources.ru",
+    "type": "fetch",
+    "status": 200,
+    "size": 7321,
+    "preview": "�PNG\r\n\u001a\n\u0000\u0000\u0000\rIHDR\u0000\u0000\u0000�\u0000\u0000\u0000�\b\u0006\u0000\u0000\u0000<\u0001q�\u0000\u0000\u0000\tpHYs\u0000\u0000\u000b\u0013\u0000\u0000\u000b\u0013\u0001\u0000��\u0018\u0000\u0000\u0000\u0001sRGB\u0000��\u001c�\u0000\u0000\u0000\u0004gAMA\u0000\u0000��\u000b�a\u0005\u0000\u0000\u001c.IDATx\u0001�\tp\u001cՙǿ�\u0019�,\u0010kp%`\u001b\u0019�,��� ˕��\u0012�rRe�+��`H\u0002���$\u0014`�\rl±��+\u000b)�9��d�\f^�]\u001b\u001c\u000e��X�\u0001\f!�dsfagd��\u001c�%�!��;���ߨ���==3ݣ�U�z��3�G���}�Rh\u001c�L�SDm!U���Ҥ�z�\u0014%f�)�o�)���\n��琉��R\u0014%E�گ�\u000e��\u0012�O4\u001e�M�\u0014��\tɾ�ZةE%��\u0011���z��\"FeE"
+  },
+  {
+    "ts": 1790861915.943177,
+    "method": "GET",
+    "url": "https://cdn-ec.bk6bba-resources.ru/ContentCommon/NewFlags/Circle/Serbia.svg",
+    "host": "cdn-ec.bk6bba-resources.ru",
+    "type": "fetch",
+    "status": 200,
+    "size": 6809,
+    "preview": "<?xml version=\"1.0\" encoding=\"iso-8859-1\"?>\r\n<!-- Generator: Adobe Illustrator 24.2.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->\r\n<svg version=\"1.1\" id=\"&#x421;&#x43B;&#x43E;&#x439;_1\"\r\n\t xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" x=\"0px\" y=\"0px\" viewBox"
+  },
+  {
+    "ts": 1790861915.9434738,
+    "method": "GET",
+    "url": "https://cdn-ec.bk6bba-resources.ru/ContentCommon/NewFlags/Circle/Serbia.svg",
+    "host": "cdn-ec.bk6bba-resources.ru",
+    "type": "fetch",
+    "status": 200,
+    "size": 6809,
+    "preview": "<?xml version=\"1.0\" encoding=\"iso-8859-1\"?>\r\n<!-- Generator: Adobe Illustrator 24.2.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->\r\n<svg version=\"1.1\" id=\"&#x421;&#x43B;&#x43E;&#x439;_1\"\r\n\t xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" x=\"0px\" y=\"0px\" viewBox"
+  },
+  {
+    "ts": 1790862000.0083158,
+    "method": "POST",
+    "url": "https://clientsapi-lb61-w.bk6bba-resources.com/loyalty/getPublicPromos",
+    "host": "clientsapi-lb61-w.bk6bba-resources.com",
+    "type": "xhr",
+    "status": 200,
+    "size": 6463,
+    "preview": "{\"result\": \"actionInfoList\", \"viewKeysVersion\": \"0\", \"list\": [], \"viewsIdByAlias\": {}, \"zonesIdByAlias\": {}, \"currencies\": [{\"id\": 1, \"sign\": \"₽\"}], \"oldRequest\": {\"result\": \"actionInfoList\", \"list\": [{\"actionId\": \"27694\"}, {\"actionId\": \"81017\"}, {\"actionId\": \"81913\", \"action\": {\"objectId\": \"81913\","
+  },
+  {
+    "ts": 1790861952.0039463,
+    "method": "POST",
+    "url": "https://clientsapi-lb61-w.bk6bba-resources.com/loyalty/getPublicPromos",
+    "host": "clientsapi-lb61-w.bk6bba-resources.com",
+    "type": "xhr",
+    "status": 200,
+    "size": 6462,
+    "preview": "{\"result\": \"actionInfoList\", \"viewKeysVersion\": \"0\", \"list\": [], \"viewsIdByAlias\": {}, \"zonesIdByAlias\": {}, \"currencies\": [{\"id\": 1, \"sign\": \"₽\"}], \"oldRequest\": {\"result\": \"actionInfoList\", \"list\": [{\"actionId\": \"27694\"}, {\"actionId\": \"81017\", \"action\": {\"objectId\": \"81017\", \"version\": \"9037172457"
+  },
+  {
+    "ts": 1790861887.9274676,
+    "method": "GET",
+    "url": "https://cdn-ec.bk6bba-resources.ru/ContentCommon/website/resources/coupon/tickets.svg",
+    "host": "cdn-ec.bk6bba-resources.ru",
+    "type": "fetch",
+    "status": 200,
+    "size": 5729,
+    "preview": "<svg width=\"32\" height=\"33\" viewBox=\"0 0 32 33\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n<g clip-path=\"url(#clip0_27097_168990)\">\n<path fill-rule=\"evenodd\" clip-rule=\"evenodd\" d=\"M12.136 1.28188C11.6161 1.37514 11.0852 1.65504 10.689 2.0447C10.2861 2.44102 8.888 4.40649 8.888 4.57663C8.888 4."
+  },
+  {
+    "ts": 1790861936.0021756,
+    "method": "POST",
+    "url": "https://clientsapi-lb54-w.bk6bba-resources.com/loyalty/getPublicPromos",
+    "host": "clientsapi-lb54-w.bk6bba-resources.com",
+    "type": "xhr",
+    "status": 200,
+    "size": 5118,
+    "preview": "{\"result\": \"actionInfoList\", \"viewKeysVersion\": \"0\", \"list\": [], \"viewsIdByAlias\": {}, \"zonesIdByAlias\": {}, \"currencies\": [{\"id\": 1, \"sign\": \"₽\"}], \"oldRequest\": {\"result\": \"actionInfoList\", \"list\": [{\"actionId\": \"27694\"}, {\"actionId\": \"81017\"}, {\"actionId\": \"81913\"}, {\"actionId\": \"81932\"}, {\"actio"
+  },
+  {
+    "ts": 1790861904.0075548,
+    "method": "POST",
+    "url": "https://clientsapi-lb54-w.bk6bba-resources.com/loyalty/getPublicPromos",
+    "host": "clientsapi-lb54-w.bk6bba-resources.com",
+    "type": "xhr",
+    "status": 200,
+    "size": 4918,
+    "preview": "{\"result\": \"actionInfoList\", \"viewKeysVersion\": \"0\", \"list\": [], \"viewsIdByAlias\": {}, \"zonesIdByAlias\": {}, \"currencies\": [{\"id\": 1, \"sign\": \"₽\"}], \"oldRequest\": {\"result\": \"actionInfoList\", \"list\": [{\"actionId\": \"27694\"}, {\"actionId\": \"81017\"}, {\"actionId\": \"81913\"}, {\"actionId\": \"81932\"}, {\"actio"
+  },
+  {
+    "ts": 1790861968.0099647,
+    "method": "POST",
+    "url": "https://clientsapi-vk-w.bk6bba-resources.ru/loyalty/getPublicPromos",
+    "host": "clientsapi-vk-w.bk6bba-resources.ru",
+    "type": "xhr",
+    "status": 200,
+    "size": 4918,
+    "preview": "{\"result\": \"actionInfoList\", \"viewKeysVersion\": \"0\", \"list\": [], \"viewsIdByAlias\": {}, \"zonesIdByAlias\": {}, \"currencies\": [{\"id\": 1, \"sign\": \"₽\"}], \"oldRequest\": {\"result\": \"actionInfoList\", \"list\": [{\"actionId\": \"27694\"}, {\"actionId\": \"81017\"}, {\"actionId\": \"81913\"}, {\"actionId\": \"81932\"}, {\"actio"
+  },
+  {
+    "ts": 1790861984.0087788,
+    "method": "POST",
+    "url": "https://clientsapi-lb54-w.bk6bba-resources.com/loyalty/getPublicPromos",
+    "host": "clientsapi-lb54-w.bk6bba-resources.com",
+    "type": "xhr",
+    "status": 200,
+    "size": 4903,
+    "preview": "{\"result\": \"actionInfoList\", \"viewKeysVersion\": \"0\", \"list\": [], \"viewsIdByAlias\": {}, \"zonesIdByAlias\": {}, \"currencies\": [{\"id\": 1, \"sign\": \"₽\"}], \"oldRequest\": {\"result\": \"actionInfoList\", \"list\": [{\"actionId\": \"27694\"}, {\"actionId\": \"81017\"}, {\"actionId\": \"81913\"}, {\"actionId\": \"81932\"}, {\"actio"
+  },
+  {
+    "ts": 1790861889.3956113,
+    "method": "GET",
+    "url": "https://cdn-ec.bk6bba-resources.ru/ContentCommon/Logotypes/CompetitionLogos/Football/frendly_new_2.svg",
+    "host": "cdn-ec.bk6bba-resources.ru",
+    "type": "fetch",
+    "status": 200,
+    "size": 4804,
+    "preview": "<svg width=\"16\" height=\"16\" viewBox=\"0 0 16 16\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n<g clip-path=\"url(#clip0_1144_7935)\">\n<circle cx=\"8\" cy=\"8\" r=\"8\" fill=\"white\"/>\n<path d=\"M8 0C11.3794 0 14.2672 2.09621 15.4395 5.05859C14.5956 5.14802 13.691 5.25268 13.4326 5.30957C12.4542 5.5251 12.27"
+  },
+  {
+    "ts": 1790861889.3957558,
+    "method": "GET",
+    "url": "https://cdn-ec.bk6bba-resources.ru/ContentCommon/Logotypes/CompetitionLogos/Football/frendly_new_2.svg",
+    "host": "cdn-ec.bk6bba-resources.ru",
+    "type": "fetch",
+    "status": 200,
+    "size": 4804,
+    "preview": "<svg width=\"16\" height=\"16\" viewBox=\"0 0 16 16\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n<g clip-path=\"url(#clip0_1144_7935)\">\n<circle cx=\"8\" cy=\"8\" r=\"8\" fill=\"white\"/>\n<path d=\"M8 0C11.3794 0 14.2672 2.09621 15.4395 5.05859C14.5956 5.14802 13.691 5.25268 13.4326 5.30957C12.4542 5.5251 12.27"
+  },
+  {
+    "ts": 1790861889.400317,
+    "method": "GET",
+    "url": "https://cdn-ec.bk6bba-resources.ru/ContentCommon/NewFlags/Circle/png/Denmark.png",
+    "host": "cdn-ec.bk6bba-resources.ru",
+    "type": "fetch",
+    "status": 200,
+    "size": 4323,
+    "preview": "�PNG\r\n\u001a\n\u0000\u0000\u0000\rIHDR\u0000\u0000\u0000�\u0000\u0000\u0000�\b\u0006\u0000\u0000\u0000<\u0001q�\u0000\u0000\u0000\tpHYs\u0000\u0000\u000b\u0013\u0000\u0000\u000b\u0013\u0001\u0000��\u0018\u0000\u0000\u0000\u0001sRGB\u0000��\u001c�\u0000\u0000\u0000\u0004gAMA\u0000\u0000��\u000b�a\u0005\u0000\u0000\u0010xIDATx\u0001�Op\u0013�\u0015��oW��B�\u001f\u0007S$�\u0003\\�9�N�)���%�S\u000f\u0005��\u001eJ�\u00142m\u000e�b3�\t�f&0�Mn�If��!v\u000figڤ8�I\u000f�N1��CR�`�\u0000\u0001\u0004؀-k����ȶ�}�ծ��gF�%�\u0004h������~�+ �d��i0�^0D�\u0010b��2\rB�J[Hك$���Y@n����S�\t!r ��U��\u0004��gz֍CL\u0011\u0010\u0013�\u00137zզW}�=Rm�GO+U��WD^�\u001b�"
+  },
+  {
+    "ts": 1790861889.6140316,
+    "method": "GET",
+    "url": "https://cdn-ec.bk6bba-resources.ru/ContentCommon/NewFlags/Circle/Portugal.svg",
+    "host": "cdn-ec.bk6bba-resources.ru",
+    "type": "fetch",
+    "status": 200,
+    "size": 3448,
+    "preview": "<?xml version=\"1.0\" encoding=\"iso-8859-1\"?>\r\n<!-- Generator: Adobe Illustrator 24.2.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->\r\n<svg version=\"1.1\" id=\"&#x421;&#x43B;&#x43E;&#x439;_1\"\r\n\t xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" x=\"0px\" y=\"0px\" viewBox"
+  },
+  {
+    "ts": 1790861889.6144786,
+    "method": "GET",
+    "url": "https://cdn-ec.bk6bba-resources.ru/ContentCommon/NewFlags/Circle/Portugal.svg",
+    "host": "cdn-ec.bk6bba-resources.ru",
+    "type": "fetch",
+    "status": 200,
+    "size": 3448,
+    "preview": "<?xml version=\"1.0\" encoding=\"iso-8859-1\"?>\r\n<!-- Generator: Adobe Illustrator 24.2.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->\r\n<svg version=\"1.1\" id=\"&#x421;&#x43B;&#x43E;&#x439;_1\"\r\n\t xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" x=\"0px\" y=\"0px\" viewBox"
+  },
+  {
+    "ts": 1790861887.9233828,
+    "method": "GET",
+    "url": "https://cdn-ec.bk6bba-resources.ru/ContentCommon/website/resources/header/world_filled.svg",
+    "host": "cdn-ec.bk6bba-resources.ru",
+    "type": "fetch",
+    "status": 200,
+    "size": 3408,
+    "preview": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\" viewBox=\"0 0 16 16\" fill=\"none\">\n\t<g clip-path=\"url(#clip0_42713_22434)\">\n\t\t<path fill-rule=\"evenodd\" clip-rule=\"evenodd\" d=\"M7.71071 15.9451C6.89223 15.6159 6.12909 14.1167 5.67482 11.9456C5.63067 11.7346 5.59453 11.5269 5.59453 11.4842"
+  },
+  {
+    "ts": 1790861936.5461903,
+    "method": "GET",
+    "url": "https://cdn-ec.bk6bba-resources.ru/ContentCommon/Logotypes/TeamLogos/Hockey/Russia/Dynamo_Moskva-new.png",
+    "host": "cdn-ec.bk6bba-resources.ru",
+    "type": "fetch",
+    "status": 200,
+    "size": 2977,
+    "preview": "�PNG\r\n\u001a\n\u0000\u0000\u0000\rIHDR\u0000\u0000\u0000�\u0000\u0000\u0000�\b\u0003\u0000\u0000\u0000�\u001e�\f\u0000\u0000\u0000{PLTE\u0000\u0000\u0000\u00013����!M���������������\u0011@�������Af������������������������퐦�1Y�������Af�a�À��`��p��������������`�����p��Qs�Ps��������*x�\u0000\u0000\u0000)tRNS\u0000������� ����@\u0010`������p������P�0���������\"\u000f�\u0000\u0000\n�IDATx��\\�B�J\f�\u0016�\u000e��(�(.���7�LgM:\u0003�����Sڏ�ɤ��\ff���b{\u001c4t�{p\u001c\u0015\u001a���<�**D�T\u0006"
+  },
+  {
+    "ts": 1790861887.9216816,
+    "method": "GET",
+    "url": "https://cdn-ec.bk6bba-resources.ru/ContentRed/website/resources/logo/desktop_header_logo.svg",
+    "host": "cdn-ec.bk6bba-resources.ru",
+    "type": "fetch",
+    "status": 200,
+    "size": 2625,
+    "preview": "<svg width=\"99\" height=\"18\" viewBox=\"0 0 99 18\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n<path d=\"M83.962 0.348458L83.0575 4.27904H87.8563L84.7783 17.6515H89.3198L92.3978 4.27904H97.1956L98.1 0.348458H83.962Z\" fill=\"white\"/>\n<path d=\"M68.4728 5.59465L66.905 12.4054C66.7652 13.0119 66.6872 13."
+  },
+  {
+    "ts": 1790861889.0971525,
+    "method": "GET",
+    "url": "https://cdn-ec.bk6bba-resources.ru/ContentCommon/website/resources/sport/translation/translation_tv_3.svg",
+    "host": "cdn-ec.bk6bba-resources.ru",
+    "type": "fetch",
+    "status": 200,
+    "size": 2509,
+    "preview": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"19\" height=\"15\" viewBox=\"0 0 19 15\" fill=\"none\">\r\n<path fill-rule=\"evenodd\" clip-rule=\"evenodd\" d=\"M15.7556 1.11216H2.7804C1.84599 1.11216 1.11216 1.85667 1.11216 2.74607V10.0689C1.11216 10.9583 1.84599 11.7028 2.7804 11.7028H15.7556C16.69 11.7028 17.42"
+  },
+  {
+    "ts": 1790861887.9228728,
+    "method": "GET",
+    "url": "https://cdn-ec.bk6bba-resources.ru/ContentCommon/website/resources/giftFill.svg",
+    "host": "cdn-ec.bk6bba-resources.ru",
+    "type": "fetch",
+    "status": 200,
+    "size": 2441,
+    "preview": "<svg color=\"currentColor\" width=\"14\" height=\"14\" viewBox=\"0 0 16 16\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n\t<path d=\"M8.33366 8.33355H13.667V14.5002C13.667 14.6328 13.6143 14.76 13.5205 14.8538C13.4268 14.9475 13.2996 15.0002 13.167 15.0002H8.83366C8.70105 15.0002 8.57387 14.9475 8.48011 1"
+  },
+  {
+    "ts": 1790861944.225648,
+    "method": "GET",
+    "url": "https://fon.bet/urls.json?hash=1790861944054",
+    "host": "fon.bet",
+    "type": "fetch",
+    "status": 200,
+    "size": 2305,
+    "preview": "{\"common\": [\"//clientsapi-lb51.bk6bba-resources.com\", \"//clientsapi-lb52.bk6bba-resources.ru\", \"//clientsapi-vk-w.bk6bba-resources.ru\"], \"line\": [\"//line-lb51.bk6bba-resources.com\", \"//line-lb52.bk6bba-resources.ru\", \"//line-vk-w.bk6bba-resources.ru\"], \"commonQueues\": [[\"//clientsapi-lb54-w.bk6bba-r"
+  },
+  {
+    "ts": 1790861889.0957437,
+    "method": "GET",
+    "url": "https://cdn-ec.bk6bba-resources.ru/ContentCommon/website/resources/filter.svg",
+    "host": "cdn-ec.bk6bba-resources.ru",
+    "type": "fetch",
+    "status": 200,
+    "size": 2294,
+    "preview": "<svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n\t\t\t<path fill-rule=\"evenodd\" clip-rule=\"evenodd\" d=\"M9.86525 1.90002C8.45112 1.90002 7.2681 2.88546 6.91396 4.21672H2.70206C2.25701 4.21672 1.90002 4.58615 1.90002 5.03309L1.90003 5.03412C1.90464 5.48349 "
+  },
+  {
+    "ts": 1790861889.4454267,
+    "method": "POST",
+    "url": "https://clientsapi-lb54-w.bk6bba-resources.com/content/getContentFromVersion",
+    "host": "clientsapi-lb54-w.bk6bba-resources.com",
+    "type": "xhr",
+    "status": 200,
+    "size": 2282,
+    "preview": "{\"result\": \"contents\", \"contents\": [{\"items\": [{\"class\": \"Content.AppPage\", \"id\": \"54506\", \"version\": \"245459491\", \"object\": {\"text\": \"\", \"seoURI\": \"\", \"userMetaTitle\": \"Букмекерская контора FON.BET – ставки на спорт онлайн с 1994 года\", \"datetimeOpen\": 1491890629500, \"datetimeClose\": null, \"caption"
+  },
+  {
+    "ts": 1790861889.093781,
+    "method": "GET",
+    "url": "https://cdn-ec.bk6bba-resources.ru/ContentCommon/website/resources/shield.svg",
+    "host": "cdn-ec.bk6bba-resources.ru",
+    "type": "fetch",
+    "status": 200,
+    "size": 2240,
+    "preview": "<svg width=\"16\" height=\"18\" viewBox=\"0 0 16 18\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n<path fill-rule=\"evenodd\" clip-rule=\"evenodd\" d=\"M7.25071 0.459229C5.30807 1.71241 3.19779 2.62859 1.07058 3.1424C0.641376 3.24604 0.250016 3.35611 0.2009 3.38694C0.0180458 3.5017 -0.000710172 3.61901 1.9"
+  },
+  {
+    "ts": 1790861889.3551147,
+    "method": "GET",
+    "url": "https://cdn-ec.bk6bba-resources.ru/ContentCommon/website/resources/chat.svg",
+    "host": "cdn-ec.bk6bba-resources.ru",
+    "type": "fetch",
+    "status": 200,
+    "size": 2059,
+    "preview": "<svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n\t\t\t\t<path fill-rule=\"evenodd\" clip-rule=\"evenodd\" d=\"M12.058 2.00026C8.54635 1.98615 5.28554 3.80703 3.46059 6.80012C1.63541 9.79361 1.51288 13.5227 3.13765 16.6292L3.32147 16.9875C3.39175 17.1192 3.40531"
+  },
+  {
+    "ts": 1790861889.0978358,
+    "method": "GET",
+    "url": "https://cdn-ec.bk6bba-resources.ru/ContentCommon/website/resources/fire.svg",
+    "host": "cdn-ec.bk6bba-resources.ru",
+    "type": "fetch",
+    "status": 200,
+    "size": 1903,
+    "preview": "<svg width=\"12\" height=\"13\" viewBox=\"0 0 12 13\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n\t\t<g clip-path=\"url(#clip0_2424_151051)\">\n\t\t\t<path fill-rule=\"evenodd\" clip-rule=\"evenodd\" d=\"M8.8279 4.74095C9.2457 5.0764 9.6576 5.40715 9.9527 5.868C10.7036 7.04835 10.9236 8.727 10.1987 9.97285C9.8491"
+  },
+  {
+    "ts": 1790861887.5631926,
+    "method": "POST",
+    "url": "https://clientsapi-lb54-w.bk6bba-resources.com/client/defaultProfile",
+    "host": "clientsapi-lb54-w.bk6bba-resources.com",
+    "type": "xhr",
+    "status": 200,
+    "size": 1772,
+    "preview": "{\"result\": \"defaultProfile\", \"defaultProfile\": {\"version\": \"1\", \"commonSettings\": {\"oneClickBet\": false, \"oneClickBetSum\": 50, \"newBetSumByPrev\": true, \"flexOptions\": \"-+-+-\", \"favoriteBetsSumKind\": 2, \"favoriteBetsSumPercent\": \"5;10;15\", \"favoriteBetsSumAbsolute\": \"50;500;1000;2000\", \"autoConfirm\":"
+  },
+  {
+    "ts": 1790861886.3369474,
+    "method": "POST",
+    "url": "https://clientsapi-lb54-w.bk6bba-resources.com/getApiState",
+    "host": "clientsapi-lb54-w.bk6bba-resources.com",
+    "type": "fetch",
+    "status": 200,
+    "size": 1763,
+    "preview": "{\"result\": \"apiState\", \"stateTime\": \"2026-10-01 13:38:05\", \"state\": {\"selfApi\": {\"ready\": true, \"delay\": 0}, \"client\": {\"ready\": true, \"delay\": 34}, \"clientOperations\": {\"ready\": true, \"delay\": 35}, \"content\": {\"ready\": true, \"delay\": 0}, \"couponBet\": {\"ready\": true, \"delay\": 35}, \"couponBetSlipInfo"
+  },
+  {
+    "ts": 1790861892.3401878,
+    "method": "POST",
+    "url": "https://clientsapi-lb61-w.bk6bba-resources.com/getApiState",
+    "host": "clientsapi-lb61-w.bk6bba-resources.com",
+    "type": "fetch",
+    "status": 200,
+    "size": 1763,
+    "preview": "{\"result\": \"apiState\", \"stateTime\": \"2026-10-01 13:38:11\", \"state\": {\"selfApi\": {\"ready\": true, \"delay\": 0}, \"client\": {\"ready\": true, \"delay\": 29}, \"clientOperations\": {\"ready\": true, \"delay\": 24}, \"content\": {\"ready\": true, \"delay\": 0}, \"couponBet\": {\"ready\": true, \"delay\": 26}, \"couponBetSlipInfo"
+  },
+  {
+    "ts": 1790861892.3538013,
+    "method": "POST",
+    "url": "https://clientsapi-vk-w.bk6bba-resources.ru/getApiState",
+    "host": "clientsapi-vk-w.bk6bba-resources.ru",
+    "type": "fetch",
+    "status": 200,
+    "size": 1763,
+    "preview": "{\"result\": \"apiState\", \"stateTime\": \"2026-10-01 13:38:11\", \"state\": {\"selfApi\": {\"ready\": true, \"delay\": 0}, \"client\": {\"ready\": true, \"delay\": 29}, \"clientOperations\": {\"ready\": true, \"delay\": 24}, \"content\": {\"ready\": true, \"delay\": 0}, \"couponBet\": {\"ready\": true, \"delay\": 26}, \"couponBetSlipInfo"
+  },
+  {
+    "ts": 1790861976.72853,
+    "method": "POST",
+    "url": "https://clientsapi-lb54-w.bk6bba-resources.com/getApiState",
+    "host": "clientsapi-lb54-w.bk6bba-resources.com",
+    "type": "fetch",
+    "status": 200,
+    "size": 1763,
+    "preview": "{\"result\": \"apiState\", \"stateTime\": \"2026-10-01 13:39:35\", \"state\": {\"selfApi\": {\"ready\": true, \"delay\": 0}, \"client\": {\"ready\": true, \"delay\": 31}, \"clientOperations\": {\"ready\": true, \"delay\": 27}, \"content\": {\"ready\": true, \"delay\": 0}, \"couponBet\": {\"ready\": true, \"delay\": 34}, \"couponBetSlipInfo"
+  },
+  {
+    "ts": 1790861982.728857,
+    "method": "POST",
+    "url": "https://clientsapi-lb61-w.bk6bba-resources.com/getApiState",
+    "host": "clientsapi-lb61-w.bk6bba-resources.com",
+    "type": "fetch",
+    "status": 200,
+    "size": 1763,
+    "preview": "{\"result\": \"apiState\", \"stateTime\": \"2026-10-01 13:39:41\", \"state\": {\"selfApi\": {\"ready\": true, \"delay\": 0}, \"client\": {\"ready\": true, \"delay\": 36}, \"clientOperations\": {\"ready\": true, \"delay\": 32}, \"content\": {\"ready\": true, \"delay\": 0}, \"couponBet\": {\"ready\": true, \"delay\": 25}, \"couponBetSlipInfo"
+  },
+  {
+    "ts": 1790861982.7376819,
+    "method": "POST",
+    "url": "https://clientsapi-vk-w.bk6bba-resources.ru/getApiState",
+    "host": "clientsapi-vk-w.bk6bba-resources.ru",
+    "type": "fetch",
+    "status": 200,
+    "size": 1763,
+    "preview": "{\"result\": \"apiState\", \"stateTime\": \"2026-10-01 13:39:41\", \"state\": {\"selfApi\": {\"ready\": true, \"delay\": 0}, \"client\": {\"ready\": true, \"delay\": 32}, \"clientOperations\": {\"ready\": true, \"delay\": 21}, \"content\": {\"ready\": true, \"delay\": 0}, \"couponBet\": {\"ready\": true, \"delay\": 30}, \"couponBetSlipInfo"
+  },
+  {
+    "ts": 1790861887.9409614,
+    "method": "GET",
+    "url": "https://cdn-ec.bk6bba-resources.ru/ContentCommon/website/resources/settingsFilled.svg",
+    "host": "cdn-ec.bk6bba-resources.ru",
+    "type": "fetch",
+    "status": 200,
+    "size": 1760,
+    "preview": "<svg width=\"18\" height=\"18\" viewBox=\"0 0 18 18\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\"> <path fill-rule=\"evenodd\" clip-rule=\"evenodd\" d=\"M15.3016 10.185C15.5699 10.3275 15.7768 10.5525 15.9225 10.7775C16.2061 11.2425 16.1831 11.8125 15.9071 12.315L15.3706 13.215C15.087 13.695 14.5582 13.995 "
+  },
+  {
+    "ts": 1790861889.0987573,
+    "method": "GET",
+    "url": "https://cdn-ec.bk6bba-resources.ru/ContentCommon/website/resources/sport/sports/sport_volleyball.svg",
+    "host": "cdn-ec.bk6bba-resources.ru",
+    "type": "fetch",
+    "status": 200,
+    "size": 1719,
+    "preview": "<svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\"> <path fill-rule=\"evenodd\" clip-rule=\"evenodd\" d=\"M15.0163 7.92617C14.0711 9.06421 13.4065 10.4084 13.0759 11.8504C16.1469 14.8553 17.1746 19.38 15.7031 23.4169C17.3909 22.8737 18.9365 21.9615 20.2278 20.7"
+  },
+  {
+    "ts": 1790861889.0989401,
+    "method": "GET",
+    "url": "https://cdn-ec.bk6bba-resources.ru/ContentCommon/website/resources/sport/sports/sport_handball.svg",
+    "host": "cdn-ec.bk6bba-resources.ru",
+    "type": "fetch",
+    "status": 200,
+    "size": 1615,
+    "preview": "<svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\"> <path fill-rule=\"evenodd\" clip-rule=\"evenodd\" d=\"M14.4256 2.57111L16.8342 1.02821C13.7958 -0.321551 10.3322 -0.343296 7.27708 0.968212L9.47136 2.57111H14.4256ZM16.6287 6.60014L19.8344 8.61448L22.8258 6.90"
+  },
+  {
+    "ts": 1790861889.354689,
+    "method": "GET",
+    "url": "https://cdn-ec.bk6bba-resources.ru/ContentCommon/website/resources/sport/sports/sport_darts.svg",
+    "host": "cdn-ec.bk6bba-resources.ru",
+    "type": "fetch",
+    "status": 200,
+    "size": 1586,
+    "preview": "<svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\"> <path fill-rule=\"evenodd\" clip-rule=\"evenodd\" d=\"M22.4142 7.70786L20.0437 10.1186C20.1992 10.7332 20.2775 11.3649 20.2767 11.9989C20.2767 16.4369 16.679 20.0346 12.241 20.0346C7.80303 20.0346 4.20533 16.4"
+  },
+  {
+    "ts": 1790861889.0991862,
+    "method": "GET",
+    "url": "https://cdn-ec.bk6bba-resources.ru/ContentCommon/website/resources/sport/sports/sport_mix_fights.svg",
+    "host": "cdn-ec.bk6bba-resources.ru",
+    "type": "fetch",
+    "status": 200,
+    "size": 1577,
+    "preview": "<svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\"> <path fill-rule=\"evenodd\" clip-rule=\"evenodd\" d=\"M15.5283 15.9854C15.5428 17.0762 14.6777 17.9759 13.5873 18.0041H12.2932C11.2042 17.9805 10.3377 17.0833 10.3522 15.9941V8.65266H8.62685V18.0213H8.41118H7."
+  },
+  {
+    "ts": 1790861889.0781066,
+    "method": "GET",
+    "url": "https://cdn-ec.bk6bba-resources.ru/ContentCommon/website/resources/sport/sports/sport_football.svg",
+    "host": "cdn-ec.bk6bba-resources.ru",
+    "type": "fetch",
+    "status": 200,
+    "size": 1487,
+    "preview": "<svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\"> <path fill-rule=\"evenodd\" clip-rule=\"evenodd\" d=\"M8.53076 0.513249C10.8028 -0.172252 13.2057 -0.169736 15.4647 0.512716L11.9973 2.13563L8.53076 0.513249ZM20.512 9.11518L20.7421 3.77733C19.6416 2.61173 18."
+  },
+  {
+    "ts": 1790861889.3537073,
+    "method": "GET",
+    "url": "https://cdn-ec.bk6bba-resources.ru/ContentCommon/website/resources/sport/sports/sport_futsal.svg",
+    "host": "cdn-ec.bk6bba-resources.ru",
+    "type": "fetch",
+    "status": 200,
+    "size": 1442,
+    "preview": "<svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\"> <path fill-rule=\"evenodd\" clip-rule=\"evenodd\" d=\"M15.043 0.40232C13.0501 -0.134107 10.9499 -0.134107 8.95701 0.40232L12 2.19184L15.043 0.40232ZM21.3523 8.90441L22.1259 5.47949C23.2373 7.20169 23.8828 9.18"
+  },
+  {
+    "ts": 1790861889.0786717,
+    "method": "GET",
+    "url": "https://cdn-ec.bk6bba-resources.ru/ContentCommon/website/resources/sport/sports/sport_tennis.svg",
+    "host": "cdn-ec.bk6bba-resources.ru",
+    "type": "fetch",
+    "status": 200,
+    "size": 1441,
+    "preview": "<svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\"> <path fill-rule=\"evenodd\" clip-rule=\"evenodd\" d=\"M19.9194 15.6351L19.9302 15.6188C20.9056 14.141 21.6482 13.0603 23.6931 12.9181C23.7781 13.1028 23.8631 13.2857 23.9998 13.4483C23.6783 16.016 22.546 18.49"
+  },
+  {
+    "ts": 1790861889.078971,
+    "method": "GET",
+    "url": "https://cdn-ec.bk6bba-resources.ru/ContentCommon/website/resources/sport/sports/sport_basketball.svg",
+    "host": "cdn-ec.bk6bba-resources.ru",
+    "type": "fetch",
+    "status": 200,
+    "size": 1429,
+    "preview": "<svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\"> <path fill-rule=\"evenodd\" clip-rule=\"evenodd\" d=\"M13.6731 11.1548H10.2396C9.92726 8.84624 8.6723 6.7689 6.77167 5.41437L3.92334 3.06328C5.99902 1.20468 8.65725 0.121985 11.4443 0C12.7401 3.58688 13.4913 7"
+  },
+  {
+    "ts": 1790861889.098436,
+    "method": "GET",
+    "url": "https://cdn-ec.bk6bba-resources.ru/ContentCommon/website/resources/sport/translation/translation_mc_soccer.svg",
+    "host": "cdn-ec.bk6bba-resources.ru",
+    "type": "fetch",
+    "status": 200,
+    "size": 1418,
+    "preview": "<svg width=\"16\" height=\"14\" viewBox=\"0 0 16 14\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M8.32 1H7.68H2C0.895433 1 0 1.89543 0 3V3.72733V4.27267V9.72733V10.2727V11C0 12.1046 0.895431 13 2 13H7.68H8.32H14C15.1046 13 16 12.1046 16 11V10.2727V9.72733V4.27267V3.72733V3C16 1.89543 15.1046 "
+  },
+  {
+    "ts": 1790861889.093916,
+    "method": "GET",
+    "url": "https://cdn-ec.bk6bba-resources.ru/ContentCommon/website/resources/statistics.svg",
+    "host": "cdn-ec.bk6bba-resources.ru",
+    "type": "fetch",
+    "status": 200,
+    "size": 1367,
+    "preview": "<svg width=\"16\" height=\"16\" viewBox=\"0 0 16 16\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n<path fill-rule=\"evenodd\" clip-rule=\"evenodd\" d=\"M11.2691 0.5H4.7309C2.1919 0.5 0.5 2.31493 0.5 4.91988V11.0801C0.5 13.6875 2.18744 15.5 4.7309 15.5H11.2691C13.8126 15.5 15.5 13.6875 15.5 11.0801V4.91988C"
+  },
+  {
+    "ts": 1790861889.6133783,
+    "method": "GET",
+    "url": "https://cdn-ec.bk6bba-resources.ru/ContentCommon/NewFlags/Circle/Georgia.svg",
+    "host": "cdn-ec.bk6bba-resources.ru",
+    "type": "fetch",
+    "status": 200,
+    "size": 1357,
+    "preview": "<?xml version=\"1.0\" encoding=\"iso-8859-1\"?>\r\n<!-- Generator: Adobe Illustrator 24.2.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->\r\n<svg version=\"1.1\" id=\"&#x421;&#x43B;&#x43E;&#x439;_1\"\r\n\t xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" x=\"0px\" y=\"0px\" viewBox"
+  },
+  {
+    "ts": 1790861889.0933669,
+    "method": "GET",
+    "url": "https://cdn-ec.bk6bba-resources.ru/ContentCommon/website/resources/sport/sports/sport_esports.svg",
+    "host": "cdn-ec.bk6bba-resources.ru",
+    "type": "fetch",
+    "status": 200,
+    "size": 1294,
+    "preview": "<svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\"> <path fill-rule=\"evenodd\" clip-rule=\"evenodd\" d=\"M19.3579 3.2377C21.6675 3.93982 23.2472 6.06854 23.25 8.48248V17.5146V17.6271C23.2401 19.0681 22.2241 20.3061 20.8127 20.5969C19.4013 20.8877 17.9787 20.15"
+  },
+  {
+    "ts": 1790861889.3541725,
+    "method": "GET",
+    "url": "https://cdn-ec.bk6bba-resources.ru/ContentCommon/website/resources/sport/sports/sport_billiard.svg",
+    "host": "cdn-ec.bk6bba-resources.ru",
+    "type": "fetch",
+    "status": 200,
+    "size": 1290,
+    "preview": "<svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\"> <path fill-rule=\"evenodd\" clip-rule=\"evenodd\" d=\"M12 0C5.37258 0 0 5.37258 0 12C0 18.6274 5.37258 24 12 24C18.6274 24 24 18.6274 24 12C24 5.37258 18.6274 0 12 0ZM14.9057 11.6571C15.4507 11.1785 15.7631 10"
+  },
+  {
+    "ts": 1790861889.0976074,
+    "method": "GET",
+    "url": "https://cdn-ec.bk6bba-resources.ru/ContentCommon/website/resources/compass.svg",
+    "host": "cdn-ec.bk6bba-resources.ru",
+    "type": "fetch",
+    "status": 200,
+    "size": 1275,
+    "preview": "<svg width=\"14\" height=\"14\" viewBox=\"0 0 14 14\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n\t\t\t\t<g clip-path=\"url(#clip0_1953_40226)\">\n\t\t\t\t<path d=\"M7 0C3.14027 0 0 3.14027 0 7C0 10.8597 3.14027 14 7 14C10.8597 14 14 10.8597 14 7C14 3.14027 10.8598 0 7 0ZM7 12.7826C3.81165 12.7826 1.21737 10.188"
+  },
+  {
+    "ts": 1790861889.6135695,
+    "method": "GET",
+    "url": "https://cdn-ec.bk6bba-resources.ru/ContentCommon/NewFlags/Circle/Israel.svg",
+    "host": "cdn-ec.bk6bba-resources.ru",
+    "type": "fetch",
+    "status": 200,
+    "size": 1230,
+    "preview": "<?xml version=\"1.0\" encoding=\"iso-8859-1\"?>\r\n<!-- Generator: Adobe Illustrator 24.2.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->\r\n<svg version=\"1.1\" id=\"&#x421;&#x43B;&#x43E;&#x439;_1\"\r\n\t xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" x=\"0px\" y=\"0px\" viewBox"
+  },
+  {
+    "ts": 1790861889.6141906,
+    "method": "GET",
+    "url": "https://cdn-ec.bk6bba-resources.ru/ContentCommon/NewFlags/Circle/Israel.svg",
+    "host": "cdn-ec.bk6bba-resources.ru",
+    "type": "fetch",
+    "status": 200,
+    "size": 1230,
+    "preview": "<?xml version=\"1.0\" encoding=\"iso-8859-1\"?>\r\n<!-- Generator: Adobe Illustrator 24.2.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->\r\n<svg version=\"1.1\" id=\"&#x421;&#x43B;&#x43E;&#x439;_1\"\r\n\t xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" x=\"0px\" y=\"0px\" viewBox"
+  },
+  {
+    "ts": 1790861889.6146238,
+    "method": "GET",
+    "url": "https://cdn-ec.bk6bba-resources.ru/ContentCommon/NewFlags/Circle/Israel.svg",
+    "host": "cdn-ec.bk6bba-resources.ru",
+    "type": "fetch",
+    "status": 200,
+    "size": 1230,
+    "preview": "<?xml version=\"1.0\" encoding=\"iso-8859-1\"?>\r\n<!-- Generator: Adobe Illustrator 24.2.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->\r\n<svg version=\"1.1\" id=\"&#x421;&#x43B;&#x43E;&#x439;_1\"\r\n\t xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" x=\"0px\" y=\"0px\" viewBox"
+  },
+  {
+    "ts": 1790861889.0982597,
+    "method": "GET",
+    "url": "https://cdn-ec.bk6bba-resources.ru/ContentCommon/website/resources/sport/competitionDefault.svg",
+    "host": "cdn-ec.bk6bba-resources.ru",
+    "type": "fetch",
+    "status": 200,
+    "size": 1226,
+    "preview": "<svg width=\"16\" height=\"16\" viewBox=\"0 0 16 16\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n<g clip-path=\"url(#clip0_8107_100059)\">\n<path d=\"M8 16C12.4183 16 16 12.4183 16 8C16 3.58172 12.4183 0 8 0C3.58172 0 0 3.58172 0 8C0 12.4183 3.58172 16 8 16Z\" fill=\"#39608D\"/>\n<path fill-rule=\"evenodd\" cl"
+  },
+  {
+    "ts": 1790861887.92373,
+    "method": "GET",
+    "url": "https://cdn-ec.bk6bba-resources.ru/ContentCommon/website/resources/header/help_filled.svg",
+    "host": "cdn-ec.bk6bba-resources.ru",
+    "type": "fetch",
+    "status": 200,
+    "size": 1189,
+    "preview": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\" viewBox=\"0 0 16 16\" fill=\"none\">\n    <path fill-rule=\"evenodd\" clip-rule=\"evenodd\" d=\"M8 16C12.4183 16 16 12.4183 16 8C16 3.58172 12.4183 0 8 0C3.58172 0 0 3.58172 0 8C0 12.4183 3.58172 16 8 16ZM5.42767 3.73203C4.83034 4.3387 4.499 5.178"
+  },
+  {
+    "ts": 1790861889.0980535,
+    "method": "GET",
+    "url": "https://cdn-ec.bk6bba-resources.ru/ContentCommon/website/resources/favorites.svg",
+    "host": "cdn-ec.bk6bba-resources.ru",
+    "type": "fetch",
+    "status": 200,
+    "size": 1179,
+    "preview": "<svg width=\"18\" height=\"18\" viewBox=\"0 0 18 18\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n<path d=\"M13.7289 10.7089C13.5381 10.8938 13.4504 11.1613 13.4939 11.4236L14.1489 15.0486C14.2041 15.3558 14.0745 15.6668 13.8173 15.8443C13.5653 16.0285 13.2301 16.0506 12.9553 15.9033L9.69203 14.2013C9."
+  },
+  {
+    "ts": 1790861926.255544,
+    "method": "GET",
+    "url": "https://cdn-ec.bk6bba-resources.ru/ContentCommon/NewFlags/Circle/Greece.svg",
+    "host": "cdn-ec.bk6bba-resources.ru",
+    "type": "fetch",
+    "status": 200,
+    "size": 1108,
+    "preview": "<?xml version=\"1.0\" encoding=\"iso-8859-1\"?>\r\n<!-- Generator: Adobe Illustrator 24.2.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->\r\n<svg version=\"1.1\" id=\"&#x421;&#x43B;&#x43E;&#x439;_1\"\r\n\t xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" x=\"0px\" y=\"0px\" viewBox"
+  },
+  {
+    "ts": 1790861926.2587204,
+    "method": "GET",
+    "url": "https://cdn-ec.bk6bba-resources.ru/ContentCommon/NewFlags/Circle/Greece.svg",
+    "host": "cdn-ec.bk6bba-resources.ru",
+    "type": "fetch",
+    "status": 200,
+    "size": 1108,
+    "preview": "<?xml version=\"1.0\" encoding=\"iso-8859-1\"?>\r\n<!-- Generator: Adobe Illustrator 24.2.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->\r\n<svg version=\"1.1\" id=\"&#x421;&#x43B;&#x43E;&#x439;_1\"\r\n\t xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" x=\"0px\" y=\"0px\" viewBox"
+  },
+  {
+    "ts": 1790861889.3539445,
+    "method": "GET",
+    "url": "https://cdn-ec.bk6bba-resources.ru/ContentCommon/website/resources/sport/sports/sport_baseball.svg",
+    "host": "cdn-ec.bk6bba-resources.ru",
+    "type": "fetch",
+    "status": 200,
+    "size": 1094,
+    "preview": "<svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\"> <path fill-rule=\"evenodd\" clip-rule=\"evenodd\" d=\"M23.1617 0.833147C22.689 0.328578 22.0373 0.029587 21.3466 0.000407282C20.9551 -0.00855852 20.5746 0.130786 20.2815 0.39052L13.5312 7.14246L8.87344 12.484L"
+  },
+  {
+    "ts": 1790861905.6612866,
+    "method": "GET",
+    "url": "https://cdn-ec.bk6bba-resources.ru/ContentCommon/NewFlags/Circle/Norway.svg",
+    "host": "cdn-ec.bk6bba-resources.ru",
+    "type": "fetch",
+    "status": 200,
+    "size": 1004,
+    "preview": "<?xml version=\"1.0\" encoding=\"iso-8859-1\"?>\r\n<!-- Generator: Adobe Illustrator 24.2.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->\r\n<svg version=\"1.1\" id=\"&#x421;&#x43B;&#x43E;&#x439;_1\"\r\n\t xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" x=\"0px\" y=\"0px\" viewBox"
+  },
+  {
+    "ts": 1790861905.6651158,
+    "method": "GET",
+    "url": "https://cdn-ec.bk6bba-resources.ru/ContentCommon/NewFlags/Circle/Norway.svg",
+    "host": "cdn-ec.bk6bba-resources.ru",
+    "type": "fetch",
+    "status": 200,
+    "size": 1004,
+    "preview": "<?xml version=\"1.0\" encoding=\"iso-8859-1\"?>\r\n<!-- Generator: Adobe Illustrator 24.2.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->\r\n<svg version=\"1.1\" id=\"&#x421;&#x43B;&#x43E;&#x439;_1\"\r\n\t xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" x=\"0px\" y=\"0px\" viewBox"
+  },
+  {
+    "ts": 1790861889.229888,
+    "method": "GET",
+    "url": "https://cdn-ec.bk6bba-resources.ru/webStaticCommon/loyalty/universal/banners/v4/manifest.json",
+    "host": "cdn-ec.bk6bba-resources.ru",
+    "type": "fetch",
+    "status": 200,
+    "size": 968,
+    "preview": "{\"Promocode\": {\"4\": \"4.0.4-manual\"}, \"Announcement\": {\"4\": \"4.28.36\"}, \"JackpotInfo\": {\"4\": \"4.28.36\"}, \"BetCounter\": {\"4\": \"4.28.36\"}, \"BetSeriesBonus\": {\"4\": \"4.28.36\"}, \"BetTimer2\": {\"4\": \"4.28.36\"}, \"BonusWinback\": {\"4\": \"4.28.36\"}, \"CasinoTournament\": {\"4\": \"4.28.36\"}, \"CasinoTournamentInfo\": {"
+  },
+  {
+    "ts": 1790861889.096897,
+    "method": "GET",
+    "url": "https://cdn-ec.bk6bba-resources.ru/ContentCommon/website/resources/timer.svg",
+    "host": "cdn-ec.bk6bba-resources.ru",
+    "type": "fetch",
+    "status": 200,
+    "size": 962,
+    "preview": "<svg width=\"14\" height=\"14\" viewBox=\"0 0 14 14\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n<path fill-rule=\"evenodd\" clip-rule=\"evenodd\" d=\"M6.99988 1.16699C3.77801 1.16699 1.16655 3.77845 1.16655 7.00033C1.16655 10.2222 3.77801 12.8337 6.99988 12.8337C10.2218 12.8337 12.8332 10.2222 12.8332 7."
+  },
+  {
+    "ts": 1790861889.612475,
+    "method": "GET",
+    "url": "https://cdn-ec.bk6bba-resources.ru/ContentCommon/NewFlags/Circle/United-Arab-Emirates.svg",
+    "host": "cdn-ec.bk6bba-resources.ru",
+    "type": "fetch",
+    "status": 200,
+    "size": 957,
+    "preview": "<?xml version=\"1.0\" encoding=\"iso-8859-1\"?>\r\n<!-- Generator: Adobe Illustrator 24.2.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->\r\n<svg version=\"1.1\" id=\"&#x421;&#x43B;&#x43E;&#x439;_1\"\r\n\t xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" x=\"0px\" y=\"0px\" viewBox"
+  },
+  {
+    "ts": 1790861926.2585125,
+    "method": "GET",
+    "url": "https://cdn-ec.bk6bba-resources.ru/ContentCommon/NewFlags/Circle/Netherlands.svg",
+    "host": "cdn-ec.bk6bba-resources.ru",
+    "type": "fetch",
+    "status": 200,
+    "size": 908,
+    "preview": "<?xml version=\"1.0\" encoding=\"iso-8859-1\"?>\r\n<!-- Generator: Adobe Illustrator 24.2.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->\r\n<svg version=\"1.1\" id=\"&#x421;&#x43B;&#x43E;&#x439;_1\"\r\n\t xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" x=\"0px\" y=\"0px\" viewBox"
+  },
+  {
+    "ts": 1790861926.258898,
+    "method": "GET",
+    "url": "https://cdn-ec.bk6bba-resources.ru/ContentCommon/NewFlags/Circle/Netherlands.svg",
+    "host": "cdn-ec.bk6bba-resources.ru",
+    "type": "fetch",
+    "status": 200,
+    "size": 908,
+    "preview": "<?xml version=\"1.0\" encoding=\"iso-8859-1\"?>\r\n<!-- Generator: Adobe Illustrator 24.2.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->\r\n<svg version=\"1.1\" id=\"&#x421;&#x43B;&#x43E;&#x439;_1\"\r\n\t xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" x=\"0px\" y=\"0px\" viewBox"
+  },
+  {
+    "ts": 1790861889.6137486,
+    "method": "GET",
+    "url": "https://cdn-ec.bk6bba-resources.ru/ContentCommon/NewFlags/Circle/Denmark.svg",
+    "host": "cdn-ec.bk6bba-resources.ru",
+    "type": "fetch",
+    "status": 200,
+    "size": 892,
+    "preview": "<?xml version=\"1.0\" encoding=\"iso-8859-1\"?>\r\n<!-- Generator: Adobe Illustrator 24.2.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->\r\n<svg version=\"1.1\" id=\"&#x421;&#x43B;&#x43E;&#x439;_1\"\r\n\t xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" x=\"0px\" y=\"0px\" viewBox"
+  },
+  {
+    "ts": 1790861889.61432,
+    "method": "GET",
+    "url": "https://cdn-ec.bk6bba-resources.ru/ContentCommon/NewFlags/Circle/Denmark.svg",
+    "host": "cdn-ec.bk6bba-resources.ru",
+    "type": "fetch",
+    "status": 200,
+    "size": 892,
+    "preview": "<?xml version=\"1.0\" encoding=\"iso-8859-1\"?>\r\n<!-- Generator: Adobe Illustrator 24.2.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->\r\n<svg version=\"1.1\" id=\"&#x421;&#x43B;&#x43E;&#x439;_1\"\r\n\t xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" x=\"0px\" y=\"0px\" viewBox"
+  },
+  {
+    "ts": 1790861915.9426796,
+    "method": "GET",
+    "url": "https://cdn-ec.bk6bba-resources.ru/ContentCommon/NewFlags/Circle/Germany.svg",
+    "host": "cdn-ec.bk6bba-resources.ru",
+    "type": "fetch",
+    "status": 200,
+    "size": 890,
+    "preview": "<?xml version=\"1.0\" encoding=\"iso-8859-1\"?>\r\n<!-- Generator: Adobe Illustrator 24.2.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->\r\n<svg version=\"1.1\" id=\"&#x421;&#x43B;&#x43E;&#x439;_1\"\r\n\t xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" x=\"0px\" y=\"0px\" viewBox"
+  },
+  {
+    "ts": 1790861915.9429362,
+    "method": "GET",
+    "url": "https://cdn-ec.bk6bba-resources.ru/ContentCommon/NewFlags/Circle/Germany.svg",
+    "host": "cdn-ec.bk6bba-resources.ru",
+    "type": "fetch",
+    "status": 200,
+    "size": 890,
+    "preview": "<?xml version=\"1.0\" encoding=\"iso-8859-1\"?>\r\n<!-- Generator: Adobe Illustrator 24.2.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->\r\n<svg version=\"1.1\" id=\"&#x421;&#x43B;&#x43E;&#x439;_1\"\r\n\t xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" x=\"0px\" y=\"0px\" viewBox"
+  },
+  {
+    "ts": 1790861889.3544276,
+    "method": "GET",
+    "url": "https://cdn-ec.bk6bba-resources.ru/ContentCommon/website/resources/sport/sports/sport_cricket.svg",
+    "host": "cdn-ec.bk6bba-resources.ru",
+    "type": "fetch",
+    "status": 200,
+    "size": 798,
+    "preview": "<svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\"> <path fill-rule=\"evenodd\" clip-rule=\"evenodd\" d=\"M5.82993 13.4728L10.2039 17.8391L22.9267 5.12395C22.3368 2.99971 20.677 1.33989 18.5528 0.75L5.82993 13.4728ZM6.12152 4.418C6.12152 5.9013 4.91907 7.10376 "
+  },
+  {
+    "ts": 1790861887.923125,
+    "method": "GET",
+    "url": "https://cdn-ec.bk6bba-resources.ru/ContentCommon/website/resources/header/settings_filled.svg",
+    "host": "cdn-ec.bk6bba-resources.ru",
+    "type": "fetch",
+    "status": 200,
+    "size": 700,
+    "preview": "<svg xmlns=\"http://www.w3.org/2000/svg\" x=\"0px\" y=\"0px\" viewBox=\"0 0 210 210\" style=\"enable-background:new 0 0 210 210;\" xml:space=\"preserve\">\n    <path class=\"st0\" d=\"M180.5,92.3c-0.8-4.5-1.8-9.1-3.5-13.5c-1.6-4.4-3.7-8.6-6-12.6l19.3-22.8l-39-32.6L132,33.8  c-8.7-3.2-18-4.8-27.5-4.7L94.4,1.1L46.3,1"
+  },
+  {
+    "ts": 1790861889.098602,
+    "method": "GET",
+    "url": "https://cdn-ec.bk6bba-resources.ru/ContentCommon/website/resources/sport/sports/sport_table_tennis.svg",
+    "host": "cdn-ec.bk6bba-resources.ru",
+    "type": "fetch",
+    "status": 200,
+    "size": 694,
+    "preview": "<svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\"> <path fill-rule=\"evenodd\" clip-rule=\"evenodd\" d=\"M3.01499 0C4.68012 0 6.02997 1.36437 6.02997 3.04741C6.02997 4.73044 4.68012 6.09481 3.01499 6.09481C1.34986 6.09481 0 4.73044 0 3.04741C0 1.36437 1.34986 "
+  },
+  {
+    "ts": 1790861889.3549073,
+    "method": "GET",
+    "url": "https://cdn-ec.bk6bba-resources.ru/ContentCommon/website/resources/sport/sports/sport_badminton.svg",
+    "host": "cdn-ec.bk6bba-resources.ru",
+    "type": "fetch",
+    "status": 200,
+    "size": 670,
+    "preview": "<svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\"> <path fill-rule=\"evenodd\" clip-rule=\"evenodd\" d=\"M12.9704 5.02068L11.1667 0L6.62416 9.73532L8.92437 12.0265L12.9704 5.02068ZM0.906804 18.2548C-0.338694 19.6055 -0.29611 21.6981 1.00331 22.997C2.30273 24.2"
+  },
+  {
+    "ts": 1790861889.0784082,
+    "method": "GET",
+    "url": "https://cdn-ec.bk6bba-resources.ru/ContentCommon/website/resources/sport/sports/sport_hockey.svg",
+    "host": "cdn-ec.bk6bba-resources.ru",
+    "type": "fetch",
+    "status": 200,
+    "size": 624,
+    "preview": "<svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\"> <path fill-rule=\"evenodd\" clip-rule=\"evenodd\" d=\"M18.1624 17.3731C13.4483 21.8822 8.14286 24.1121 6.30866 22.3577L3.09452 19.2833C6.12867 18.9718 10.1485 16.709 13.8083 13.2083C17.1596 10.0028 19.808 6.05"
+  },
+  {
+    "ts": 1790861887.9331815,
+    "method": "GET",
+    "url": "https://cdn-ec.bk6bba-resources.ru/ContentCommon/website/resources/searchThick.svg",
+    "host": "cdn-ec.bk6bba-resources.ru",
+    "type": "fetch",
+    "status": 200,
+    "size": 550,
+    "preview": "<svg xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" x=\"0px\" y=\"0px\" viewBox=\"0 0 210 210\" style=\"enable-background:new 0 0 210 210;\" xml:space=\"preserve\">\n\t<g>\n\t\t<path class=\"st0\" d=\"M90,30c33.1,0,60,26.9,60,60s-26.9,60-60,60s-60-26.9-60-60S56.9,30,90,30 M90,0C40.3,0,0"
+  },
+  {
+    "ts": 1790861887.9418354,
+    "method": "GET",
+    "url": "https://cdn-ec.bk6bba-resources.ru/ContentCommon/website/resources/chevron.svg",
+    "host": "cdn-ec.bk6bba-resources.ru",
+    "type": "fetch",
+    "status": 200,
+    "size": 490,
+    "preview": "<svg width=\"18\" height=\"18\" viewBox=\"0 0 18 18\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n<path fill-rule=\"evenodd\" clip-rule=\"evenodd\" d=\"M6.21967 14.0303C5.92678 13.7374 5.92678 13.2626 6.21967 12.9697L10.1893 9L6.21967 5.03033C5.92678 4.73744 5.92678 4.26256 6.21967 3.96967C6.51256 3.67678 "
+  },
+  {
+    "ts": 1790861889.0935245,
+    "method": "GET",
+    "url": "https://cdn-ec.bk6bba-resources.ru/ContentCommon/website/resources/topEvents/graph-up.svg",
+    "host": "cdn-ec.bk6bba-resources.ru",
+    "type": "fetch",
+    "status": 200,
+    "size": 398,
+    "preview": "<svg width=\"20\" height=\"20\" viewBox=\"0 0 20 20\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n<path d=\"M11.8418 7.42081L14.789 3L17.7362 7.42081H16.2626V16.9992H13.3154V7.42081H11.8418Z\" fill=\"#D42A28\"/>\n<path d=\"M11.1054 8.89453H8.1582V16.9993H11.1054V8.89453Z\" fill=\"#D42A28\" fill-opacity=\"0.6\"/>"
+  },
+  {
+    "ts": 1790861889.0973837,
+    "method": "GET",
+    "url": "https://cdn-ec.bk6bba-resources.ru/ContentCommon/website/resources/toBottomArrow.svg",
+    "host": "cdn-ec.bk6bba-resources.ru",
+    "type": "fetch",
+    "status": 200,
+    "size": 306,
+    "preview": "<svg width=\"14\" height=\"14\" xmlns=\"http://www.w3.org/2000/svg\"  viewBox=\"0 0 14 14\" >\n\t\t\t\t<path\n\t\t\t\t\tfill='currentColor'\n\t\t\t\t\td=\"M12.562 4.5034a.75.75 0 01-.0654 1.0586l-5.0294 4.4445a.75.75 0 01-.9965-.003L1.5 5.5591a.75.75 0 11.9998-1.1182l4.4736 4 4.5299-4.0029a.75.75 0 011.0586.0654z\"\n\t\t\t\t/>\n\t\t\t"
+  },
+  {
+    "ts": 1790861889.5736225,
+    "method": "POST",
+    "url": "https://clientsapi-lb54-w.bk6bba-resources.com/content/getContentFromVersion",
+    "host": "clientsapi-lb54-w.bk6bba-resources.com",
+    "type": "xhr",
+    "status": 200,
+    "size": 289,
+    "preview": "{\"result\": \"contents\", \"contents\": [{\"items\": [], \"version\": \"1194162744\", \"hasMoreData\": false, \"initialPacket\": false}, {\"items\": [], \"version\": \"1194162744\", \"hasMoreData\": false, \"initialPacket\": false}, {\"items\": [], \"version\": \"1194162744\", \"hasMoreData\": false, \"initialPacket\": false}], \"scop"
+  },
+  {
+    "ts": 1790861887.8385084,
+    "method": "POST",
+    "url": "https://clientsapi-lb54-w.bk6bba-resources.com/getScopeSettings",
+    "host": "clientsapi-lb54-w.bk6bba-resources.com",
+    "type": "xhr",
+    "status": 200,
+    "size": 251,
+    "preview": "{\"result\": \"scopeSettings\", \"settings\": {\"fullAuthInterval\": 0, \"inactivityTimeout\": 0, \"showLastLoginPopup\": false, \"oauthKinds\": [], \"passKeyEnabled\": true, \"videoIdentOffDemand\": false, \"selfExclusionCancelByClient\": true, \"selfExclusionCancelByClientCooldown\": 60}}"
+  },
+  {
+    "ts": 1790861888.9542763,
+    "method": "POST",
+    "url": "https://clientsapi-lb54-w.bk6bba-resources.com/content/getContentFromVersion",
+    "host": "clientsapi-lb54-w.bk6bba-resources.com",
+    "type": "xhr",
+    "status": 200,
+    "size": 133,
+    "preview": "{\"result\": \"contents\", \"contents\": [{\"items\": [], \"version\": \"1194162744\", \"hasMoreData\": false, \"initialPacket\": false}], \"scopeMarketId\": 1600}"
+  },
+  {
+    "ts": 1790861949.3003848,
+    "method": "POST",
+    "url": "https://clientsapi-vk-w.bk6bba-resources.ru/content/getContentFromVersion",
+    "host": "clientsapi-vk-w.bk6bba-resources.ru",
+    "type": "xhr",
+    "status": 200,
+    "size": 133,
+    "preview": "{\"result\": \"contents\", \"contents\": [{\"items\": [], \"version\": \"1194162744\", \"hasMoreData\": false, \"initialPacket\": false}], \"scopeMarketId\": 1600}"
+  },
+  {
+    "ts": 1790861950.1298828,
+    "method": "POST",
+    "url": "https://clientsapi-lb61-w.bk6bba-resources.com/content/getContentFromVersion",
+    "host": "clientsapi-lb61-w.bk6bba-resources.com",
+    "type": "xhr",
+    "status": 200,
+    "size": 133,
+    "preview": "{\"result\": \"contents\", \"contents\": [{\"items\": [], \"version\": \"1194162744\", \"hasMoreData\": false, \"initialPacket\": false}], \"scopeMarketId\": 1600}"
+  },
+  {
+    "ts": 1790861886.348662,
+    "method": "POST",
+    "url": "https://line-lb54-w.bk6bba-resources.com/getApiState",
+    "host": "line-lb54-w.bk6bba-resources.com",
+    "type": "fetch",
+    "status": 200,
+    "size": 119,
+    "preview": "{\"result\": \"apiState\", \"stateTime\": \"2026-10-01 13:38:05\", \"state\": {\"line\": {\"ready\": true, \"delay\": 0, \"commandList\": [\"/*\"]}}}"
+  },
+  {
+    "ts": 1790861892.345328,
+    "method": "POST",
+    "url": "https://line-lb61-w.bk6bba-resources.com/getApiState",
+    "host": "line-lb61-w.bk6bba-resources.com",
+    "type": "fetch",
+    "status": 200,
+    "size": 119,
+    "preview": "{\"result\": \"apiState\", \"stateTime\": \"2026-10-01 13:38:11\", \"state\": {\"line\": {\"ready\": true, \"delay\": 0, \"commandList\": [\"/*\"]}}}"
+  },
+  {
+    "ts": 1790861892.3612554,
+    "method": "POST",
+    "url": "https://line-vk-w.bk6bba-resources.ru/getApiState",
+    "host": "line-vk-w.bk6bba-resources.ru",
+    "type": "fetch",
+    "status": 200,
+    "size": 119,
+    "preview": "{\"result\": \"apiState\", \"stateTime\": \"2026-10-01 13:38:11\", \"state\": {\"line\": {\"ready\": true, \"delay\": 0, \"commandList\": [\"/*\"]}}}"
+  },
+  {
+    "ts": 1790861976.7288494,
+    "method": "POST",
+    "url": "https://line-lb54-w.bk6bba-resources.com/getApiState",
+    "host": "line-lb54-w.bk6bba-resources.com",
+    "type": "fetch",
+    "status": 200,
+    "size": 119,
+    "preview": "{\"result\": \"apiState\", \"stateTime\": \"2026-10-01 13:39:35\", \"state\": {\"line\": {\"ready\": true, \"delay\": 0, \"commandList\": [\"/*\"]}}}"
+  },
+  {
+    "ts": 1790861982.7296767,
+    "method": "POST",
+    "url": "https://line-lb61-w.bk6bba-resources.com/getApiState",
+    "host": "line-lb61-w.bk6bba-resources.com",
+    "type": "fetch",
+    "status": 200,
+    "size": 119,
+    "preview": "{\"result\": \"apiState\", \"stateTime\": \"2026-10-01 13:39:41\", \"state\": {\"line\": {\"ready\": true, \"delay\": 0, \"commandList\": [\"/*\"]}}}"
+  },
+  {
+    "ts": 1790861982.7626793,
+    "method": "POST",
+    "url": "https://line-vk-w.bk6bba-resources.ru/getApiState",
+    "host": "line-vk-w.bk6bba-resources.ru",
+    "type": "fetch",
+    "status": 200,
+    "size": 119,
+    "preview": "{\"result\": \"apiState\", \"stateTime\": \"2026-10-01 13:39:41\", \"state\": {\"line\": {\"ready\": true, \"delay\": 0, \"commandList\": [\"/*\"]}}}"
+  },
+  {
+    "ts": 1790861887.5430708,
+    "method": "POST",
+    "url": "https://clientsapi-lb54-w.bk6bba-resources.com/geoIp/checkGeoAccess",
+    "host": "clientsapi-lb54-w.bk6bba-resources.com",
+    "type": "xhr",
+    "status": 200,
+    "size": 107,
+    "preview": "{\"result\": \"geoAccess\", \"allowed\": true, \"ip\": \"178.208.255.30\", \"country\": \"RU\", \"geoCountryId\": \"1\", \"isVPN\": false}"
+  },
+  {
+    "ts": 1790861889.0700622,
+    "method": "GET",
+    "url": "https://clientsapi-lb54-w.bk6bba-resources.com/serverTime",
+    "host": "clientsapi-lb54-w.bk6bba-resources.com",
+    "type": "xhr",
+    "status": 200,
+    "size": 56,
+    "preview": "{\"serverTime\": 1790861888, \"serverTimeMsec\": 1790861887599}"
+  },
+  {
+    "ts": 1790861949.5824199,
+    "method": "GET",
+    "url": "https://clientsapi-vk-w.bk6bba-resources.ru/serverTime",
+    "host": "clientsapi-vk-w.bk6bba-resources.ru",
+    "type": "xhr",
+    "status": 200,
+    "size": 56,
+    "preview": "{\"serverTime\": 1790861949, \"serverTimeMsec\": 1790861948601}"
+  },
+  {
+    "ts": 1790861891.5312293,
+    "method": "POST",
+    "url": "https://clientsapi-lb54-w.bk6bba-resources.com/analytics/clickStreamList",
+    "host": "clientsapi-lb54-w.bk6bba-resources.com",
+    "type": "xhr",
+    "status": 200,
+    "size": 20,
+    "preview": "{\"result\": \"success\"}"
+  },
+  {
+    "ts": 1790861888.932321,
+    "method": "GET",
+    "url": "https://line-lb54-w.bk6bba-resources.com/ma/events/listBase?lang=ru&scopeMarket=1600",
+    "host": "line-lb54-w.bk6bba-resources.com",
+    "type": "xhr",
+    "status": 200,
+    "size": 0,
+    "preview": ""
+  }
+]

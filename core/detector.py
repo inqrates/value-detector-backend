@@ -375,6 +375,7 @@ class Detector:
                 "slow_score": slow_score_pair,
                 "slow_sub_score": slow_sub_pair,
                 "slow_odds": slow_odds_pair,
+                "slow_is_reversed": bool(reverse),
                 "delay": round(delay, 1),
                 "match_id": match_id_for_slow,
                 "match_url": match_url,

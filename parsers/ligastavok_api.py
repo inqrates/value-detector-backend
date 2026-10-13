@@ -80,10 +80,10 @@ class LigaStavokApiParser:
 
     IMPERSONATE = "chrome150"
     LIMIT = 40
-    SNAPSHOT_INTERVAL = 15.0
+    SNAPSHOT_INTERVAL = 300.0
     WS_RECONNECT_DELAY = 3.0
 
-    REFRESH_MIN_INTERVAL = 60.0
+    REFRESH_MIN_INTERVAL = 600.0
     REFRESH_AFTER_403 = 1
 
     def __init__(self, detector=None, aggregator=None, enabled_sports=None):
@@ -118,7 +118,7 @@ class LigaStavokApiParser:
         self._consecutive_403: int = 0
         self._refresh_event = asyncio.Event()
         self._last_successful_response_at: float = 0.0
-
+        self._qrator_cooldown_until: float = 0.0   # ← новый флаг
     # ============================================================
     # Cookies
     # ============================================================
@@ -186,10 +186,17 @@ class LigaStavokApiParser:
                 page = await browser_manager.new_page()
                 await page.goto(
                     "https://www.ligastavok.ru/live",
-                    wait_until="domcontentloaded",
-                    timeout=60000,
+                    wait_until="commit",
+                    timeout=90000,
                 )
-                await page.wait_for_timeout(5000)
+                # Qrator-челлендж разгадывается в фоне 5-10 сек
+                await page.wait_for_timeout(8000)
+                                # Проверим, что Qrator пропустил
+                try:
+                    title = await page.title()
+                    logger.info(f"[{self.bk_id}] 📄 page.title после goto: {title!r}")
+                except Exception:
+                    pass
                 try:
                     await page.evaluate("window.scrollTo(0, 2000)")
                     await page.wait_for_timeout(1000)
@@ -279,6 +286,10 @@ class LigaStavokApiParser:
     # HTTP-снапшот
     # ============================================================
     async def _fetch_snapshot(self):
+        # ── Cooldown после 5 подряд 403 ──
+        if time.time() < self._qrator_cooldown_until:
+            self._last_snapshot_at = time.time()
+            return        
         all_items = []
         skip = 0
         page = 0
@@ -348,10 +359,11 @@ class LigaStavokApiParser:
             if page > 200:
                 break
 
-            await asyncio.sleep(0.1)
+            await asyncio.sleep(0.5)
 
         if not got_403:
             self._consecutive_403 = 0
+            self._qrator_cooldown_until = 0.0
 
         if all_items:
             self._last_successful_response_at = time.time()
@@ -363,10 +375,23 @@ class LigaStavokApiParser:
                 f"({page + 1} стр.), в кеше: {len(self._matches_cache)}"
             )
 
-        if got_403 and self._consecutive_403 >= self.REFRESH_AFTER_403:
-            asyncio.create_task(
-                self._refresh_cookies_via_playwright("(после 403)")
-            )
+        if got_403:
+            # Cooldown: после 5 подряд 403 — не пытаемся refresh 10 минут
+            if self._consecutive_403 >= 5:
+                now = time.time()
+                if now < self._qrator_cooldown_until:
+                    # ещё в cooldown — молчим
+                    pass
+                else:
+                    self._qrator_cooldown_until = now + 600.0
+                    logger.warning(
+                        f"[{self.bk_id}] 🧊 {self._consecutive_403} 403 подряд — "
+                        f"cooldown 10 мин, HTTP-снапшоты на паузе"
+                    )
+            elif self._consecutive_403 >= self.REFRESH_AFTER_403:
+                asyncio.create_task(
+                    self._refresh_cookies_via_playwright("(после 403)")
+                )
 
     def _process_http_item(self, m: dict):
         if not isinstance(m, dict):

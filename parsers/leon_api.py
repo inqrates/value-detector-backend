@@ -153,11 +153,22 @@ class LeonApiParser:
     async def _ensure_session(self):
         if self._session is not None:
             return
-        self._session = AsyncSession(
+
+        # ── Прокси из .env (нужен, если Leon отдаёт 404 nginx) ──
+        # Формат: socks5://user:pass@host:port  или  http://user:pass@host:port
+        proxy = os.getenv("LEON_PROXY", "").strip()
+
+        kwargs = dict(
             impersonate=self.IMPERSONATE,
-            timeout=30,
+            timeout=120,
             headers=self.HEADERS,
         )
+        if proxy:
+            kwargs["proxies"] = {"http": proxy, "https": proxy}
+            safe = proxy.split("@")[-1] if "@" in proxy else proxy
+            logger.info(f"[{self.bk_id}] 🌐 через прокси: {safe}")
+
+        self._session = AsyncSession(**kwargs)
 
         cookies = self._load_cookies()
 

@@ -2,16 +2,22 @@
 """
 Fonbet — HTTP-парсер через curl_cffi (без Playwright).
 
-Механика (по аналогии с Playwright-версией, эндпоинты те же):
+Механика:
   1. GET /ma/events/listBase       — полный снапшот (prematch+live)
   2. GET /ma/events/list?version=X — дельта, X = packetVersion
   3. Повторять (2) каждые POLL_INTERVAL; раз в 5 мин обновлять снапшот
 
-Логика разбора (sports, eventMiscs, customFactors, дерево, фильтр по parentId)
-скопирована из старой Playwright-версии 1-в-1.
+ВЕРСИЯ 2 (2026-10-11):
+  - Активная партия теперь берётся из liveEventInfos.subscores —
+    это структурированные данные от Fonbet (kindName="N-й сет",
+    c1/c2 = точный счёт активной партии).
+  - Comment используется только как fallback через звёздочку.
+  - Исправлен баг: раньше sub1/sub2 брались из pairs[-1], что давало
+    рассинхрон при смене партии (score уже новый, comment ещё старый).
 """
 import asyncio
 import logging
+import re
 import time
 from typing import Dict, Optional, Set, List
 
@@ -70,6 +76,9 @@ class FonbetApiParser:
         self._packet_version: Optional[int] = None
         self._last_snapshot_at: float = 0.0
 
+        # ── Диагностика рассинхрона comment ↔ subscores ──
+        self._last_subs_log: Dict[int, tuple] = {}
+
         self._session: Optional[AsyncSession] = None
 
     # ============================================================
@@ -90,7 +99,6 @@ class FonbetApiParser:
     # ============================================================
     async def start(self):
         await self._ensure_session()
-        # Первый снапшот — сразу, чтобы наполнить справочник
         await self._fetch_snapshot()
 
     async def stop(self):
@@ -113,7 +121,6 @@ class FonbetApiParser:
 
             try:
                 now = time.time()
-                # Раз в SNAPSHOT_INTERVAL — обновляем снапшот
                 if now - self._last_snapshot_at >= self.SNAPSHOT_INTERVAL:
                     await self._fetch_snapshot()
                 else:
@@ -126,7 +133,6 @@ class FonbetApiParser:
             except Exception as e:
                 logger.error(f"[{self.bk_id}] Ошибка опроса: {e}", exc_info=True)
                 await asyncio.sleep(3)
-                # Переснять снапшот на всякий случай
                 try:
                     await self._fetch_snapshot()
                 except Exception:
@@ -169,7 +175,6 @@ class FonbetApiParser:
 
     async def _fetch_delta(self):
         if not self._packet_version:
-            # Нет версии — значит снапшот не удался, форсим его
             await self._fetch_snapshot()
             return
 
@@ -196,12 +201,12 @@ class FonbetApiParser:
         if new_pv:
             self._packet_version = new_pv
 
-        # Обрабатываем только если есть что-то новое
-        if data.get("events") or data.get("sports") or data.get("eventMiscs"):
+        if (data.get("events") or data.get("sports")
+                or data.get("eventMiscs") or data.get("liveEventInfos")):
             self._process_events(data)
 
     # ============================================================
-    # Аккумулятор sports[] (копия из старого парсера)
+    # Аккумулятор sports[]
     # ============================================================
     def _accumulate_sports(self, sports: list) -> bool:
         changed = False
@@ -251,14 +256,15 @@ class FonbetApiParser:
         self._tree_by_root = tree_by_root
 
         total = sum(len(s) for s in tree_by_root.values())
-        roots_info = ", ".join(f"root={r}(ids={len(s)})" for r, s in tree_by_root.items())
+        roots_info = ", ".join(
+            f"root={r}(ids={len(s)})" for r, s in tree_by_root.items()
+        )
         logger.info(
             f"[{self.bk_id}] Дерево: enabled={self.enabled_sports}, "
             f"{roots_info}, total_seen={len(self._all_sports)}, tree_total={total}"
         )
 
     def _find_root_sport_id(self, sport_id: int) -> Optional[int]:
-        """По листовому sport_id находит корневой (3088 для НТ, 3 для баскета и т.п.)."""
         if sport_id is None:
             return None
         for root_id, tree in self._tree_by_root.items():
@@ -267,7 +273,7 @@ class FonbetApiParser:
         return None
 
     # ============================================================
-    # events/list — основная обработка (копия из старого парсера)
+    # events/list — основная обработка
     # ============================================================
     def _process_events(self, data: dict):
         sports = data.get("sports", [])
@@ -298,11 +304,17 @@ class FonbetApiParser:
                 self._events_cache[eid] = {"_last_sent": None}
                 self._first_seen[eid] = time.time()
 
-            self._events_cache[eid]["player1"] = ev.get("team1", "") or ev.get("participant1", "")
-            self._events_cache[eid]["player2"] = ev.get("team2", "") or ev.get("participant2", "")
+            self._events_cache[eid]["player1"] = (
+                ev.get("team1", "") or ev.get("participant1", "")
+            )
+            self._events_cache[eid]["player2"] = (
+                ev.get("team2", "") or ev.get("participant2", "")
+            )
             self._events_cache[eid]["tournament"] = ev.get("tournamentName", "")
             self._events_cache[eid]["sport_id"] = sid
-            self._events_cache[eid]["sport_category_id"] = self._sport_category_by_id.get(sid)
+            self._events_cache[eid]["sport_category_id"] = (
+                self._sport_category_by_id.get(sid)
+            )
             self._events_cache[eid]["parent_id"] = ev.get("parentId")
             self._events_cache[eid]["kind"] = ev.get("kind")
             self._events_cache[eid]["level"] = ev.get("level")
@@ -344,6 +356,10 @@ class FonbetApiParser:
         if "eventMiscs" in data:
             self._process_live({"eventMiscs": data["eventMiscs"]})
 
+        # ── Subscores — точные данные активной партии от Fonbet ──
+        if "liveEventInfos" in data:
+            self._process_live_infos(data["liveEventInfos"])
+
     def _process_live(self, data: dict):
         miscs = data.get("eventMiscs", [])
         for m in miscs:
@@ -364,8 +380,66 @@ class FonbetApiParser:
 
             self._last_update_time[eid] = time.time()
 
+    def _process_live_infos(self, infos: list):
+        """
+        Fonbet отдаёт активную партию в liveEventInfos.subscores:
+            {
+                "kindId": "100503",
+                "kindName": "3-й сет",
+                "c1": "4",
+                "c2": "0"
+            }
+
+        kindName уже содержит номер партии и название.
+        c1/c2 — точный счёт активной партии.
+
+        ВАЖНО: subscores — СТРУКТУРИРОВАННЫЕ данные, а не comment.
+        Они всегда синхронны с реальностью, потому что их отдаёт
+        сама Fonbet для каждой активной партии.
+        """
+        for info in infos or []:
+            eid = info.get("eventId")
+            if not eid:
+                continue
+
+            subs = info.get("subscores") or []
+            if not subs:
+                continue
+
+            # Активная = первая с ненулевым счётом.
+            # Пустые будущие партии (c1=0, c2=0) пропускаем.
+            for sub in subs:
+                try:
+                    c1 = int(sub.get("c1", 0) or 0)
+                    c2 = int(sub.get("c2", 0) or 0)
+                except (ValueError, TypeError):
+                    continue
+
+                if c1 == 0 and c2 == 0:
+                    continue
+
+                kind_name = (sub.get("kindName") or "").strip()
+                m = re.search(r'(\d+)', kind_name)
+                if not m:
+                    continue
+
+                phase_num = int(m.group(1))
+
+                if eid not in self._live_cache:
+                    self._live_cache[eid] = {}
+                    self._first_seen[eid] = time.time()
+
+                self._live_cache[eid]["subscores"] = {
+                    "phase_num":  phase_num,
+                    "phase_name": kind_name,
+                    "sub1":       c1,
+                    "sub2":       c2,
+                    "ts":         time.time(),
+                }
+                break  # берём только первую ненулевую (это активная)
+
     # ============================================================
-    # sport_key события (копия)
+    # sport_key события
     # ============================================================
     def _resolve_sport_key(self, sport_id, sport_category_id) -> Optional[str]:
         if sport_id is None:
@@ -391,13 +465,12 @@ class FonbetApiParser:
         return None
 
     # ============================================================
-    # parse_comment (копия, без изменений)
+    # parse_comment — fallback через звёздочку/индекс
     # ============================================================
     def _parse_comment(self, comment: str, sport_key: str,
                        children_miscs: list = None,
                        total_s1: Optional[int] = None,
                        total_s2: Optional[int] = None) -> dict:
-        import re
         result = {
             "sub1": 0, "sub2": 0,
             "total1": 0, "total2": 0,
@@ -406,18 +479,51 @@ class FonbetApiParser:
         if not comment:
             comment = ""
 
-        # НТ — оригинальная логика
+        # ── НТ ──
+        # Формат comment: "(11-7 11-13 4-0*)" — пары через пробел,
+        # * помечает активную партию.
+        #
+        # Стратегия (в порядке приоритета):
+        #   1) Есть звёздочка → она и есть активная
+        #   2) Нет звёздочки, но пар ровно сколько ожидается
+        #      (score1 + score2 + 1) → берём последнюю
+        #   3) Иначе — sub=0,0 (активной партии в comment ещё нет)
         if sport_key == "table_tennis":
             pairs = re.findall(r'\d+[*]?-\d+[*]?', comment)
             if pairs:
-                last = pairs[-1].replace('*', '')
-                parts = last.split('-')
-                if len(parts) == 2:
-                    result["sub1"] = int(parts[0]) if parts[0].isdigit() else 0
-                    result["sub2"] = int(parts[1]) if parts[1].isdigit() else 0
+                active = None
+
+                # Приоритет 1: звёздочка
+                for p in pairs:
+                    if '*' in p:
+                        active = p
+                        break
+
+                # Приоритет 2: индекс ожидаемой партии
+                if active is None:
+                    expected = (total_s1 or 0) + (total_s2 or 0) + 1
+                    if len(pairs) == expected:
+                        active = pairs[-1]
+
+                # Приоритет 3: ничего не берём — активной нет
+                if active is None:
+                    logger.debug(
+                        f"[{self.bk_id}] comment без активной партии: "
+                        f"score={total_s1}:{total_s2} "
+                        f"pairs={len(pairs)} comment={comment!r}"
+                    )
+                else:
+                    parts = active.replace('*', '').split('-')
+                    if len(parts) == 2:
+                        result["sub1"] = (
+                            int(parts[0]) if parts[0].isdigit() else 0
+                        )
+                        result["sub2"] = (
+                            int(parts[1]) if parts[1].isdigit() else 0
+                        )
             return result
 
-        # Волейбол / пляжный волейбол
+        # ── Волейбол / пляжный волейбол ──
         if sport_key in ("volleyball", "beach_volleyball"):
             if comment:
                 first_bracket = re.search(r'\(([^)]+)\)', comment)
@@ -457,7 +563,7 @@ class FonbetApiParser:
                 result["phase_name"] = format_phase(sport_key, active_idx)
             return result
 
-        # Баскетбол
+        # ── Баскетбол ──
         if sport_key in ("basketball", "cyber_basketball"):
             if comment:
                 first_bracket = re.search(r'\(([^)]+)\)', comment)
@@ -490,10 +596,9 @@ class FonbetApiParser:
         return result
 
     # ============================================================
-    # parse_factors (копия)
+    # parse_factors
     # ============================================================
     def _parse_factors(self, factors: list) -> dict:
-        import re
         result = {
             'odds1': 0.0, 'odds2': 0.0,
             'totalLine': 0.0, 'totalOver': 0.0, 'totalUnder': 0.0,
@@ -555,7 +660,7 @@ class FonbetApiParser:
         return result
 
     # ============================================================
-    # Отправка (копия из старого, с адаптацией под HTTP-кэш)
+    # Отправка
     # ============================================================
     async def _try_send_matches(self):
         current_time = time.time()
@@ -579,11 +684,11 @@ class FonbetApiParser:
             if not has_live_data:
                 continue
 
-            # Кэфы
+            # ── Кэфы ──
             factors = self._factors_cache.get(eid, [])
             parsed = self._parse_factors(factors)
 
-            # Баскетбол: fallback на кэфы активной четверти
+            # ── Баскетбол: fallback на кэфы активной четверти ──
             if sport_key in ("basketball", "cyber_basketball"):
                 if not parsed['odds1'] and not parsed['odds2']:
                     children = [
@@ -600,41 +705,72 @@ class FonbetApiParser:
                                 break
 
             first_seen = self._first_seen.get(eid, current_time)
-            if parsed['odds1'] == 0 and parsed['odds2'] == 0 and current_time - first_seen < 15:
+            if (parsed['odds1'] == 0 and parsed['odds2'] == 0
+                    and current_time - first_seen < 15):
                 continue
 
             last_sent = self._last_sent_time.get(eid, 0)
             if current_time - last_sent < 1.0:
                 continue
 
-            # miscs детей — для fallback
+            # ── miscs детей — для fallback ──
             children_miscs = []
-            if sport_key in ("basketball", "cyber_basketball", "volleyball", "beach_volleyball"):
+            if sport_key in ("basketball", "cyber_basketball",
+                             "volleyball", "beach_volleyball"):
                 children_eids = [
                     ceid for ceid, cev in self._events_cache.items()
                     if cev.get('parent_id') == eid
                 ]
-                children_eids.sort(key=lambda c: self._events_cache.get(c, {}).get('kind', 0))
+                children_eids.sort(
+                    key=lambda c: self._events_cache.get(c, {}).get('kind', 0)
+                )
                 for ceid in children_eids:
                     cm = dict(self._live_cache.get(ceid, {}) or {})
                     children_miscs.append(cm)
 
-            score_info = self._parse_comment(
-                comment, sport_key,
-                children_miscs=children_miscs,
-                total_s1=s1,
-                total_s2=s2,
-            )
-            sub1 = score_info["sub1"]
-            sub2 = score_info["sub2"]
-            phase_name = score_info["phase_name"]
+            # ═══════════════════════════════════════════════════════
+            # ПРИОРИТЕТ 1: subscores из liveEventInfos
+            #  Фонбет сам помечает активную партию.
+            #  Это надёжный структурированный источник.
+            # ═══════════════════════════════════════════════════════
+            subs = live.get('subscores')
+            sub1 = sub2 = 0
+            phase_num = 0
+            phase_name = ""
 
-            if sport_key == "table_tennis":
-                phase_num = (s1 or 0) + (s2 or 0) + 1
-                phase_name = format_phase(sport_key, phase_num)
+            if subs and sport_key == "table_tennis":
+                sub1 = subs["sub1"]
+                sub2 = subs["sub2"]
+                phase_num = subs["phase_num"]
+                phase_name = subs["phase_name"] or format_phase(
+                    sport_key, phase_num
+                )
+            else:
+                # ═══════════════════════════════════════════════════
+                # ПРИОРИТЕТ 2: fallback через comment
+                # ═══════════════════════════════════════════════════
+                score_info = self._parse_comment(
+                    comment, sport_key,
+                    children_miscs=children_miscs,
+                    total_s1=s1,
+                    total_s2=s2,
+                )
+                sub1 = score_info["sub1"]
+                sub2 = score_info["sub2"]
+                phase_name = score_info["phase_name"]
+                phase_num = score_info["phase_num"]
 
-            # Итоговый score
+                if sport_key == "table_tennis":
+                    phase_num = (s1 or 0) + (s2 or 0) + 1
+                    phase_name = format_phase(sport_key, phase_num)
+
+            # ── Итоговый score ──
             if sport_key in ("basketball", "cyber_basketball"):
+                score_info = self._parse_comment(
+                    comment, sport_key,
+                    children_miscs=children_miscs,
+                    total_s1=s1, total_s2=s2,
+                )
                 if score_info["total1"] or score_info["total2"]:
                     final_score1 = score_info["total1"]
                     final_score2 = score_info["total2"]
@@ -655,14 +791,11 @@ class FonbetApiParser:
             if event.get('_last_sent') == current_state:
                 continue
 
-            
-            # URL матча — проверенный универсальный формат для всех видов спорта:
-            #   /live/{sport_slug}/category/x/{sport_id}/{event_id}
-            # где x — заглушка (Fonbet игнорирует alias категории),
-            #     sport_id — листовой sportId события (55118, 146304, 134749, ...).
-            # Проверено в test_fonbet_debug4.py — работает 9/9.
+            # ── URL матча ──
             url_slug = get_url_slug(self.bk_id, sport_key) or 'table-tennis'
-            match_url = f"https://fon.bet/live/{url_slug}/category/x/{sport_id}/{eid}"
+            match_url = (
+                f"https://fon.bet/live/{url_slug}/category/x/{sport_id}/{eid}"
+            )
 
             match = Match(
                 bk_id='fonbet',
@@ -693,7 +826,8 @@ class FonbetApiParser:
                 f"[{self.bk_id}] 🟢 [{sport_key}] {match.player1} vs {match.player2} | "
                 f"матч {match.score1}:{match.score2} | "
                 f"{phase_name} {match.sub_score1}:{match.sub_score2} | "
-                f"К: {match.odds1}/{match.odds2}"
+                f"К: {match.odds1}/{match.odds2} | "
+                f"src={'sub' if subs and sport_key == 'table_tennis' else 'cmt'}"
             )
 
             if self.detector:
