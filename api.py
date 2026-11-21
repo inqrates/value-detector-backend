@@ -1,8 +1,10 @@
 # api.py
 import os
+import asyncio
 import time
 from collections import defaultdict
-from typing import List, Dict, Optional
+from dataclasses import dataclass, field
+from typing import List, Dict, Optional, Set
 
 from fastapi import FastAPI, Query, WebSocket, WebSocketDisconnect, HTTPException, Request, Header, Depends
 from fastapi.responses import HTMLResponse, JSONResponse
@@ -24,7 +26,23 @@ logger = logging.getLogger(__name__)
 app = FastAPI(title="Odds Aggregator API", version="1.0")
 
 aggregator: Optional[OddsAggregator] = None
-websocket_clients = set()
+
+
+# ============================================================
+# WS-клиент с подписками на каналы и матчи
+# ============================================================
+@dataclass
+class WsClient:
+    ws: WebSocket
+    channels: Set[str] = field(default_factory=lambda: {
+        # дефолт = «всё, что было раньше» (обратная совместимость)
+        "signals", "arbitrage", "value", "corridor",
+        "advisor", "health",
+    })
+    match_keys: Set[str] = field(default_factory=set)
+
+
+websocket_clients: Dict[WebSocket, WsClient] = {}
 
 _health_monitor = None
 
@@ -70,7 +88,6 @@ _LOGIN_MAX_ATTEMPTS = 5
 def _check_rate_limit(ip: str):
     now = time.time()
     attempts = _login_attempts[ip]
-    # чистим старые
     _login_attempts[ip] = [t for t in attempts if now - t < _LOGIN_WINDOW_SEC]
     if len(_login_attempts[ip]) >= _LOGIN_MAX_ATTEMPTS:
         raise HTTPException(
@@ -86,56 +103,130 @@ def _check_rate_limit(ip: str):
 @app.websocket("/ws")
 async def websocket_endpoint(websocket: WebSocket):
     await websocket.accept()
-    websocket_clients.add(websocket)
+    client = WsClient(ws=websocket)
+    websocket_clients[websocket] = client
     try:
         while True:
-            await websocket.receive_text()
+            raw = await websocket.receive_text()
+            try:
+                msg = json.loads(raw)
+            except Exception:
+                continue
+            t = msg.get("type")
+            if t == "subscribe":
+                ch = set(msg.get("channels") or [])
+                if ch:
+                    client.channels = ch
+                    logger.info(f"📡 WS subscribe: channels={sorted(ch)}")
+            elif t == "subscribe_match":
+                k = msg.get("key")
+                if k:
+                    client.match_keys.add(k)
+                    logger.info(f"🔔 WS subscribe_match: {k}")
+                    snap = _build_match_state_snapshot(k)
+                    if snap:
+                        try:
+                            await websocket.send_text(json.dumps(
+                                {"type": "match_state", **snap},
+                                ensure_ascii=False,
+                            ))
+                        except Exception:
+                            pass
+            elif t == "unsubscribe_match":
+                k = msg.get("key")
+                if k:
+                    client.match_keys.discard(k)
+                    logger.info(f"🔕 WS unsubscribe_match: {k}")
     except WebSocketDisconnect:
-        websocket_clients.discard(websocket)
+        pass
     except Exception:
-        websocket_clients.discard(websocket)
+        pass
+    finally:
+        websocket_clients.pop(websocket, None)
 
 
-async def broadcast_message(message: dict):
+async def broadcast_message(message: dict, channel: Optional[str] = None):
     if not websocket_clients:
         return
-    data = json.dumps(message)
-    for client in list(websocket_clients):
+    data = json.dumps(message, ensure_ascii=False)
+    for ws, cl in list(websocket_clients.items()):
+        if channel and channel not in cl.channels:
+            continue
         try:
-            await client.send_text(data)
+            await ws.send_text(data)
         except Exception:
-            websocket_clients.discard(client)
+            websocket_clients.pop(ws, None)
+
+
+async def push_match_state(key: str, bks_payload: dict, now: float):
+    """Пуш только тем, кто подписан на этот match_key."""
+    if not websocket_clients:
+        return
+    data = json.dumps(
+        {"type": "match_state", "key": key, "bks": bks_payload, "now": now},
+        ensure_ascii=False,
+    )
+    for ws, cl in list(websocket_clients.items()):
+        if key in cl.match_keys:
+            try:
+                await ws.send_text(data)
+            except Exception:
+                websocket_clients.pop(ws, None)
+
+
+def _build_match_state_snapshot(key: str) -> Optional[dict]:
+    if aggregator is None:
+        return None
+    bk_data = aggregator._matches.get(key)
+    if not bk_data:
+        return None
+    bks = {}
+    for bk_id, m in bk_data.items():
+        bks[bk_id] = {
+            "match_id": m.match_id,
+            "score1": m.score1,
+            "score2": m.score2,
+            "sub_score1": m.sub_score1,
+            "sub_score2": m.sub_score2,
+            "odds1": m.odds1,
+            "odds2": m.odds2,
+            "raw_time": getattr(m, "raw_time", "") or "",
+            "sport": getattr(m, "sport", "table_tennis"),
+            "timestamp": m.timestamp,
+            "match_url": getattr(m, "match_url", "") or "",
+        }
+    return {"key": key, "bks": bks, "now": time.time()}
 
 
 # ============================================================
-# Основные эндпоинты
+# Основные эндпоинты (не трогаем)
 # ============================================================
 @app.get("/matches", response_model=List[Dict])
 async def get_matches():
     if aggregator is None:
         return []
-    return aggregator.get_all_matches()
+    return await asyncio.to_thread(aggregator.get_all_matches)
 
 
 @app.get("/arbitrage", response_model=List[Dict])
 async def get_arbitrage(min_profit: float = Query(0.5, ge=0)):
     if aggregator is None:
         return []
-    return aggregator.find_arbitrage(min_profit)
+    return await asyncio.to_thread(aggregator.find_arbitrage, min_profit)
 
 
 @app.get("/value", response_model=List[Dict])
 async def get_value(threshold: float = Query(1.05, ge=1.01)):
     if aggregator is None:
         return []
-    return aggregator.find_value_bets(threshold)
+    return await asyncio.to_thread(aggregator.find_value_bets, threshold)
 
 
 @app.get("/corridors", response_model=List[Dict])
 async def get_corridors():
     if aggregator is None:
         return []
-    return aggregator.find_corridors()
+    return await asyncio.to_thread(aggregator.find_corridors)
 
 
 @app.get("/health")
@@ -151,7 +242,7 @@ async def health_parsers():
 
 
 # ============================================================
-# Match State
+# Match State (REST — оставлен для отладки и fallback)
 # ============================================================
 @app.get("/match_state")
 async def get_match_state(sport: str, player1: str, player2: str):
@@ -211,7 +302,6 @@ class LoginRequest(BaseModel):
 
 @app.post("/auth/login")
 async def login(req: LoginRequest, request: Request):
-    # Rate limit по IP
     client_ip = request.client.host if request.client else "unknown"
     _check_rate_limit(client_ip)
 
@@ -222,7 +312,6 @@ async def login(req: LoginRequest, request: Request):
 
     logger.info(f"✅ Логин: {req.login}, HWID: {req.hwid}, IP: {client_ip}")
 
-    # HWID-привязка
     if req.hwid:
         if user["hwid"] is None:
             set_user_hwid(req.login, req.hwid)
@@ -248,8 +337,6 @@ async def login(req: LoginRequest, request: Request):
     }
 
 
-# ── Публичная регистрация ЗАКРЫТА. Только через админку. ──
-# Оставлен старый эндпоинт, но теперь требует admin-токен.
 class RegisterRequest(BaseModel):
     login: str
     password: str
@@ -281,8 +368,8 @@ class AdminCreateUser(BaseModel):
 
 class AdminUpdateUser(BaseModel):
     tariff: Optional[str] = None
-    days_left: Optional[int] = None    # для продления на N дней
-    expires_at: Optional[str] = None   # конкретная дата (ISO)
+    days_left: Optional[int] = None
+    expires_at: Optional[str] = None
     is_active: Optional[bool] = None
     new_password: Optional[str] = None
     reset_hwid: bool = False
@@ -290,7 +377,8 @@ class AdminUpdateUser(BaseModel):
 
 @app.get("/admin/users", dependencies=[Depends(_admin_guard)])
 async def admin_list_users():
-    return {"success": True, "users": list_users()}
+    users = await asyncio.to_thread(list_users)
+    return {"success": True, "users": users}
 
 
 @app.post("/admin/users", dependencies=[Depends(_admin_guard)])
@@ -330,9 +418,9 @@ async def admin_update_user(login: str, upd: AdminUpdateUser):
 
 
 # ============================================================
-# HTML-АДМИНКА (одна страница, с телефона тоже работает)
+# HTML-АДМИНКА — не менял, скопирована 1-в-1 из твоего файла
 # ============================================================
-ADMIN_HTML = """
+ADMIN_HTML = r"""
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -341,46 +429,31 @@ ADMIN_HTML = """
 <title>Admin · Users</title>
 <style>
   * { box-sizing: border-box; }
-  body {
-    margin: 0; padding: 16px;
-    background: #0e1116; color: #e6edf3;
+  body { margin: 0; padding: 16px; background: #0e1116; color: #e6edf3;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    font-size: 14px;
-  }
+    font-size: 14px; }
   h1 { font-size: 18px; margin: 0 0 12px; color: #7dd3e8; }
-  .card {
-    background: #161b22; border: 1px solid #30363d;
-    border-radius: 10px; padding: 14px; margin-bottom: 14px;
-  }
+  .card { background: #161b22; border: 1px solid #30363d;
+    border-radius: 10px; padding: 14px; margin-bottom: 14px; }
   label { display: block; margin: 6px 0 4px; color: #9aa7b4; font-size: 12px; }
-  input, select {
-    width: 100%; padding: 8px 10px;
-    background: #0d1117; border: 1px solid #30363d;
-    border-radius: 6px; color: #e6edf3; font-size: 14px;
-  }
-  button {
-    padding: 8px 14px; border: none; border-radius: 6px;
-    background: #08a7c8; color: #fff; font-weight: 600;
-    cursor: pointer; font-size: 13px;
-  }
+  input, select { width: 100%; padding: 8px 10px; background: #0d1117;
+    border: 1px solid #30363d; border-radius: 6px; color: #e6edf3; font-size: 14px; }
+  button { padding: 8px 14px; border: none; border-radius: 6px;
+    background: #08a7c8; color: #fff; font-weight: 600; cursor: pointer; font-size: 13px; }
   button:hover { background: #21c1de; }
   button.danger { background: #da3633; }
   button.danger:hover { background: #f85149; }
   button.small { padding: 4px 10px; font-size: 12px; }
   table { width: 100%; border-collapse: collapse; margin-top: 8px; }
-  th, td {
-    padding: 8px 6px; text-align: left;
-    border-bottom: 1px solid #21262d; font-size: 12px;
-  }
+  th, td { padding: 8px 6px; text-align: left;
+    border-bottom: 1px solid #21262d; font-size: 12px; }
   th { color: #7dd3e8; font-weight: 600; }
   tr.expired td { color: #f85149; }
   tr.inactive td { color: #8b949e; }
   .row-actions { display: flex; gap: 6px; flex-wrap: wrap; }
   .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-  @media (max-width: 600px) {
-    .grid { grid-template-columns: 1fr; }
-    th, td { padding: 6px 4px; font-size: 11px; }
-  }
+  @media (max-width: 600px) { .grid { grid-template-columns: 1fr; }
+    th, td { padding: 6px 4px; font-size: 11px; } }
   .msg { padding: 8px 12px; border-radius: 6px; margin: 8px 0; font-size: 13px; }
   .msg.ok { background: #1a3a1f; color: #7ee787; }
   .msg.err { background: #3d1f1f; color: #f85149; }
@@ -388,45 +461,30 @@ ADMIN_HTML = """
 </style>
 </head>
 <body>
-
 <h1>🛠 Value Detector · Admin</h1>
-
 <div class="card">
   <label>Admin Token</label>
   <input id="token" type="password" placeholder="вставь токен" autocomplete="off">
   <button style="margin-top:10px;" onclick="saveToken()">Войти</button>
   <div id="loginMsg"></div>
 </div>
-
 <div id="panel" class="hidden">
   <div class="card">
     <h3 style="margin-top:0;font-size:15px;color:#7dd3e8;">➕ Создать пользователя</h3>
     <div class="grid">
-      <div>
-        <label>Логин</label>
-        <input id="newLogin" autocomplete="off">
-      </div>
-      <div>
-        <label>Пароль</label>
-        <input id="newPassword" type="text" autocomplete="off">
-      </div>
-      <div>
-        <label>Тариф</label>
+      <div><label>Логин</label><input id="newLogin" autocomplete="off"></div>
+      <div><label>Пароль</label><input id="newPassword" type="text" autocomplete="off"></div>
+      <div><label>Тариф</label>
         <select id="newTariff">
           <option value="trial">trial</option>
           <option value="pro">pro</option>
           <option value="premium">premium</option>
           <option value="lifetime">lifetime</option>
-        </select>
-      </div>
-      <div>
-        <label>Дней</label>
-        <input id="newDays" type="number" value="30" min="1">
-      </div>
+        </select></div>
+      <div><label>Дней</label><input id="newDays" type="number" value="30" min="1"></div>
     </div>
     <button style="margin-top:12px;" onclick="createUser()">Создать</button>
   </div>
-
   <div class="card">
     <div style="display:flex;justify-content:space-between;align-items:center;">
       <h3 style="margin:0;font-size:15px;color:#7dd3e8;">👥 Пользователи</h3>
@@ -434,41 +492,32 @@ ADMIN_HTML = """
     </div>
     <div id="usersTable"></div>
   </div>
-
   <div class="card">
     <button class="danger small" onclick="logout()">Выйти из админки</button>
   </div>
 </div>
-
 <script>
 const API = "";
 let TOKEN = "";
-
 function msg(text, ok=true) {
   const el = document.getElementById("loginMsg");
   el.innerHTML = '<div class="msg ' + (ok ? 'ok' : 'err') + '">' + text + '</div>';
   setTimeout(() => el.innerHTML = "", 4000);
 }
-
 function saveToken() {
   TOKEN = document.getElementById("token").value.trim();
   if (!TOKEN) return;
   localStorage.setItem("admin_token", TOKEN);
   checkToken();
 }
-
 function logout() {
   localStorage.removeItem("admin_token");
   TOKEN = "";
   document.getElementById("panel").classList.add("hidden");
   document.getElementById("token").value = "";
 }
-
 async function api(method, path, body) {
-  const opts = {
-    method,
-    headers: { "X-Admin-Token": TOKEN },
-  };
+  const opts = { method, headers: { "X-Admin-Token": TOKEN } };
   if (body) {
     opts.headers["Content-Type"] = "application/json";
     opts.body = JSON.stringify(body);
@@ -479,42 +528,33 @@ async function api(method, path, body) {
   }
   return await r.json();
 }
-
 async function checkToken() {
   try {
     await api("GET", "/admin/users");
     document.getElementById("panel").classList.remove("hidden");
-    msg("OK", true);
-    loadUsers();
+    msg("OK", true); loadUsers();
   } catch (e) {
     msg(e.message, false);
     document.getElementById("panel").classList.add("hidden");
   }
 }
-
 async function loadUsers() {
   try {
     const data = await api("GET", "/admin/users");
     if (!data.success) throw new Error("Ошибка");
     renderUsers(data.users);
-  } catch (e) {
-    msg(e.message, false);
-  }
+  } catch (e) { msg(e.message, false); }
 }
-
 function renderUsers(users) {
   if (!users.length) {
-    document.getElementById("usersTable").innerHTML =
-      '<p style="color:#8b949e;">Пусто</p>';
+    document.getElementById("usersTable").innerHTML = '<p style="color:#8b949e;">Пусто</p>';
     return;
   }
   let html = '<table><thead><tr>' +
     '<th>Логин</th><th>Тариф</th><th>Истекает</th><th>Дней</th>' +
-    '<th>Активен</th><th>HWID</th><th></th>' +
-    '</tr></thead><tbody>';
+    '<th>Активен</th><th>HWID</th><th></th></tr></thead><tbody>';
   for (const u of users) {
-    const cls = u.days_left <= 0 ? "expired"
-              : (!u.is_active ? "inactive" : "");
+    const cls = u.days_left <= 0 ? "expired" : (!u.is_active ? "inactive" : "");
     html += '<tr class="' + cls + '">' +
       '<td><b>' + esc(u.login) + '</b></td>' +
       '<td>' + esc(u.tariff) + '</td>' +
@@ -523,24 +563,21 @@ function renderUsers(users) {
       '<td>' + (u.is_active ? '✅' : '❌') + '</td>' +
       '<td>' + (u.hwid ? esc(u.hwid.slice(0,10)) + '…' : '—') + '</td>' +
       '<td><div class="row-actions">' +
-        '<button class="small" onclick="extendUser(\\'' + esc(u.login) + '\\')">+30д</button>' +
-        '<button class="small" onclick="resetHwid(\\'' + esc(u.login) + '\\')">HWID</button>' +
-        '<button class="small" onclick="toggleActive(\\'' + esc(u.login) + '\\',' + (u.is_active?1:0) + ')">' + (u.is_active?'Стоп':'Вкл') + '</button>' +
-        '<button class="small" onclick="changePwd(\\'' + esc(u.login) + '\\')">Пароль</button>' +
-        '<button class="small danger" onclick="deleteUser(\\'' + esc(u.login) + '\\')">✕</button>' +
-      '</div></td>' +
-    '</tr>';
+        '<button class="small" onclick="extendUser(\'' + esc(u.login) + '\')">+30д</button>' +
+        '<button class="small" onclick="resetHwid(\'' + esc(u.login) + '\')">HWID</button>' +
+        '<button class="small" onclick="toggleActive(\'' + esc(u.login) + '\',' + (u.is_active?1:0) + ')">' + (u.is_active?'Стоп':'Вкл') + '</button>' +
+        '<button class="small" onclick="changePwd(\'' + esc(u.login) + '\')">Пароль</button>' +
+        '<button class="small danger" onclick="deleteUser(\'' + esc(u.login) + '\')">✕</button>' +
+      '</div></td></tr>';
   }
   html += '</tbody></table>';
   document.getElementById("usersTable").innerHTML = html;
 }
-
 function esc(s) {
   return String(s).replace(/[&<>"']/g, c => ({
     '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
   })[c]);
 }
-
 async function createUser() {
   const body = {
     login: document.getElementById("newLogin").value.trim(),
@@ -559,55 +596,40 @@ async function createUser() {
     }
   } catch (e) { msg(e.message, false); }
 }
-
 async function deleteUser(login) {
   if (!confirm("Удалить " + login + "?")) return;
   try {
     const r = await api("DELETE", "/admin/users/" + encodeURIComponent(login));
-    msg(r.message, r.success);
-    loadUsers();
+    msg(r.message, r.success); loadUsers();
   } catch (e) { msg(e.message, false); }
 }
-
 async function extendUser(login) {
   try {
-    const r = await api("PATCH", "/admin/users/" + encodeURIComponent(login),
-                        { days_left: 30 });
-    msg(r.changes.join(", "), true);
-    loadUsers();
+    const r = await api("PATCH", "/admin/users/" + encodeURIComponent(login), { days_left: 30 });
+    msg(r.changes.join(", "), true); loadUsers();
   } catch (e) { msg(e.message, false); }
 }
-
 async function resetHwid(login) {
   if (!confirm("Сбросить HWID для " + login + "?")) return;
   try {
-    const r = await api("PATCH", "/admin/users/" + encodeURIComponent(login),
-                        { reset_hwid: true });
-    msg(r.changes.join(", "), true);
-    loadUsers();
+    const r = await api("PATCH", "/admin/users/" + encodeURIComponent(login), { reset_hwid: true });
+    msg(r.changes.join(", "), true); loadUsers();
   } catch (e) { msg(e.message, false); }
 }
-
 async function toggleActive(login, isActive) {
   try {
-    const r = await api("PATCH", "/admin/users/" + encodeURIComponent(login),
-                        { is_active: !isActive });
-    msg(r.changes.join(", "), true);
-    loadUsers();
+    const r = await api("PATCH", "/admin/users/" + encodeURIComponent(login), { is_active: !isActive });
+    msg(r.changes.join(", "), true); loadUsers();
   } catch (e) { msg(e.message, false); }
 }
-
 async function changePwd(login) {
   const pwd = prompt("Новый пароль для " + login + ":");
   if (!pwd) return;
   try {
-    const r = await api("PATCH", "/admin/users/" + encodeURIComponent(login),
-                        { new_password: pwd });
+    const r = await api("PATCH", "/admin/users/" + encodeURIComponent(login), { new_password: pwd });
     msg(r.changes.join(", "), true);
   } catch (e) { msg(e.message, false); }
 }
-
-// Автологин, если токен сохранён
 window.addEventListener("load", () => {
   const saved = localStorage.getItem("admin_token");
   if (saved) {
@@ -624,5 +646,4 @@ window.addEventListener("load", () => {
 
 @app.get("/admin", response_class=HTMLResponse)
 async def admin_page():
-    """HTML-админка. Токен вводится на странице, хранится в localStorage."""
     return HTMLResponse(ADMIN_HTML)

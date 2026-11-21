@@ -222,9 +222,6 @@ class Detector:
 
         Пример: fast sub 6:10, slow sub 0:0 (LigaStavok теряет данные).
         Это не задержка, а рассинхрон. Пропускаем.
-
-        Раньше был ранний `return False` при score1=score2=0, из-за чего
-        защита не работала в 1-й партии. Теперь смотрим ещё и на sub.
         """
         m_s1, m_s2, m_sub1, m_sub2 = majority_score
         majority_sub_sum = (m_sub1 or 0) + (m_sub2 or 0)
@@ -386,7 +383,10 @@ class Detector:
                 "fast_prev_sub_score": fast_prev_sub,
                 "fast_prev_odds": fast_prev_odds,
             }
-            await self.broadcast_callback({"type": "signal", "payload": signal_data})
+            await self.broadcast_callback(
+                {"type": "signal", "payload": signal_data},
+                channel="signals",
+            )
 
     def _get_match_url(self, bk_id: str, match_id: str) -> str:
         templates = {
@@ -411,3 +411,72 @@ class Detector:
             n1, n2 = n2, n1
         sport = sport or "table_tennis"
         return f"{sport}::{n1}||{n2}"
+
+    # ============================================================
+    # Периодическая чистка мёртвых матчей
+    # ============================================================
+    def _cleanup_once(self, stale_seconds: float = 600.0) -> int:
+        """
+        Один проход чистки. Возвращает количество удалённых ключей.
+        """
+        now = time.time()
+        removed = 0
+
+        for key in list(self.states.keys()):
+            bk_states = self.states.get(key) or {}
+
+            if not bk_states:
+                self.states.pop(key, None)
+                removed += 1
+                continue
+
+            last_ts = 0.0
+            for m in bk_states.values():
+                ts = getattr(m, "timestamp", 0) or 0
+                if ts > last_ts:
+                    last_ts = ts
+
+            if now - last_ts < stale_seconds:
+                continue
+
+            # Мёртвый — вычищаем из ВСЕХ словарей
+            self.states.pop(key, None)
+            self.consensus_time.pop(key, None)
+            self.locks.pop(key, None)
+            self.known_matches.pop(key, None)
+            self.last_signal_context.pop(key, None)
+            self.last_signal_time.pop(key, None)
+            self.last_global_update.pop(key, None)
+            self._phase_history.pop(key, None)
+            removed += 1
+
+        if removed:
+            logger.info(
+                f"[detector] 🧹 cleanup: удалено {removed} мёртвых ключей, "
+                f"активных: {len(self.states)}"
+            )
+        return removed
+
+    async def cleanup_loop(
+        self,
+        check_interval: float = 300.0,
+        stale_seconds: float = 600.0,
+    ):
+        """
+        Фоновая задача: раз в 5 минут чистит мёртвые матчи.
+        """
+        logger.info(
+            f"[detector] 🧹 Cleanup loop запущен: "
+            f"интервал {check_interval:.0f}с, "
+            f"порог {stale_seconds:.0f}с"
+        )
+        while True:
+            try:
+                await asyncio.sleep(check_interval)
+                self._cleanup_once(stale_seconds)
+            except asyncio.CancelledError:
+                logger.info("[detector] 🛑 Cleanup loop остановлен")
+                break
+            except Exception as e:
+                logger.error(f"[detector] cleanup: {e}", exc_info=True)
+                await asyncio.sleep(30)

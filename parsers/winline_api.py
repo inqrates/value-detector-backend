@@ -11,6 +11,12 @@ Heartbeat: Winline НЕ отвечает на стандартный WS-ping (we
 автоматически каждые 20 сек), из-за чего сервер рвёт соединение с 1011.
 Решение — отключить встроенный ping и слать свой heartbeat через "getdate"
 каждые 20 секунд. Winline на getdate отвечает всегда.
+
+ОБНОВЛЕНО 2026-10-22:
+  - Перечитывание cookies при серии ошибок (>5 подряд).
+  - open_timeout=15 для connect.
+  - Сброс _reconnects_error при успешном подключении.
+  - Исправлена структура async with (всё внутри).
 """
 import asyncio
 import json
@@ -154,6 +160,7 @@ class WinlineApiParser:
                 if closed_cleanly:
                     # Штатное закрытие (сервер, keepalive, EOF) — быстрый reconnect
                     self._reconnects_fast += 1
+                    self._reconnects_error = 0   # ← сброс ошибок при успехе
                     delay = self.WS_RECONNECT_DELAY
                     logger.info(
                         f"[{self.bk_id}] WS закрыт → реконнект через {delay:.1f}с "
@@ -186,10 +193,12 @@ class WinlineApiParser:
             await asyncio.sleep(delay)
 
     async def _ws_connect_and_listen(self) -> bool:
-        """
-        Возвращает True если закрытие штатное (сервер/EOF/сеть),
-        False если аномалия (ошибка протокола).
-        """
+        # ── ФИКС: при множественных ошибках перечитываем cookies ──
+        if self._reconnects_error > 5:
+            self._cookie_header = self._load_cookies_header()
+            self._reconnects_error = 0
+            logger.info(f"[{self.bk_id}] 🍪 Cookies перечитаны после серии ошибок")
+
         headers = [
             ("User-Agent", self.IMPERSONATE_UA),
             ("Origin", "https://winline.ru"),
@@ -209,9 +218,13 @@ class WinlineApiParser:
             ping_interval=None,
             ping_timeout=None,
             close_timeout=5,
+            open_timeout=15,           # ← явный таймаут открытия
         ) as ws:
             self._ws = ws
             logger.info(f"[{self.bk_id}] ✅ WS подключён")
+
+            # ── ФИКС: успешное подключение сбрасывает ошибки ──
+            self._reconnects_error = 0
 
             # Handshake
             for cmd in self.HANDSHAKE_FRAMES:
@@ -237,7 +250,6 @@ class WinlineApiParser:
                         logger.debug(f"[{self.bk_id}] frame: {e}")
             except websockets.ConnectionClosed as e:
                 # 1011, 1000, 1006 — все штатные варианты после handshake
-                # Логируем на INFO, без стека
                 logger.info(
                     f"[{self.bk_id}] WS закрыт сервером: "
                     f"code={e.code}, reason={e.reason!r}"
@@ -424,6 +436,12 @@ class WinlineApiParser:
                 phase_num = int(m.group(1))
             else:
                 phase_num = len(parts) if parts else 1
+
+            # ── ФИКС: если фаза по времени уже новая, а партий меньше — счёт старый ──
+            # Пример: время "2-я четверть", а parts = [16:18] (только 1-я).
+            # Значит, вторая только началась, и счёт в ней 0:0.
+            if phase_num > len(parts):
+                sub1 = sub2 = 0
         else:
             phase_num = score1 + score2 + 1
 

@@ -2,24 +2,71 @@
 """
 LigaStavok — HTTP + WS парсер с auto-refresh cookies Qrator.
 
-Ключевые принципы:
-  1. Фаза (номер партии/сета/четверти) берётся из statusTranslated —
-     это самое надёжное, что отдаёт LigaStavok.
-  2. sub_score активной партии — из all_parts[phase_num - 1], а не из
-     last элемента (мог быть заглушкой).
-  3. HTTP-снапшот НЕ перезаписывает свежие WS-данные нулями.
-  4. При смене фазы (event: statusTranslated) — пересчёт из all_parts.
+ОБНОВЛЕНО 2026-11-10 (LigaStavok мигрировал на новый хост + новые заголовки):
+  - BASE:    https://lds-api.ligastavok.ru
+  - WS_URL:  wss://lds-api.ligastavok.ru/ws?Country-Code=RUS&Locale=ru-RU
+  - meta JSON-RPC теперь содержит locale=ru-RU
+  - User-Agent Chrome/150.0.0.0
+  - ID в subscribe шлём строками
+
+ОБНОВЛЕНО 2026-11-10 (заголовки Qrator):
+  - В HTTP и WS добавлены ОБЯЗАТЕЛЬНЫЕ заголовки:
+      country-code, locale, x-application-name, x-req-id (динамический)
+
+ОБНОВЛЕНО 2026-11-10 (прокси):
+  - LIGASTAVOK_PROXY применяется ко всем трём каналам:
+    HTTP (curl_cffi), WS (websockets + python-socks), Playwright.
+
+ОБНОВЛЕНО 2026-11-10 (real-time eventAdded):
+  - Обработка /notifications/v3/eventAdded — новый матч создаётся
+    в кеше сразу при появлении, без ожидания HTTP-снапшота.
+  - Динамическая подписка на /notifications/v3/eventUpdated для
+    новых ID через отдельную задачу _subscribe_loop (≤1 сек задержки).
+  - _subscribed_ids — защита от повторной подписки.
+  - SNAPSHOT_INTERVAL = 120с (fallback на случай потери eventAdded).
+
+ОБНОВЛЕНО 2026-11-10 (Qrator 403 — защита):
+  - _load_cookies игнорирует файл старше 10 минут: протухший qrator_jsr
+    вызывает 403 у Qrator, тогда как БЕЗ куки Qrator пускает по заголовкам.
+  - _rollback_refresh_on_fail: если refresh Playwright провалился, откатываем
+    _last_refresh_at, чтобы следующая 403 запустила новую попытку через
+    ~60 сек, а не через 10 минут. После 3 фейлов — cooldown 10 мин (защита
+    от спама Playwright).
+  - _fetch_snapshot: gameId = [наши виды спорта] — вместо 120 событий
+    (3 страницы) сервер отдаёт ~46 (1-2 страницы). Снижает HTTP-нагрузку.
+
+ОБНОВЛЕНО 2026-11-10 (WS heartbeat против code=1006):
+  - Браузер повторяет subscribe на /notifications/v2/eventUpdated
+    с пустым ids каждые 15-30 сек — это application-level heartbeat.
+    Без него Qrator/WS-сервер рвёт TCP по idle через ~30-60 сек
+    (code=1006 'no close frame received or sent').
+  - Добавлена задача _ws_heartbeat_loop: шлёт v2/eventUpdated раз в 15 сек.
+  - WS ping отключён (ping_interval=None, ping_timeout=None) — сервер
+    не отвечает на WS ping, из-за чего были ложные разрывы.
+  - _ws_last_payload_at — для диагностики: сколько прошло с последнего
+    реального payload до разрыва соединения.
+
+Требует: pip install "python-socks[asyncio]"
 """
 import asyncio
 import json
 import logging
+import os
 import re
 import time
+import uuid
 from pathlib import Path
 from typing import Dict, List, Optional
+from urllib.parse import urlparse
 
 import websockets
 from curl_cffi.requests import AsyncSession
+import ssl
+try:
+    import certifi
+    _SSL_CTX = ssl.create_default_context(cafile=certifi.where())
+except ImportError:
+    _SSL_CTX = ssl.create_default_context()
 
 from core.models import Match
 from core.sport_map import (
@@ -39,7 +86,6 @@ SEO_TO_SPORT = {
 }
 
 
-# Транслит кириллицы в латиницу (для URL-slug)
 _TRANSLIT = {
     'а':'a','б':'b','в':'v','г':'g','д':'d','е':'e','ё':'e','ж':'zh','з':'z',
     'и':'i','й':'y','к':'k','л':'l','м':'m','н':'n','о':'o','п':'p','р':'r',
@@ -52,7 +98,6 @@ def _slug(text: str) -> str:
     if not text:
         return "x"
     text = text.lower().strip()
-    # Транслит кириллицы
     text = "".join(_TRANSLIT.get(ch, ch) for ch in text)
     text = re.sub(r"[^\w\s-]", "", text)
     text = re.sub(r"\s+", "-", text)
@@ -63,9 +108,9 @@ def _slug(text: str) -> str:
 class LigaStavokApiParser:
     bk_id = "ligastavok"
 
-    BASE = "https://lds-api-sites.ligastavok.ru"
+    BASE = "https://lds-api.ligastavok.ru"
     EVENTS_URL = f"{BASE}/rest/events/v8/eventsList"
-    WS_URL = "wss://lds-api-sites.ligastavok.ru/ws"
+    WS_URL = "wss://lds-api.ligastavok.ru/ws?Country-Code=RUS&Locale=ru-RU"
 
     HEADERS = {
         "accept": "application/json, text/plain, */*",
@@ -76,11 +121,24 @@ class LigaStavokApiParser:
         "sec-fetch-site": "same-site",
         "sec-fetch-mode": "cors",
         "sec-fetch-dest": "empty",
+        "country-code": "RUS",
+        "locale": "ru-RU",
+        "x-application-name": "mobile",
     }
+
+    USER_AGENT = (
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+        "AppleWebKit/537.36 (KHTML, like Gecko) "
+        "Chrome/150.0.0.0 Safari/537.36"
+    )
 
     IMPERSONATE = "chrome150"
     LIMIT = 40
-    SNAPSHOT_INTERVAL = 300.0
+    # ── ФИКС: real-time eventAdded ──
+    # Снапшот — только fallback. Всё real-time идёт через eventAdded
+    # (новые матчи, ≤1-2 сек). Вернули 120 сек (было 60), чтобы не
+    # триггерить Qrator: 3 HTTP-запроса/мин вместо 6.
+    SNAPSHOT_INTERVAL = 120.0
     WS_RECONNECT_DELAY = 3.0
 
     REFRESH_MIN_INTERVAL = 600.0
@@ -110,15 +168,77 @@ class LigaStavokApiParser:
         self._session: Optional[AsyncSession] = None
         self._ws = None
         self._ws_connected = False
+        # ── ФИКС: real-time eventAdded ──
+        self._subscribed_ids: set = set()
+        self._pending_subscribe: set = set()
         self._last_snapshot_at: float = 0.0
         self._cookie_header: str = ""
+        # ── ФИКС 2026-11-10: application-level heartbeat ──
+        # Браузер повторяет v2/eventUpdated с пустым ids каждые 15-30 сек.
+        # Без этого Qrator/WS-сервер рвёт TCP по idle (code=1006).
+        self._ws_last_payload_at: float = 0.0
 
         self._refresh_lock = asyncio.Lock()
         self._last_refresh_at: float = 0.0
         self._consecutive_403: int = 0
         self._refresh_event = asyncio.Event()
         self._last_successful_response_at: float = 0.0
-        self._qrator_cooldown_until: float = 0.0   # ← новый флаг
+        self._qrator_cooldown_until: float = 0.0
+
+        self.qrator_fails: int = 0
+        self.last_qrator_success_at: float = 0.0
+
+        self._proxy_url: str = os.getenv("LIGASTAVOK_PROXY", "").strip()
+        self._proxy_cfg: Optional[dict] = self._build_playwright_proxy(
+            self._proxy_url
+        )
+        if self._proxy_url:
+            _safe = (
+                self._proxy_url.split("@")[-1]
+                if "@" in self._proxy_url
+                else self._proxy_url
+            )
+            logger.info(
+                f"[{self.bk_id}] 🌐 Прокси настроен для HTTP + WS + Playwright: "
+                f"{_safe}"
+            )
+        else:
+            logger.warning(
+                f"[{self.bk_id}] ⚠️ LIGASTAVOK_PROXY не задан — "
+                f"WS и Qrator пойдут с IP сервера (часто = 403 на VDS)"
+            )
+
+    # ============================================================
+    # Прокси-хелпер
+    # ============================================================
+    @staticmethod
+    def _build_playwright_proxy(proxy_url: str) -> Optional[dict]:
+        if not proxy_url:
+            return None
+        try:
+            p = urlparse(proxy_url)
+            if not p.hostname or not p.port:
+                return None
+            return {
+                "server": f"{p.scheme}://{p.hostname}:{p.port}",
+                "username": p.username or "",
+                "password": p.password or "",
+            }
+        except Exception as e:
+            logger.warning(f"[ligastavok] Не разобрал прокси URL: {e}")
+            return None
+
+    # ============================================================
+    # Заголовки
+    # ============================================================
+    def _make_headers(self, with_cookies: bool = True) -> dict:
+        h = dict(self.HEADERS)
+        h["user-agent"] = self.USER_AGENT
+        h["x-req-id"] = str(uuid.uuid4())
+        if with_cookies and self._cookie_header:
+            h["cookie"] = self._cookie_header
+        return h
+
     # ============================================================
     # Cookies
     # ============================================================
@@ -126,7 +246,21 @@ class LigaStavokApiParser:
         if not COOKIES_PATH.exists():
             return []
         try:
-            return json.loads(COOKIES_PATH.read_text(encoding="utf-8")).get("cookies", [])
+            # ── ФИКС 2026-11-10: протухшая куки хуже, чем её отсутствие ──
+            # Qrator явно распознаёт невалидный qrator_jsr и блокирует (403),
+            # тогда как без куки пускает по заголовкам (200). qrator_jsr живёт
+            # ~5 минут, так что файл старше 10 минут — точно мусор.
+            age = time.time() - COOKIES_PATH.stat().st_mtime
+            if age > 600.0:   # 10 минут
+                logger.warning(
+                    f"[{self.bk_id}] 🍪 Файл cookies старше "
+                    f"{age/60:.1f} мин — игнорируем (протухший "
+                    f"qrator_jsr вызывает 403 у Qrator)"
+                )
+                return []
+            return json.loads(
+                COOKIES_PATH.read_text(encoding="utf-8")
+            ).get("cookies", [])
         except Exception:
             return []
 
@@ -146,11 +280,16 @@ class LigaStavokApiParser:
                 await self._session.close()
             except Exception:
                 pass
-            self._session = AsyncSession(
+            kwargs = dict(
                 impersonate=self.IMPERSONATE,
                 timeout=30,
                 headers=self.HEADERS,
             )
+            if self._proxy_url:
+                kwargs["proxies"] = {
+                    "http": self._proxy_url, "https": self._proxy_url,
+                }
+            self._session = AsyncSession(**kwargs)
         for c in cookies:
             try:
                 self._session.cookies.set(
@@ -164,67 +303,264 @@ class LigaStavokApiParser:
     async def _ensure_session(self):
         if self._session is not None:
             return
-        self._session = AsyncSession(
+
+        kwargs = dict(
             impersonate=self.IMPERSONATE,
             timeout=30,
             headers=self.HEADERS,
         )
+        if self._proxy_url:
+            kwargs["proxies"] = {
+                "http": self._proxy_url, "https": self._proxy_url,
+            }
+            _safe = (
+                self._proxy_url.split("@")[-1]
+                if "@" in self._proxy_url
+                else self._proxy_url
+            )
+            logger.info(f"[{self.bk_id}] 🌐 HTTP через прокси: {_safe}")
+
+        self._session = AsyncSession(**kwargs)
         cookies = self._load_cookies()
         await self._apply_cookies_to_session(cookies)
         logger.info(f"[{self.bk_id}] 🍪 Загружено {len(cookies)} cookies")
 
+    # ============================================================
+    # Refresh cookies через invisible_playwright
+    # ============================================================
     async def _refresh_cookies_via_playwright(self, reason: str = ""):
         async with self._refresh_lock:
             now = time.time()
             if now - self._last_refresh_at < self.REFRESH_MIN_INTERVAL:
                 return False
-            logger.warning(f"[{self.bk_id}] 🔄 Refresh cookies через Playwright {reason}")
+
+            # ── ФИКС 2026-11-10: запоминаем ДО сдвига, чтобы при провале
+            # откатить _last_refresh_at. ──
+            prev_last_refresh = self._last_refresh_at
             self._last_refresh_at = now
-            page = None
+            logger.warning(f"[{self.bk_id}] 🔄 Refresh cookies {reason}")
+
             try:
-                from core.browser_manager import browser_manager
-                page = await browser_manager.new_page()
-                await page.goto(
-                    "https://www.ligastavok.ru/live",
-                    wait_until="commit",
-                    timeout=90000,
+                from invisible_playwright.async_api import InvisiblePlaywright
+            except ImportError:
+                logger.error(
+                    f"[{self.bk_id}] ❌ invisible_playwright не установлен."
                 )
-                # Qrator-челлендж разгадывается в фоне 5-10 сек
-                await page.wait_for_timeout(8000)
-                                # Проверим, что Qrator пропустил
-                try:
-                    title = await page.title()
-                    logger.info(f"[{self.bk_id}] 📄 page.title после goto: {title!r}")
-                except Exception:
-                    pass
-                try:
-                    await page.evaluate("window.scrollTo(0, 2000)")
-                    await page.wait_for_timeout(1000)
-                except Exception:
-                    pass
-                cookies = await page.context.cookies()
-                if not cookies:
-                    return False
-                COOKIES_PATH.parent.mkdir(exist_ok=True)
-                COOKIES_PATH.write_text(
-                    json.dumps({"cookies": cookies}, ensure_ascii=False, indent=2),
-                    encoding="utf-8",
-                )
-                await self._apply_cookies_to_session(cookies)
-                logger.info(f"[{self.bk_id}] ✅ Cookies обновлены ({len(cookies)} шт.)")
-                self._consecutive_403 = 0
-                self._last_snapshot_at = 0.0
-                self._refresh_event.set()
-                return True
-            except Exception as e:
-                logger.error(f"[{self.bk_id}] Refresh cookies ошибка: {e}")
+                self._rollback_refresh_on_fail(prev_last_refresh)
                 return False
-            finally:
-                if page is not None:
+
+            try:
+                async with InvisiblePlaywright(headless=True) as browser:
+                    if self._proxy_cfg:
+                        logger.info(
+                            f"[{self.bk_id}] 🌐 Playwright через прокси: "
+                            f"{self._proxy_cfg['server']}"
+                        )
+                        try:
+                            page = await browser.new_page(
+                                proxy=self._proxy_cfg
+                            )
+                        except TypeError:
+                            context = await browser.new_context(
+                                proxy=self._proxy_cfg
+                            )
+                            page = await context.new_page()
+                    else:
+                        page = await browser.new_page()
+
                     try:
-                        await page.close()
+                        await page.set_viewport_size(
+                            {"width": 1920, "height": 1080}
+                        )
                     except Exception:
                         pass
+
+                    logger.info(f"[{self.bk_id}] Фаза 1: Qrator")
+
+                    try:
+                        await page.goto(
+                            "https://www.ligastavok.ru/live",
+                            wait_until="domcontentloaded",
+                            timeout=60000,
+                        )
+                    except Exception as e:
+                        logger.warning(f"[{self.bk_id}] goto: {e}")
+                        self._rollback_refresh_on_fail(prev_last_refresh)
+                        return False
+
+                    MAX_QRATOR_WAIT = 60.0
+                    start = time.monotonic()
+                    last_log = 0.0
+                    passed = False
+
+                    while time.monotonic() - start < MAX_QRATOR_WAIT:
+                        await asyncio.sleep(1.5)
+                        elapsed = time.monotonic() - start
+
+                        try:
+                            await page.mouse.move(
+                                200 + int((elapsed * 137) % 1200),
+                                150 + int((elapsed * 91) % 600),
+                                steps=5,
+                            )
+                        except Exception:
+                            pass
+                        try:
+                            await page.evaluate(
+                                f"window.scrollTo(0, "
+                                f"{int((elapsed * 150) % 800)})"
+                            )
+                        except Exception:
+                            pass
+
+                        try:
+                            cur = await page.context.cookies()
+                        except Exception:
+                            cur = []
+                        names = {
+                            (c.get("name") or "").lower() for c in cur
+                        }
+                        has_qrator = "qrator_jsr" in names
+
+                        try:
+                            title = (await page.title()) or ""
+                        except Exception:
+                            title = ""
+                        try:
+                            body_len = len(
+                                await page.locator("body").inner_text()
+                            )
+                        except Exception:
+                            body_len = 0
+
+                        tl = title.lower()
+                        blocked = any(m in tl for m in (
+                            "проверка", "qrator", "challenge",
+                            "just a moment", "ddos-guard",
+                            "безопасности",
+                        ))
+
+                        if has_qrator and not blocked and body_len > 500:
+                            passed = True
+                            logger.info(
+                                f"[{self.bk_id}] ✅ Qrator пройден "
+                                f"за {elapsed:.1f}с "
+                                f"(cookies={len(cur)}, body={body_len})"
+                            )
+                            break
+
+                        if elapsed - last_log >= 5.0:
+                            last_log = elapsed
+                            logger.info(
+                                f"[{self.bk_id}] Qrator: {elapsed:.0f}/"
+                                f"{MAX_QRATOR_WAIT:.0f}с "
+                                f"cookies={len(cur)} "
+                                f"qrator_jsr={has_qrator} "
+                                f"title={title[:50]!r} body={body_len}"
+                            )
+
+                    if not passed:
+                        self.qrator_fails += 1
+                        logger.warning(
+                            f"[{self.bk_id}] ❌ Qrator не пройден за "
+                            f"{MAX_QRATOR_WAIT:.0f}с. "
+                            f"qrator_fails={self.qrator_fails}"
+                        )
+                        self._rollback_refresh_on_fail(prev_last_refresh)
+                        return False
+
+                    logger.info(f"[{self.bk_id}] Фаза 2: 1920×4000")
+                    try:
+                        await page.set_viewport_size(
+                            {"width": 1920, "height": 4000}
+                        )
+                    except Exception as e:
+                        logger.debug(f"[{self.bk_id}] set_viewport: {e}")
+
+                    await asyncio.sleep(2.0)
+
+                    for y in [1000, 2000, 3000, 4000, 5000, 6000,
+                              7000, 8000, 5000, 3000, 1000, 0]:
+                        try:
+                            await page.evaluate(
+                                f"window.scrollTo(0, {y})"
+                            )
+                        except Exception:
+                            pass
+                        await asyncio.sleep(0.4)
+
+                    await asyncio.sleep(1.5)
+
+                    cookies = await page.context.cookies()
+                    if not cookies:
+                        logger.warning(
+                            f"[{self.bk_id}] cookies пусты — не сохраняю"
+                        )
+                        self._rollback_refresh_on_fail(prev_last_refresh)
+                        return False
+
+                    names = {
+                        (c.get("name") or "").lower() for c in cookies
+                    }
+                    if "qrator_jsr" not in names:
+                        logger.warning(
+                            f"[{self.bk_id}] qrator_jsr пропал после "
+                            f"ресайза — не сохраняю"
+                        )
+                        self.qrator_fails += 1
+                        self._rollback_refresh_on_fail(prev_last_refresh)
+                        return False
+
+                    COOKIES_PATH.parent.mkdir(exist_ok=True)
+                    tmp = COOKIES_PATH.with_suffix(".tmp")
+                    tmp.write_text(
+                        json.dumps(
+                            {"cookies": cookies},
+                            ensure_ascii=False, indent=2,
+                        ),
+                        encoding="utf-8",
+                    )
+                    tmp.replace(COOKIES_PATH)
+
+                    await self._apply_cookies_to_session(cookies)
+                    logger.info(
+                        f"[{self.bk_id}] ✅ Cookies обновлены "
+                        f"({len(cookies)} шт.)"
+                    )
+
+                    self.qrator_fails = 0
+                    self.last_qrator_success_at = time.time()
+                    self._consecutive_403 = 0
+                    self._last_snapshot_at = 0.0
+                    self._refresh_event.set()
+                    return True
+
+            except Exception as e:
+                logger.error(
+                    f"[{self.bk_id}] Refresh cookies ошибка: {e}",
+                    exc_info=True,
+                )
+                self._rollback_refresh_on_fail(prev_last_refresh)
+                return False
+
+    def _rollback_refresh_on_fail(self, prev_last_refresh: float):
+        """
+        При провале refresh откатываем _last_refresh_at к предыдущему
+        значению, чтобы следующая 403 снова вызвала refresh. Но не
+        бесконечно: после 3 фейлов подряд — оставляем свежий timestamp,
+        уходим в cooldown 10 минут (защита от спама Playwright).
+        """
+        if self.qrator_fails >= 3:
+            logger.warning(
+                f"[{self.bk_id}] 🧊 {self.qrator_fails} фейлов refresh "
+                f"подряд — cooldown 10 мин (спам Playwright не нужен)"
+            )
+        else:
+            self._last_refresh_at = prev_last_refresh
+            logger.info(
+                f"[{self.bk_id}] 🔄 refresh откатан — "
+                f"следующая 403 запустит новую попытку"
+            )
 
     # ============================================================
     # Жизненный цикл
@@ -251,13 +587,18 @@ class LigaStavokApiParser:
     async def run(self):
         self.is_running = True
         await self.start()
-        logger.info(f"[{self.bk_id}] 🚀 HTTP+WS парсер LigaStavok запущен (без Playwright)")
+        logger.info(
+            f"[{self.bk_id}] 🚀 HTTP+WS парсер LigaStavok запущен"
+        )
 
         try:
             await self._fetch_snapshot()
         except Exception as e:
             logger.error(f"[{self.bk_id}] начальный снапшот: {e}")
 
+        # ── ФИКС: real-time eventAdded + heartbeat ──
+        subscribe_task = asyncio.create_task(self._subscribe_loop())
+        heartbeat_task = asyncio.create_task(self._ws_heartbeat_loop())
         ws_task = asyncio.create_task(self._ws_loop())
 
         try:
@@ -269,51 +610,71 @@ class LigaStavokApiParser:
                         await self._fetch_snapshot()
                     await self._try_send_matches()
                 except Exception as e:
-                    logger.error(f"[{self.bk_id}] цикл: {e}", exc_info=True)
+                    logger.error(
+                        f"[{self.bk_id}] цикл: {e}", exc_info=True
+                    )
                     await asyncio.sleep(3)
                     continue
                 elapsed = time.monotonic() - t0
                 await asyncio.sleep(max(0, 0.5 - elapsed))
         finally:
             self.is_running = False
+            subscribe_task.cancel()
+            heartbeat_task.cancel()
             ws_task.cancel()
-            try:
-                await ws_task
-            except (asyncio.CancelledError, Exception):
-                pass
+            for t in (subscribe_task, heartbeat_task, ws_task):
+                try:
+                    await t
+                except (asyncio.CancelledError, Exception):
+                    pass
 
     # ============================================================
     # HTTP-снапшот
     # ============================================================
     async def _fetch_snapshot(self):
-        # ── Cooldown после 5 подряд 403 ──
         if time.time() < self._qrator_cooldown_until:
             self._last_snapshot_at = time.time()
-            return        
+            return
         all_items = []
         skip = 0
         page = 0
         got_403 = False
 
+        # единый ts на весь цикл пагинации
+        ts = int(time.time() * 1000)
+
+        # ── ФИКС: фильтр по нашим видам спорта ──
+        # Вместо 120 событий (3 страницы) — только наши ~46 (1-2 страницы).
+        # Снижает HTTP-нагрузку на Qrator в 1.5-2 раза.
+        our_game_ids: List[int] = []
+        for sk in self.enabled_sports:
+            cfg = SPORT_MAP.get(self.bk_id, {}).get(sk, {})
+            for gid in cfg.get("ids", []):
+                our_game_ids.append(gid)
+
         while self.is_running:
             body = {
-                "gameId": [],
+                "gameId": our_game_ids,   # ── было [], теперь наши ID ──
                 "limit": self.LIMIT,
                 "ns": ["live"],
                 "topEvents": False,
                 "view": "priority",
                 "widgetVideo": False,
+                "ts": ts,
             }
             if skip > 0:
                 body["skip"] = skip
-                body["ts"] = int(time.time() * 1000)
 
             try:
                 r = await self._session.post(
-                    self.EVENTS_URL, headers=self.HEADERS, json=body,
+                    self.EVENTS_URL,
+                    headers=self._make_headers(),
+                    json=body,
                 )
             except Exception as e:
-                logger.warning(f"[{self.bk_id}] snapshot HTTP error skip={skip}: {e}")
+                logger.warning(
+                    f"[{self.bk_id}] snapshot HTTP error skip={skip}: {e}"
+                )
                 break
 
             if r.status_code == 403:
@@ -325,16 +686,18 @@ class LigaStavokApiParser:
                 )
                 break
 
-            # 502/503 — Qrator может отдавать во время refresh.
-            # Это не ошибка парсера, а состояние антибота. Тихо пропускаем.
             if r.status_code in (502, 503):
                 logger.debug(
-                    f"[{self.bk_id}] snapshot HTTP {r.status_code} (Qrator)"
+                    f"[{self.bk_id}] snapshot HTTP {r.status_code} "
+                    f"(Qrator)"
                 )
                 break
 
             if r.status_code != 200:
-                logger.warning(f"[{self.bk_id}] snapshot HTTP {r.status_code} skip={skip}")
+                logger.warning(
+                    f"[{self.bk_id}] snapshot HTTP {r.status_code} "
+                    f"skip={skip}"
+                )
                 break
 
             try:
@@ -351,12 +714,16 @@ class LigaStavokApiParser:
             for it in items:
                 self._process_http_item(it)
 
+            _total_api = result.get("total") or result.get(
+                "totalCount") or 0
+            if _total_api and skip + len(items) >= _total_api:
+                break
             if len(items) < self.LIMIT:
                 break
 
             skip += self.LIMIT
             page += 1
-            if page > 200:
+            if page > 20:
                 break
 
             await asyncio.sleep(0.5)
@@ -374,19 +741,21 @@ class LigaStavokApiParser:
                 f"[{self.bk_id}] 📸 Снапшот: {len(all_items)} событий "
                 f"({page + 1} стр.), в кеше: {len(self._matches_cache)}"
             )
+            # ── ФИКС: real-time eventAdded ──
+            for mid in list(self._matches_cache.keys()):
+                if mid not in self._subscribed_ids:
+                    self._pending_subscribe.add(mid)
 
         if got_403:
-            # Cooldown: после 5 подряд 403 — не пытаемся refresh 10 минут
             if self._consecutive_403 >= 5:
                 now = time.time()
                 if now < self._qrator_cooldown_until:
-                    # ещё в cooldown — молчим
                     pass
                 else:
                     self._qrator_cooldown_until = now + 600.0
                     logger.warning(
-                        f"[{self.bk_id}] 🧊 {self._consecutive_403} 403 подряд — "
-                        f"cooldown 10 мин, HTTP-снапшоты на паузе"
+                        f"[{self.bk_id}] 🧊 {self._consecutive_403} 403 "
+                        f"подряд — cooldown 10 мин"
                     )
             elif self._consecutive_403 >= self.REFRESH_AFTER_403:
                 asyncio.create_task(
@@ -427,30 +796,38 @@ class LigaStavokApiParser:
             if t:
                 cache["tournament"] = t
 
-        # ---- scores из HTTP ----
-        # HTTP-снапшот приходит раз в 15 сек, WS — чаще.
-        # Не перезаписываем свежие WS-данные нулями/заглушками.
         if m.get("scores"):
             new_scores = m["scores"] or {}
             old_scores = cache.get("scores") or {}
 
-            new_total1 = str((new_scores.get("total") or {}).get("ScoreTeam1", "0"))
-            new_total2 = str((new_scores.get("total") or {}).get("ScoreTeam2", "0"))
-            old_total1 = str((old_scores.get("total") or {}).get("ScoreTeam1", "0"))
-            old_total2 = str((old_scores.get("total") or {}).get("ScoreTeam2", "0"))
+            new_total1 = str(
+                (new_scores.get("total") or {}).get("ScoreTeam1", "0")
+            )
+            new_total2 = str(
+                (new_scores.get("total") or {}).get("ScoreTeam2", "0")
+            )
+            old_total1 = str(
+                (old_scores.get("total") or {}).get("ScoreTeam1", "0")
+            )
+            old_total2 = str(
+                (old_scores.get("total") or {}).get("ScoreTeam2", "0")
+            )
 
             new_cur = new_scores.get("current") or {}
             new_cur1 = str(new_cur.get("ScoreTeam1", "0"))
             new_cur2 = str(new_cur.get("ScoreTeam2", "0"))
-            new_cur_is_zero = (new_cur1 in ("0", "") and new_cur2 in ("0", ""))
+            new_cur_is_zero = (
+                new_cur1 in ("0", "") and new_cur2 in ("0", "")
+            )
 
             if (new_total1 in ("0", "") and new_total2 in ("0", "")
-                    and (old_total1 not in ("0", "") or old_total2 not in ("0", ""))):
-                # HTTP total=0:0, но в кэше уже ненулевой — не затираем
+                    and (old_total1 not in ("0", "")
+                         or old_total2 not in ("0", ""))):
                 if not new_cur_is_zero:
                     cache.setdefault("scores", {})["current"] = new_cur
                 if new_scores.get("all"):
-                    cache.setdefault("scores", {})["all"] = new_scores["all"]
+                    cache.setdefault("scores", {})["all"] = \
+                        new_scores["all"]
             else:
                 cache["scores"] = new_scores
 
@@ -478,8 +855,109 @@ class LigaStavokApiParser:
             return sport
         return None
 
+    def _resolve_sport_key_from_event(self, event: dict) -> Optional[str]:
+        """Определяет sport_key по полям event из WS-нотификации."""
+        if not isinstance(event, dict):
+            return None
+        seo = (event.get("categorySeoName") or "").strip()
+        sport = SEO_TO_SPORT.get(seo)
+        if sport and sport in self.enabled_sports:
+            return sport
+        gid = str(event.get("gameId", ""))
+        sport = self._sport_ids.get(gid)
+        if sport and sport in self.enabled_sports:
+            return sport
+        sid = str(event.get("sportId", "") or "")
+        sport = self._sport_ids.get(sid)
+        if sport and sport in self.enabled_sports:
+            return sport
+        return None
+
     # ============================================================
-    # WS
+    # WS: heartbeat (application-level)
+    # ============================================================
+    async def _ws_heartbeat_loop(self):
+        """
+        ── ФИКС 2026-11-10: application-level heartbeat ──
+        Браузер повторяет subscribe на /notifications/v2/eventUpdated
+        с пустым ids каждые 15-30 сек — это видно в DevTools. Без этого
+        Qrator/WS-сервер рвёт TCP по idle через ~30-60 сек, что даёт
+        code=1006 'no close frame received or sent'. Шлём каждые 15 сек.
+        """
+        while self.is_running:
+            try:
+                await asyncio.sleep(15.0)
+                if self._ws is None or not self._ws_connected:
+                    continue
+                await self._send_subscribe(
+                    self._ws, 777, "/notifications/v2/eventUpdated", []
+                )
+                logger.debug(f"[{self.bk_id}] 💓 WS heartbeat")
+            except asyncio.CancelledError:
+                break
+            except Exception as e:
+                logger.debug(f"[{self.bk_id}] heartbeat: {e}")
+
+    # ============================================================
+    # WS: динамическая подписка на новые матчи
+    # ============================================================
+    async def _subscribe_loop(self):
+        """
+        ── ФИКС: real-time eventAdded ──
+        Каждую секунду проверяет очередь _pending_subscribe и подписывает
+        новые ID на /notifications/v3/eventUpdated. Задержка появления
+        нового матча в WS ≈ 1–2 сек вместо 120 сек (HTTP-snapshot).
+        """
+        while self.is_running:
+            try:
+                await asyncio.sleep(1.0)
+                if not self._pending_subscribe:
+                    continue
+                if self._ws is None or not self._ws_connected:
+                    continue
+
+                pending = list(self._pending_subscribe)
+                self._pending_subscribe.clear()
+                new_ids = [
+                    i for i in pending
+                    if i not in self._subscribed_ids
+                ]
+                if not new_ids:
+                    continue
+
+                sent_ok = True
+                for chunk_start in range(0, len(new_ids), 100):
+                    chunk = new_ids[chunk_start:chunk_start + 100]
+                    try:
+                        await self._send_subscribe(
+                            self._ws, 2000 + chunk_start // 100,
+                            "/notifications/v3/eventUpdated", chunk,
+                        )
+                    except Exception as e:
+                        logger.debug(
+                            f"[{self.bk_id}] subscribe батч: {e}"
+                        )
+                        self._pending_subscribe |= set(chunk)
+                        sent_ok = False
+                        break
+
+                if sent_ok:
+                    self._subscribed_ids.update(new_ids)
+                    logger.info(
+                        f"[{self.bk_id}] 📤 Подписка (динамич.): "
+                        f"+{len(new_ids)} "
+                        f"(всего подписано: {len(self._subscribed_ids)})"
+                    )
+            except asyncio.CancelledError:
+                break
+            except Exception as e:
+                logger.error(
+                    f"[{self.bk_id}] subscribe loop: {e}", exc_info=True
+                )
+                await asyncio.sleep(1)
+
+    # ============================================================
+    # WS: основной цикл
     # ============================================================
     async def _ws_loop(self):
         while self.is_running:
@@ -489,12 +967,20 @@ class LigaStavokApiParser:
             except asyncio.CancelledError:
                 break
             except Exception as e:
-                logger.warning(f"[{self.bk_id}] WS ошибка: {e}")
+                logger.warning(
+                    f"[{self.bk_id}] WS ошибка: "
+                    f"{type(e).__name__}: {e}"
+                )
+                asyncio.create_task(
+                    self._refresh_cookies_via_playwright("(WS fail)")
+                )
             if not self.is_running:
                 break
             if self._refresh_event.is_set():
                 try:
-                    await asyncio.wait_for(self._refresh_event.wait(), timeout=15.0)
+                    await asyncio.wait_for(
+                        self._refresh_event.wait(), timeout=15.0
+                    )
                 except asyncio.TimeoutError:
                     pass
             await asyncio.sleep(self.WS_RECONNECT_DELAY)
@@ -502,34 +988,62 @@ class LigaStavokApiParser:
     async def _ws_connect_and_listen(self):
         headers = [
             ("Origin", "https://www.ligastavok.ru"),
-            ("User-Agent", (
-                "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
-                "AppleWebKit/537.36 (KHTML, like Gecko) "
-                "Chrome/150.0.0.0 Safari/537.36"
-            )),
+            ("User-Agent", self.USER_AGENT),
+            ("country-code", "RUS"),
+            ("locale", "ru-RU"),
+            ("x-application-name", "mobile"),
+            ("x-req-id", str(uuid.uuid4())),
         ]
         if self._cookie_header:
             headers.append(("Cookie", self._cookie_header))
 
         logger.info(f"[{self.bk_id}] 🔌 WS подключаемся...")
 
-        async with websockets.connect(
-            self.WS_URL,
+        connect_kwargs = dict(
             additional_headers=headers,
             max_size=10 * 1024 * 1024,
-            ping_interval=20,
-            ping_timeout=20,
-        ) as ws:
+            # ── ФИКС 2026-11-10: отключаем WS ping ──
+            # Сервер не отвечает на WS ping, наш ping_timeout=20 давал
+            # ложные разрывы (code=1006). Используем application-level
+            # heartbeat через v2/eventUpdated (см. _ws_heartbeat_loop).
+            ping_interval=None,
+            ping_timeout=None,
+            ssl=_SSL_CTX,
+        )
+        if self._proxy_url:
+            connect_kwargs["proxy"] = self._proxy_url
+            _safe = (
+                self._proxy_url.split("@")[-1]
+                if "@" in self._proxy_url
+                else self._proxy_url
+            )
+            logger.info(f"[{self.bk_id}] 🌐 WS через прокси: {_safe}")
+
+        async with websockets.connect(self.WS_URL, **connect_kwargs) as ws:
             self._ws = ws
             self._ws_connected = True
+            self._ws_last_payload_at = time.time()
             logger.info(f"[{self.bk_id}] ✅ WS подключён")
 
-            await self._send_subscribe(ws, 2, "/notifications/v3/eventUpdated", [])
-            await self._send_subscribe(ws, 3, "/notifications/v2/eventUpdated", [])
-            await self._send_subscribe(ws, 4, "/notifications/v3/eventAdded", None)
-            await self._send_subscribe(ws, 5, "/notifications/v3/eventRemoved", None)
-            await self._send_subscribe(ws, 6, "/notifications/v3/countersUpdated", None)
+            # при реконнекте — сбрасываем set подписок и подписываемся заново
+            self._subscribed_ids.clear()
             await self._subscribe_to_cached_ids(ws)
+
+            await self._send_subscribe(
+                ws, 2, "/notifications/v3/eventUpdated", []
+            )
+            await self._send_subscribe(
+                ws, 3, "/notifications/v2/eventUpdated", []
+            )
+            await self._send_subscribe(
+                ws, 4, "/notifications/v3/eventAdded", None
+            )
+            await self._send_subscribe(
+                ws, 5, "/notifications/v3/eventRemoved", None
+            )
+            await self._send_subscribe(
+                ws, 6, "/notifications/v3/countersUpdated", None
+            )
 
             async for frame in ws:
                 if not self.is_running:
@@ -541,6 +1055,12 @@ class LigaStavokApiParser:
                 except Exception as e:
                     logger.debug(f"[{self.bk_id}] ws frame: {e}")
 
+        # ── ФИКС 2026-11-10: диагностика закрытия ──
+        silence = time.time() - self._ws_last_payload_at
+        logger.info(
+            f"[{self.bk_id}] WS закрыт "
+            f"(последний payload: {silence:.1f}с назад)"
+        )
         self._ws = None
         self._ws_connected = False
 
@@ -551,23 +1071,31 @@ class LigaStavokApiParser:
         msg = {
             "id": id_,
             "jsonrpc": "2.0",
-            "meta": {"applicationName": "mobile"},
+            "meta": {"applicationName": "mobile", "locale": "ru-RU"},
             "method": "subscribe",
             "params": params,
         }
         await ws.send(json.dumps(msg))
 
     async def _subscribe_to_cached_ids(self, ws):
-        ids = [int(k) for k in self._matches_cache.keys() if k.isdigit()]
-        if not ids:
+        current_ids = {
+            str(k) for k in self._matches_cache.keys() if k.isdigit()
+        }
+        new_ids = current_ids - self._subscribed_ids
+        if not new_ids:
             return
+        ids = list(new_ids)
         for chunk_start in range(0, len(ids), 100):
             chunk = ids[chunk_start:chunk_start + 100]
             await self._send_subscribe(
                 ws, 1000 + chunk_start // 100,
                 "/notifications/v3/eventUpdated", chunk,
             )
-        logger.info(f"[{self.bk_id}] 📤 Подписка на {len(ids)} матчей по WS")
+        self._subscribed_ids.update(new_ids)
+        logger.info(
+            f"[{self.bk_id}] 📤 Подписка: +{len(new_ids)} "
+            f"(всего подписано: {len(self._subscribed_ids)})"
+        )
 
     def _process_ws_frame(self, frame):
         try:
@@ -588,6 +1116,8 @@ class LigaStavokApiParser:
         if not isinstance(payload, list):
             return
 
+        # ── ФИКС 2026-11-10: обновляем timestamp активности WS ──
+        self._ws_last_payload_at = time.time()
         self._last_successful_response_at = time.time()
 
         for item in payload:
@@ -596,18 +1126,51 @@ class LigaStavokApiParser:
             match_id = str(item.get("id", ""))
             if not match_id or match_id in self._finished:
                 continue
-            if match_id not in self._matches_cache:
-                continue
-            cache = self._matches_cache[match_id]
-            sport_key = cache.get("sport", TABLE_TENNIS)
+
             ws_data = item.get("data") or {}
             if not isinstance(ws_data, dict):
                 ws_data = {}
+
+            # ── ФИКС: real-time eventAdded ──
+            if match_id not in self._matches_cache:
+                event = ws_data.get("event") or {}
+                if not isinstance(event, dict):
+                    event = {}
+                p1 = event.get("team1") or ""
+                p2 = event.get("team2") or ""
+                if not p1 or not p2:
+                    continue
+
+                sport_key = self._resolve_sport_key_from_event(event)
+                if not sport_key:
+                    continue
+
+                self._matches_cache[match_id] = {
+                    "event": {}, "scores": {}, "outcomes": {},
+                    "markets": {},
+                    "player1": p1, "player2": p2,
+                    "tournament": event.get("tournamentTitle", "")
+                                  or event.get("topicTitle", "")
+                                  or "LigaStavok",
+                    "sport": sport_key, "_last_sent": None,
+                }
+                self._first_seen[match_id] = time.time()
+                self._pending_subscribe.add(match_id)
+                logger.info(
+                    f"[{self.bk_id}] 🆕 Новый матч из WS (eventAdded): "
+                    f"{p1} vs {p2} [{sport_key}] → подписка ~1с"
+                )
+
+            cache = self._matches_cache[match_id]
+            sport_key = cache.get("sport", TABLE_TENNIS)
             self._apply_ws_data(cache, ws_data, sport_key)
 
-            if cache.get("event", {}).get("statusTranslated") == "Матч завершен":
+            if cache.get("event", {}).get(
+                    "statusTranslated") == "Матч завершен":
                 self._finished.add(match_id)
-                logger.info(f"[{self.bk_id}] 🏁 Матч {match_id} завершён (из WS)")
+                logger.info(
+                    f"[{self.bk_id}] 🏁 Матч {match_id} завершён"
+                )
 
     def _apply_ws_data(self, cache: dict, ws_data: dict, sport_key: str):
         headers = ws_data.get("headers") or []
@@ -625,21 +1188,22 @@ class LigaStavokApiParser:
                     scores = {}
                     cache["scores"] = scores
 
-                # ── /scores/all — массив всех партий ──
                 if path == "/scores/all":
                     if isinstance(val, list) and val:
                         scores["all"] = val
-                        self._recompute_scores_from_all(cache, val, sport_key)
+                        self._recompute_scores_from_all(
+                            cache, val, sport_key
+                        )
                     continue
 
-                # ── /scores/total/ScoreTeamN — счёт партий ──
                 if path == "/scores/total/ScoreTeam1":
                     t = scores.get("total")
                     if not isinstance(t, dict):
                         t = {}
                         scores["total"] = t
                     old_val = t.get("ScoreTeam1", "0")
-                    if str(val) != "0" or str(old_val) in ("0", "None", ""):
+                    if str(val) != "0" or str(old_val) in (
+                            "0", "None", ""):
                         t["ScoreTeam1"] = str(val)
                     continue
                 if path == "/scores/total/ScoreTeam2":
@@ -648,11 +1212,11 @@ class LigaStavokApiParser:
                         t = {}
                         scores["total"] = t
                     old_val = t.get("ScoreTeam2", "0")
-                    if str(val) != "0" or str(old_val) in ("0", "None", ""):
+                    if str(val) != "0" or str(old_val) in (
+                            "0", "None", ""):
                         t["ScoreTeam2"] = str(val)
                     continue
 
-                # ── /scores/current/ScoreTeamN — очки активной партии ──
                 if path == "/scores/current/ScoreTeam1":
                     c = scores.get("current")
                     if not isinstance(c, dict):
@@ -668,7 +1232,6 @@ class LigaStavokApiParser:
                     c["ScoreTeam2"] = str(val)
                     continue
 
-                # ── /event/statusTranslated ──
                 if path == "/event/statusTranslated":
                     ev = cache.setdefault("event", {})
                     if not isinstance(ev, dict):
@@ -676,15 +1239,14 @@ class LigaStavokApiParser:
                         cache["event"] = ev
                     ev["statusTranslated"] = val
 
-                    # Сразу обновляем phase_num
                     s = str(val).strip()
                     mm = re.search(r"(\d+)", s)
                     if mm:
                         cache["phase_num"] = int(mm.group(1))
 
-                    # Если в кэше есть all_parts — пересчитаем current,
-                    # т.к. фаза сменилась и sub_score относится уже к другой партии
-                    all_parts = (cache.get("scores") or {}).get("all") or []
+                    all_parts = (
+                        cache.get("scores") or {}
+                    ).get("all") or []
                     if all_parts:
                         sport_key_cache = cache.get("sport", TABLE_TENNIS)
                         self._recompute_scores_from_all(
@@ -692,7 +1254,6 @@ class LigaStavokApiParser:
                         )
                     continue
 
-                # ── /markets/{id} — кэфы ──
                 if path.startswith("/markets/"):
                     markets = cache.setdefault("markets", {})
                     if not isinstance(markets, dict):
@@ -703,7 +1264,8 @@ class LigaStavokApiParser:
                         markets[mid] = val
                     continue
 
-                if path in ("/hash", "/event/server", "/event/matchTime"):
+                if path in ("/hash", "/event/server",
+                            "/event/matchTime"):
                     continue
 
         outcomes_upd = ws_data.get("outcomes") or []
@@ -740,12 +1302,8 @@ class LigaStavokApiParser:
                         if isinstance(o, dict):
                             o["adValue"] = val
 
-    def _recompute_scores_from_all(self, cache: dict, all_parts: list, sport_key: str):
-        """
-        Пересчитывает current/total/phase_num из массива all_parts.
-        Ключевое: current = очки ИМЕННО активной партии (по phase_num),
-        а не последний элемент массива (мог быть заглушкой).
-        """
+    def _recompute_scores_from_all(self, cache: dict, all_parts: list,
+                                    sport_key: str):
         scores = cache.setdefault("scores", {})
         if not isinstance(scores, dict):
             scores = {}
@@ -754,8 +1312,9 @@ class LigaStavokApiParser:
         if not all_parts:
             return
 
-        # ── 1. phase_num: сначала из statusTranslated, потом длина ──
-        status_str = ((cache.get("event") or {}).get("statusTranslated") or "").strip()
+        status_str = (
+            (cache.get("event") or {}).get("statusTranslated") or ""
+        ).strip()
         phase_num = None
         if status_str:
             mm = re.search(r"(\d+)", status_str)
@@ -765,7 +1324,6 @@ class LigaStavokApiParser:
             phase_num = len(all_parts)
         cache["phase_num"] = phase_num
 
-        # ── 2. current: очки активной партии ──
         if 0 < phase_num <= len(all_parts):
             active = all_parts[phase_num - 1] or {}
         else:
@@ -783,10 +1341,13 @@ class LigaStavokApiParser:
         c["ScoreTeam1"] = str(c1)
         c["ScoreTeam2"] = str(c2)
 
-        # ── 3. total ──
         if sport_key in (BASKETBALL, CYBER_BASKETBALL):
-            total1 = sum(int(p.get("ScoreTeam1", 0) or 0) for p in all_parts)
-            total2 = sum(int(p.get("ScoreTeam2", 0) or 0) for p in all_parts)
+            total1 = sum(
+                int(p.get("ScoreTeam1", 0) or 0) for p in all_parts
+            )
+            total2 = sum(
+                int(p.get("ScoreTeam2", 0) or 0) for p in all_parts
+            )
             t = scores.get("total")
             if not isinstance(t, dict):
                 t = {}
@@ -795,8 +1356,6 @@ class LigaStavokApiParser:
             t["ScoreTeam2"] = str(total2)
             return
 
-        # Для НТ/волейбола: считаем только ЗАВЕРШЁННЫЕ партии
-        # (индексы 0..phase_num-2)
         won1 = 0
         won2 = 0
         for i, p in enumerate(all_parts):
@@ -847,7 +1406,9 @@ class LigaStavokApiParser:
             score1 = score2 = 0
 
         if sport_key in (BASKETBALL, CYBER_BASKETBALL):
-            st = ((m.get("event") or {}).get("statusTranslated") or "").strip()
+            st = (
+                (m.get("event") or {}).get("statusTranslated") or ""
+            ).strip()
             if "перерыв" in st.lower():
                 phase_num = max(1, len(all_scores))
                 sub1 = sub2 = 0
@@ -873,27 +1434,23 @@ class LigaStavokApiParser:
                     except (ValueError, TypeError):
                         sub1 = sub2 = 0
         else:
-            # ── Фаза для НТ/волейбола ──
-            # Приоритет 1: statusTranslated ("3-я партия", "2-й сет")
-            status_str = ((m.get("event") or {}).get("statusTranslated") or "").strip()
+            status_str = (
+                (m.get("event") or {}).get("statusTranslated") or ""
+            ).strip()
             phase_num = None
             if status_str:
                 mm = re.search(r"(\d+)", status_str)
                 if mm:
                     phase_num = int(mm.group(1))
 
-            # Приоритет 2: длина all_parts
             if phase_num is None and all_scores:
                 phase_num = len(all_scores)
 
-            # Приоритет 3 (fallback): сумма партий + 1
             if phase_num is None:
                 phase_num = score1 + score2 + 1
 
-            # ── sub_score активной партии ──
             sub1 = sub2 = 0
 
-            # Берём очки ИМЕННО активной партии (по номеру phase_num)
             if all_scores and 0 < phase_num <= len(all_scores):
                 cur = all_scores[phase_num - 1] or {}
                 try:
@@ -902,7 +1459,6 @@ class LigaStavokApiParser:
                 except (ValueError, TypeError):
                     sub1 = sub2 = 0
 
-            # Fallback: current (если по индексу ничего нет)
             if sub1 == 0 and sub2 == 0:
                 try:
                     sub1 = int(current.get("ScoreTeam1", 0) or 0)
@@ -956,11 +1512,13 @@ class LigaStavokApiParser:
             "phase_num": phase_num,
             "tournament": m.get("tournament", ""),
             "odds1": odds1, "odds2": odds2,
-            "total_line": total_line, "total_over": total_over, "total_under": total_under,
+            "total_line": total_line,
+            "total_over": total_over,
+            "total_under": total_under,
             "handicap1": h1, "handicap2": h2,
             "handicap_odds1": h_o1, "handicap_odds2": h_o2,
             "p_id": self._extract_p_id(event),
-            "ext_id": str(event.get("extId") or ""),   # ← ДОБАВЬ ЭТУ СТРОКУ
+            "ext_id": str(event.get("extId") or ""),
         }
 
     def _extract_p_id(self, event: dict) -> str:
@@ -1002,7 +1560,8 @@ class LigaStavokApiParser:
                 parsed["sub1"], parsed["sub2"],
                 parsed["phase_num"],
                 parsed["odds1"], parsed["odds2"],
-                parsed["total_line"], parsed["total_over"], parsed["total_under"],
+                parsed["total_line"], parsed["total_over"],
+                parsed["total_under"],
                 parsed["handicap1"], parsed["handicap2"],
                 parsed["handicap_odds1"], parsed["handicap_odds2"],
             )
@@ -1012,17 +1571,15 @@ class LigaStavokApiParser:
             phase_name = format_phase(sport_key, parsed["phase_num"])
             slug = get_url_slug(self.bk_id, sport_key) or "table-tennis"
 
-            # ext_id = event.extId (проверено: Variant A даёт ✅ MATCH 3/3)
             ext_id = parsed.get("ext_id") or match_id
 
-            # Slug каждой персоны отдельно: "Радченко Т." → "radchenko-t"
-            # (объединение строк ломает транслит на инициалах)
             p1_slug = _slug(parsed["player1"])
             p2_slug = _slug(parsed["player2"])
 
             match_url = (
                 f"https://www.ligastavok.ru/sports/{slug}/"
-                f"{p1_slug}-{p2_slug}-id-{match_id}-service-id-27-ext-id-{ext_id}"
+                f"{p1_slug}-{p2_slug}-id-{match_id}"
+                f"-service-id-27-ext-id-{ext_id}"
             )
 
             match = Match(

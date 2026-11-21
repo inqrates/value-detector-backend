@@ -18,6 +18,11 @@
   - Не более 20 рестартов в час на каждый парсер
   - Сдвиг по индексу парсера (index * 60 сек), чтобы рестарты
     не пиковали одновременно (9 парсеров → растянуто на 8 минут)
+
+ОБНОВЛЕНО 2026-10-21:
+  - Все broadcast-вызовы идут с channel="health". Это позволяет
+    фронту подписаться только на нужные каналы через
+    {"type": "subscribe", "channels": [...]} в WS.
 """
 import asyncio
 import logging
@@ -104,7 +109,11 @@ class ManagedParser:
         now = time.time()
         self.restart_times = [t for t in self.restart_times if now - t < 3600]
         if len(self.restart_times) >= 20:
-            return False
+            # Если последний рестарт был больше 10 минут назад — сбрасываем лимит
+            if now - self.restart_times[-1] > 600:
+                self.restart_times.clear()
+            else:
+                return False
 
         logger.warning(f"[health] 🔄 Рестарт [{self.bk_id}]")
 
@@ -278,7 +287,7 @@ class HealthMonitor:
                             "reason": reason,
                             "ts": time.time(),
                         },
-                    })
+                    }, channel="health")
                 except Exception:
                     pass
         finally:
@@ -340,7 +349,7 @@ class HealthMonitor:
                             }
                             for bk, h in self._snapshot.items()
                         },
-                    })
+                    }, channel="health")
                 except Exception:
                     pass
 

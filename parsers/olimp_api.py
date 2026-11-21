@@ -1,13 +1,6 @@
 # parsers/olimp_api.py
 """
 Olimp — HTTP-парсер через curl_cffi (без Playwright).
-
-API отдаёт JSON на /api/v4/0/live/sports-with-competitions-with-events
-без cookies, только с правильными headers (X-Cupis, X-Olimp, Origin, Referer).
-Проверено: HTTP 200, ~3.6 МБ JSON, 23 элемента массива (по одному на вид спорта).
-
-Класс сохранён как OlimpApiParser и имеет тот же интерфейс, что у старой
-Playwright-версии, чтобы main.py не требовал правок.
 """
 import asyncio
 import logging
@@ -53,13 +46,11 @@ class OlimpApiParser:
         ]
         self.is_running = False
 
-        # ---- Кэши (эти же имена ищет global_cache_cleaner в main.py) ----
         self._matches_cache: Dict[str, dict] = {}
         self._first_seen: Dict[str, float] = {}
         self._last_sent_time: Dict[str, float] = {}
         self._last_update_time: Dict[str, float] = {}
 
-        # sport_id (str) → sport_key
         self._sport_ids: Dict[str, str] = {}
         for sk in self.enabled_sports:
             cfg = SPORT_MAP.get(self.bk_id, {}).get(sk, {})
@@ -69,9 +60,6 @@ class OlimpApiParser:
 
         self._session: AsyncSession = None
 
-    # ============================================================
-    # Жизненный цикл
-    # ============================================================
     async def start(self):
         if self._session is None:
             self._session = AsyncSession(
@@ -97,13 +85,35 @@ class OlimpApiParser:
         logger.info(f"[{self.bk_id}] 🚀 HTTP-парсер Olimp запущен (без Playwright)")
 
         while self.is_running:
+            # ── ФИКС: если сессия была сброшена — пересоздаём ──
+            if self._session is None:
+                try:
+                    await self.start()
+                except Exception as e:
+                    logger.warning(f"[{self.bk_id}] Не удалось пересоздать сессию: {e}")
+                    await asyncio.sleep(3)
+                    continue
+
             t0 = time.monotonic()
             try:
                 await self._poll_once()
             except asyncio.CancelledError:
                 break
             except Exception as e:
-                logger.error(f"[{self.bk_id}] Ошибка опроса: {e}", exc_info=True)
+                logger.error(f"[{self.bk_id}] Ошибка опроса: {e}")
+                err_str = str(e).lower()
+                if any(x in err_str for x in ("ssl", "timeout", "connection", "curl", "nonetype")):
+                    try:
+                        if self._session:
+                            await self._session.close()
+                    except Exception:
+                        pass
+                    self._session = None
+                    logger.warning(f"[{self.bk_id}] 🔄 Сессия сброшена — пересоздаю")
+                    try:
+                        await self.start()
+                    except Exception as se:
+                        logger.warning(f"[{self.bk_id}] Не удалось пересоздать: {se}")
                 await asyncio.sleep(3)
                 continue
 
@@ -112,9 +122,6 @@ class OlimpApiParser:
             if sleep_time > 0:
                 await asyncio.sleep(sleep_time)
 
-    # ============================================================
-    # Один опрос API
-    # ============================================================
     async def _poll_once(self):
         r = await self._session.get(self.URL, headers=self.HEADERS)
         if r.status_code != 200:
@@ -137,9 +144,6 @@ class OlimpApiParser:
 
         await self._try_send_matches()
 
-    # ============================================================
-    # Разбор payload (логика из старой Playwright-версии)
-    # ============================================================
     def _process_payload(self, payload: dict):
         comps = payload.get("competitionsWithEvents", [])
         if not isinstance(comps, list):
@@ -150,7 +154,7 @@ class OlimpApiParser:
                 continue
             comp = block.get("competition", {}) or {}
             tournament = comp.get("name", "Неизвестно")
-            tournament_id = comp.get("id")           # ← НОВОЕ
+            tournament_id = comp.get("id")
             for event in block.get("events", []) or []:
                 if not isinstance(event, dict):
                     continue
@@ -158,7 +162,6 @@ class OlimpApiParser:
                 sport_key = self._sport_ids.get(sport_id_str)
                 if not sport_key:
                     continue
-                # ← передаём tournament_id
                 self._process_event(event, tournament, sport_key, tournament_id)
 
     def _process_event(self, event: dict, tournament: str, sport_key: str,
@@ -176,18 +179,16 @@ class OlimpApiParser:
 
         cache = self._matches_cache[match_id]
         cache["tournament"] = tournament
-        cache["tournament_id"] = tournament_id      # ← НОВОЕ
+        cache["tournament_id"] = tournament_id
         cache["sport"] = sport_key
         cache["player1"] = event.get("team1Name", "Неизвестно")
         cache["player2"] = event.get("team2Name", "Неизвестно")
 
-        # ---- score ----
         try:
             s1, s2 = map(int, (event.get("score") or "0:0").split(":"))
         except (ValueError, TypeError):
             s1, s2 = 0, 0
 
-        # ---- sub_score из mapsScore ----
         pairs = []
         for m in event.get("mapsScore") or []:
             if isinstance(m, dict):
@@ -221,7 +222,6 @@ class OlimpApiParser:
         cache["sub2"] = sub2
         cache["phase_num"] = phase_num
 
-        # ---- Кэфы ----
         odds1 = odds2 = 0.0
         total_line = total_over = total_under = 0.0
         h1 = h2 = h_o1 = h_o2 = 0.0
@@ -271,9 +271,6 @@ class OlimpApiParser:
 
         self._last_update_time[match_id] = time.time()
 
-    # ============================================================
-    # Отправка в detector/aggregator
-    # ============================================================
     async def _try_send_matches(self):
         sent = 0
         now = time.time()
@@ -309,13 +306,10 @@ class OlimpApiParser:
             tour_id = m.get("tournament_id")
 
             if tour_id:
-                # Проверенный формат: /live/{sport}/{tour_id}/{match_id}
-                # Работает для НТ / волейбола / баскетбола (проверено на живых матчах).
                 match_url = (
                     f"https://www.olimp.bet/live/{slug}/{tour_id}/{match_id}"
                 )
             else:
-                # Без tournament_id URL не работает → пусто, фронт ищет кликом
                 match_url = ""
             phase_name = format_phase(sport_key, m.get("phase_num", 1))
 

@@ -19,13 +19,14 @@ class OddsAggregator:
             "fast": 0,
             "last_update": 0.0
         })
+        # ── НОВОЕ: ключи, обновлённые с прошлого flush_dirty() ──
+        self._dirty_keys: set = set()
 
     def _get_key(self, match: Match) -> str:
         p1 = normalizer.normalize_name(match.player1)
         p2 = normalizer.normalize_name(match.player2)
         if p1 > p2:
             p1, p2 = p2, p1
-        # Добавляем вид спорта в ключ, чтобы матчи разных видов не смешивались
         sport = getattr(match, "sport", "table_tennis") or "table_tennis"
         return f"{sport}::{p1}||{p2}"
 
@@ -37,6 +38,13 @@ class OddsAggregator:
         self._last_update[key] = time.time()
         self._bk_stats[match.bk_id]["matches"] += 1
         self._bk_stats[match.bk_id]["last_update"] = time.time()
+        self._dirty_keys.add(key)   # ← НОВОЕ
+
+    def flush_dirty(self) -> set:
+        """Атомарно забирает накопленные грязные ключи."""
+        keys = self._dirty_keys
+        self._dirty_keys = set()
+        return keys
 
     def _clean_expired(self):
         now = time.time()
@@ -84,7 +92,6 @@ class OddsAggregator:
         self._clean_expired()
         results = []
         for key, bk_data in self._matches.items():
-            # Фильтр: реальные live-кэфы от 1.01 до 100
             odds1 = [(bk, m.odds1, m.match_id)
                      for bk, m in bk_data.items()
                      if 1.01 <= m.odds1 <= 100]
@@ -97,26 +104,20 @@ class OddsAggregator:
             max1_bk, max1, id1 = max(odds1, key=lambda x: x[1])
             max2_bk, max2, id2 = max(odds2, key=lambda x: x[1])
 
-            # ВИЛКА ВНУТРИ ОДНОЙ БК — не вилка
             if max1_bk == max2_bk:
                 continue
 
-            # СВЕЖЕСТЬ: обе стороны должны быть обновлены за последние N секунд
             now = time.time()
             m1 = bk_data[max1_bk]
             m2 = bk_data[max2_bk]
             if now - m1.timestamp > 20 or now - m2.timestamp > 20:
                 continue
 
-            # ЗАЩИТА ОТ УСТАРЕВШИХ КЭФОВ:
-            # если лучший кэф в 1.5x больше среднего по всем БК —
-            # скорее всего это «залипший» кэф у одной БК, а не реальная вилка
             avg1_all = sum(o for _, o, _ in odds1) / len(odds1)
             avg2_all = sum(o for _, o, _ in odds2) / len(odds2)
             if max1 > avg1_all * 1.5 or max2 > avg2_all * 1.5:
                 continue
 
-            # СТРАХОВКА ОТ МУСОРА: прибыль > 10% — почти всегда глюк
             inv_sum = 1 / max1 + 1 / max2
             if inv_sum < 1:
                 profit = (1 - inv_sum) * 100
@@ -193,8 +194,6 @@ class OddsAggregator:
             avg2 = sum(o for o, _ in p2s) / len(p2s)
             sample = next(iter(bk_data.values()))
             for bk, m in bk_data.items():
-                # Реальный value — 1.05–1.4x от среднего.
-                # Всё что выше — устаревший/закрытый кэф, а не валуй.
                 if m.odds1 > avg1 * threshold and m.odds1 / avg1 <= 1.4:
                     results.append({
                         'key': key,
@@ -223,7 +222,6 @@ class OddsAggregator:
                     })
         return results
 
-    # ---------- Статистика для советника ----------
     def get_advisor_stats(self) -> Dict:
         now = time.time()
         active_bks = {}
@@ -236,8 +234,6 @@ class OddsAggregator:
                     "fast": stats["fast"],
                     "avg_delay": stats["total_delay"] / stats["signals"] if stats["signals"] > 0 else 0.0,
                 }
-        # Убираем логирование – только для отладки можно оставить DEBUG
-        # logger.debug(f"get_advisor_stats: {active_bks}")
         return active_bks
 
     def record_signal(self, fast_bk: str, slow_bk: str, delay: float):

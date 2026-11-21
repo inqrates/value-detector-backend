@@ -106,32 +106,14 @@ async def print_stats(aggregator: OddsAggregator):
                     f"3+БК: {len(triple)} | 4+БК: {len(four)}"
                 )
 
-            # ── ВИЛКИ (только новые) ──
-            forks = aggregator.find_arbitrage(min_profit=0.5)
-            for f in forks:
-                # ключ уникальности вилки: матч + обе БК + кэфы
-                key = (
-                    f.get('key', ''),
-                    f.get('bk_p1', ''),
-                    f.get('bk_p2', ''),
-                    round(f.get('best_p1', 0), 2),
-                    round(f.get('best_p2', 0), 2),
-                )
-                if key in _seen_forks:
-                    continue
-                _seen_forks.add(key)
-                logger.info(
-                    f"🔥 [{f.get('tournament', '')[:30]}] "
-                    f"{f['player1']} vs {f['player2']} | "
-                    f"П1={f['best_p1']:.2f}@{f['bk_p1']} "
-                    f"П2={f['best_p2']:.2f}@{f['bk_p2']} "
-                    f"→ {f['profit_percent']:.2f}%"
-                )
-                await broadcast_message({"type": "arbitrage", "payload": f})
-
-            # Ограничиваем память
-            if len(_seen_forks) > 5000:
-                _seen_forks.clear()
+            # ── ФИКС 2026-10: вилки отключены — фронт их не использует
+            # (place_arbitrage_bet возвращает not_implemented, стратегии
+            # 'Arbitrage' мигрируются в 'After-goal' при загрузке).
+            # Считались каждые 5 сек вхолостую: O(matches × BK).
+            # Если нужно вернуть — раскомментировать. ──
+            # forks = aggregator.find_arbitrage(min_profit=0.5)
+            # for f in forks:
+            #     ...
 
             # ── ВАЛУИ — только топ-5 по ratio, без повторов ──
             values = aggregator.find_value_bets(threshold=1.05)
@@ -143,26 +125,67 @@ async def print_stats(aggregator: OddsAggregator):
                         f"{v['outcome']} @ {v['odd']:.2f} "
                         f"(ratio {v['ratio']:.2f}) @ {v['bk']}"
                     )
-                    await broadcast_message({"type": "value", "payload": v})
+                    await broadcast_message({"type": "value", "payload": v}, channel="value")
 
-            # ── КОРИДОРЫ — только топ-3, без повторов ──
-            corridors = aggregator.find_corridors()
-            if corridors:
-                top = sorted(corridors, key=lambda c: -c['profit'])[:3]
-                for c in top:
-                    logger.info(
-                        f"🚪 {c['player1']} vs {c['player2']} | "
-                        f"{c['bk1']} {c['side1']} {c['line1']} "
-                        f"+ {c['bk2']} {c['side2']} {c['line2']}"
-                    )
-                    await broadcast_message({"type": "corridor", "payload": c})
+            # ── ФИКС 2026-10: коридоры отключены — фронт их не использует
+            # (place_corridor_bet возвращает not_implemented, стратегии
+            # 'Corridor' мигрируются в 'After-goal' при загрузке).
+            # Считались каждые 5 сек вхолостую: O(matches × BK²) —
+            # самая дорогая из мёртвых функций.
+            # Если нужно вернуть — раскомментировать. ──
+            # corridors = aggregator.find_corridors()
+            # if corridors:
+            #     ...
 
             # ── Статистика советника ──
             stats = aggregator.get_advisor_stats()
-            await broadcast_message({"type": "advisor", "payload": stats})
+            await broadcast_message({"type": "advisor", "payload": stats}, channel="advisor")
 
         except Exception as e:
             logger.error(f"print_stats: {e}", exc_info=True)
+            await asyncio.sleep(1)
+
+# ============================================================
+# Пуш изменений match_state подписчикам через WebSocket
+# ============================================================
+async def _match_state_pusher(aggregator: OddsAggregator):
+    """Раз в 0.5 сек пушит подписчикам изменения из aggregator."""
+    from api import push_match_state
+    while True:
+        try:
+            await asyncio.sleep(0.5)
+            keys = aggregator.flush_dirty()
+            if not keys:
+                continue
+            now = time.time()
+            _MAX_PER_TICK = 100
+            keys_list = list(keys)
+            for i in range(0, len(keys_list), _MAX_PER_TICK):
+                batch = keys_list[i:i + _MAX_PER_TICK]
+                for key in batch:
+                    bk_data = aggregator._matches.get(key)
+                    if not bk_data:
+                        continue
+                    bks = {}
+                    for bk_id, m in bk_data.items():
+                        bks[bk_id] = {
+                            "match_id": m.match_id,
+                            "score1": m.score1,
+                            "score2": m.score2,
+                            "sub_score1": m.sub_score1,
+                            "sub_score2": m.sub_score2,
+                            "odds1": m.odds1,
+                            "odds2": m.odds2,
+                            "raw_time": getattr(m, "raw_time", "") or "",
+                            "sport": getattr(m, "sport", "table_tennis"),
+                            "timestamp": m.timestamp,
+                            "match_url": getattr(m, "match_url", "") or "",
+                        }
+                    await push_match_state(key, bks, now)
+                if i + _MAX_PER_TICK < len(keys_list):
+                    await asyncio.sleep(0)
+        except Exception as e:
+            logger.error(f"_match_state_pusher: {e}", exc_info=True)
             await asyncio.sleep(1)
 
 
@@ -207,15 +230,73 @@ async def global_cache_cleaner(parsers, ttl_seconds: float = 900.0,
                         extra_caches.append(d)
 
                 removed = 0
+
+                live_cache = getattr(p, '_live_cache', None)
+                factors_cache = getattr(p, '_factors_cache', None)
+                is_fonbet_like = (
+                    p.bk_id in ('fonbet', 'pari')
+                    and isinstance(live_cache, dict)
+                )
+
+                if is_fonbet_like:
+                    # ═══════════════════════════════════════════════
+                    # PATCH 2a (2026-10-29): для fonbet/pari — чистка
+                    # ТОЛЬКО по возрасту от first_seen. Игнорируем
+                    # upd>snt (у этих БК snt=0 для "висящих" live
+                    # событий, которые не отправляются в агрегатор).
+                    #
+                    # Условия удаления:
+                    #   1) first_seen > 10 минут
+                    #   2) last_update > 2 минут (данные не менялись)
+                    #
+                    # Активные live (счёт меняется каждые 0.5-2 сек)
+                    # под условие (2) НЕ попадают — остаются.
+                    # ═══════════════════════════════════════════════
+                    HARD_TTL = 600.0
+                    for eid in list(cache.keys()):
+                        _fs = first_seen.get(eid, 0) if isinstance(first_seen, dict) else 0
+                        if not _fs:
+                            continue
+                        upd = last_update.get(eid, 0) if isinstance(last_update, dict) else 0
+                        # Если данные обновлялись <120 сек назад — активные
+                        if upd and (now - upd) < 120.0:
+                            continue
+                        if (now - _fs) > HARD_TTL:
+                            cache.pop(eid, None)
+                            if isinstance(live_cache, dict):
+                                live_cache.pop(eid, None)
+                            if isinstance(factors_cache, dict):
+                                factors_cache.pop(eid, None)
+                            for d in (last_update, last_sent, first_seen, *extra_caches):
+                                if isinstance(d, dict):
+                                    d.pop(eid, None)
+                            removed += 1
+
+                    if removed:
+                        logger.info(
+                            f"🧹 [cache-cleaner] [{p.bk_id}] "
+                            f"удалено {removed}, осталось {len(cache)}"
+                        )
+                        total_removed += removed
+                    else:
+                        logger.debug(
+                            f"🧹 [cache-cleaner] [{p.bk_id}] "
+                            f"жив, в кэше {len(cache)}"
+                        )
+                    continue   # старая логика для fonbet/pari не нужна
+
+                # ═══════════════════════════════════════════════════════
+                # Старая логика для остальных БК (betcity, olimp,
+                # winline, marathon, zenit, ligastavok, sportbet).
+                # Работает нормально, не трогаем.
+                # ═══════════════════════════════════════════════════════
                 for eid in list(cache.keys()):
                     upd = last_update.get(eid, 0) if isinstance(last_update, dict) else 0
                     snt = last_sent.get(eid, 0) if isinstance(last_sent, dict) else 0
 
-                    # Не удаляем, если есть неотправленные апдейты
                     if upd > snt:
                         continue
 
-                    # Оба тайма старые?
                     if now - upd > ttl_seconds and now - snt > ttl_seconds:
                         cache.pop(eid, None)
                         for d in (last_update, last_sent, first_seen, *extra_caches):
@@ -253,7 +334,7 @@ async def main():
     SPORTBET_SPORTS = ["table_tennis", "volleyball", "basketball"]
     ZENIT_SPORTS = ["table_tennis", "volleyball", "basketball", "cyber_basketball"]
     LIGASTAVOK_SPORTS = ["table_tennis", "volleyball", "basketball", "cyber_basketball"]
-    LEON_SPORTS = ["table_tennis", "volleyball", "basketball", "cyber_basketball"]
+    #LEON_SPORTS = ["table_tennis", "volleyball", "basketball", "cyber_basketball"]
     MARATHON_SPORTS = ["table_tennis", "volleyball", "basketball", "cyber_basketball"]
     WINLINE_SPORTS = ["table_tennis", "volleyball", "basketball", "cyber_basketball"]
 
@@ -262,7 +343,7 @@ async def main():
         PariApiParser(detector=detector, aggregator=aggregator, enabled_sports=FONBET_SPORTS),
         WinlineApiParser(detector=detector, aggregator=aggregator, enabled_sports=WINLINE_SPORTS),
         LigaStavokApiParser(detector=detector, aggregator=aggregator, enabled_sports=LIGASTAVOK_SPORTS),
-        LeonApiParser(detector=detector, aggregator=aggregator, enabled_sports=LEON_SPORTS),
+        #LeonApiParser(detector=detector, aggregator=aggregator, enabled_sports=LEON_SPORTS),
         OlimpApiParser(detector=detector, aggregator=aggregator, enabled_sports=OLIMP_SPORTS),
         BetcityApiParser(detector=detector, aggregator=aggregator, enabled_sports=BETCITY_SPORTS),
         MarathonApiParser(detector=detector, aggregator=aggregator, enabled_sports=MARATHON_SPORTS),
@@ -284,6 +365,8 @@ async def main():
 
     asyncio.create_task(print_stats(aggregator))
     asyncio.create_task(global_cache_cleaner(parsers, ttl_seconds=900.0))
+    asyncio.create_task(_match_state_pusher(aggregator))
+    asyncio.create_task(detector.cleanup_loop())
 
     # ── Обёртки с рестартом + Health Monitor ──
     from core.health_monitor import ManagedParser, HealthMonitor
@@ -308,7 +391,12 @@ async def main():
     from api import set_health_monitor
     set_health_monitor(health_monitor)
 
-    config = uvicorn.Config(app, host="0.0.0.0", port=8000, loop="asyncio")
+    config = uvicorn.Config(
+        app, host="0.0.0.0", port=8000, loop="asyncio",
+        ws_ping_interval=None,
+        ws_ping_timeout=None,
+        ws_max_size=8 * 1024 * 1024,
+    )
     server = uvicorn.Server(config)
     asyncio.create_task(server.serve())
 

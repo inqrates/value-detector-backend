@@ -271,11 +271,18 @@ class LeonApiParser:
         logger.info(f"[{self.bk_id}] 🚀 HTTP-парсер Leon запущен")
 
         while self.is_running:
+            if self._session is None:
+                try:
+                    await self.start()
+                except Exception as e:
+                    logger.warning(f"[{self.bk_id}] Не удалось пересоздать сессию: {e}")
+                    await asyncio.sleep(3)
+                    continue
+
             t0 = time.monotonic()
             try:
                 now = time.time()
 
-                # 1) Watchdog: молчание > SILENCE_TIMEOUT → полный рестарт снапшота
                 if (self._last_successful_response_at > 0
                         and now - self._last_successful_response_at > self.SILENCE_TIMEOUT):
                     logger.warning(
@@ -285,18 +292,15 @@ class LeonApiParser:
                     await self._fetch_initial_snapshot()
                     self._last_successful_response_at = time.time()
 
-                    # Если даже снапшот не помог — refresh cookies
                     if self._consecutive_errors >= 3:
                         logger.warning(f"[{self.bk_id}] много ошибок подряд → refresh cookies")
                         await self._refresh_cookies_via_playwright()
                         self._consecutive_errors = 0
 
-                # 2) Периодический принудительный снапшот (страховка от протухшего vtag)
                 elif now - self._last_snapshot_at > self.SNAPSHOT_INTERVAL:
-                    logger.info(f"[{self.bk_id}] 🔄 плановый снапшот (прошло {now - self._last_snapshot_at:.0f}с)")
+                    logger.info(f"[{self.bk_id}] 🔄 плановый снапшот")
                     await self._fetch_initial_snapshot()
 
-                # 3) Обычный delta-polling
                 else:
                     await self._poll_changes()
 
@@ -306,7 +310,22 @@ class LeonApiParser:
                 break
             except Exception as e:
                 self._consecutive_errors += 1
-                logger.error(f"[{self.bk_id}] Ошибка опроса: {e}", exc_info=True)
+                logger.error(f"[{self.bk_id}] Ошибка опроса: {e}")
+                err_str = str(e).lower()
+                if any(x in err_str for x in (
+                    "ssl", "timeout", "connection", "curl", "nonetype",
+                )):
+                    try:
+                        if self._session:
+                            await self._session.close()
+                    except Exception:
+                        pass
+                    self._session = None
+                    logger.warning(f"[{self.bk_id}] 🔄 Сессия сброшена — пересоздаю")
+                    try:
+                        await self.start()
+                    except Exception as se:
+                        logger.warning(f"[{self.bk_id}] Не удалось пересоздать: {se}")
                 await asyncio.sleep(3)
                 continue
 

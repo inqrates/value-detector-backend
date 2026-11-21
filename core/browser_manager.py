@@ -6,6 +6,13 @@ from config import HEADLESS, VIEWPORT_WIDTH, VIEWPORT_HEIGHT
 
 logger = logging.getLogger(__name__)
 
+# ── Нормализация viewport ──
+# VIEWPORT_HEIGHT в config.py может быть 4000 (для полной lazy-загрузки
+# матчей LigaStavok). Такой размер палит Qrator на входе — поэтому контекст
+# создаём с "человеческим" 1080, а конкретный сборщик куки ставит 4000
+# через page.set_viewport_size() ПОСЛЕ прохождения Qrator.
+_SAFE_VH = min(int(VIEWPORT_HEIGHT or 1080), 2160)
+
 
 class BrowserManager:
     _instance = None
@@ -35,76 +42,157 @@ class BrowserManager:
         self._ensure_lock()
         async with self._browser_lock:
             if self._browser is None or not self._browser.is_connected():
-                logger.info("🌐 Запускаем общий браузер Chromium...")
+                logger.info("🌐 Запуск Chromium (headless=new + антидетект)")
                 self._pw = await async_playwright().start()
+
                 self._browser = await self._pw.chromium.launch(
-                    headless=HEADLESS,
+                    headless=True,
                     args=[
+                        # ── Headless нового поколения ──
+                        # Полноценный рендер через SwiftShader: работает
+                        # requestAnimationFrame, WebGL, canvas — критично
+                        # для прохождения Qrator без активной RDP-сессии.
+                        '--headless=new',
+
+                        # ── Антидетект ──
                         '--disable-blink-features=AutomationControlled',
                         '--no-sandbox',
                         '--disable-dev-shm-usage',
-                        '--start-maximized',
 
-                        # ---- АНТИСОН: отключаем троттлинг фоновых вкладок ----
+                        # ── Стабильный размер окна ──
+                        '--window-size=1920,1080',
+                        '--window-position=0,0',
+
+                        # ── Антисон для фоновых вкладок ──
                         '--disable-background-timer-throttling',
                         '--disable-backgrounding-occluded-windows',
                         '--disable-renderer-backgrounding',
-                        '--disable-features=CalculateNativeWinOcclusion,IntensiveWakeUpThrottling',
+                        '--disable-features='
+                            'CalculateNativeWinOcclusion,'
+                            'IntensiveWakeUpThrottling',
                         '--disable-ipc-flooding-protection',
 
-                        # ---- ЭКОНОМИЯ ПАМЯТИ ----
-                        # Не загружать и не рендерить картинки (в SPA это десятки МБ)
-                        '--blink-settings=imagesEnabled=false',
-                        '--disable-images',
-
-                        # Отключить GPU-процесс и его буферы (~500 МБ на 9 вкладок)
-                        '--disable-gpu',
-                        '--disable-gpu-compositing',
-                        '--disable-software-rasterizer',
-
-                        # Ограничить V8 heap на вкладку (защита от утечек SPA)
-                        '--js-flags=--max-old-space-size=256',
-
-                        # Не держать в кэше лишние ресурсы
-                        '--disk-cache-size=1',
-                        '--media-cache-size=1',
-                        '--disable-application-cache',
-                        '--disable-offline-load-stale-cache',
-                    ]
+                        # ── ВАЖНО: НЕ отключаем GPU / rasterizer ──
+                        # Раньше было --disable-gpu, --disable-gpu-compositing,
+                        # --disable-software-rasterizer, --blink-settings=
+                        # imagesEnabled=false, --disable-images.
+                        # Все они ломают WebGL/canvas fingerprint и Qrator
+                        # отказывает. Не возвращать.
+                    ],
                 )
+
                 self._context = await self._browser.new_context(
-                    viewport={'width': VIEWPORT_WIDTH, 'height': VIEWPORT_HEIGHT},
+                    viewport={'width': int(VIEWPORT_WIDTH or 1920),
+                              'height': _SAFE_VH},
                     no_viewport=False,
-                    # Не грузить картинки и медиа на уровне контекста тоже
                     ignore_https_errors=True,
+                    user_agent=(
+                        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+                        "AppleWebKit/537.36 (KHTML, like Gecko) "
+                        "Chrome/131.0.0.0 Safari/537.36"
+                    ),
+                    locale="ru-RU",
+                    timezone_id="Europe/Moscow",
+                    device_scale_factor=1,
+                    java_script_enabled=True,
                 )
 
-                # Дополнительный фильтр: обрывать запросы к картинкам/шрифтам/медиа
-                # на уровне контекста (быстрее чем через page.route).
-                try:
-                    await self._context.route(
-                        "**/*",
-                        self._route_handler,
-                    )
-                except Exception as e:
-                    logger.warning(f"⚠️ Не удалось установить route-фильтр: {e}")
+                # ── Антидетект: подмена полей, которые смотрит Qrator ──
+                await self._context.add_init_script(self._antidetect_js())
 
-                logger.info("✅ Общий браузер и контекст запущены (оптимизация памяти)")
+                # ── Route: блокируем только рекламу ──
+                # image / media / font НЕ блокируем — Qrator использует
+                # canvas-картинку как challenge.
+                try:
+                    await self._context.route("**/*", self._route_handler)
+                except Exception as e:
+                    logger.warning(f"⚠️ Не удалось установить route: {e}")
+
+                logger.info("✅ Браузер запущен (headless=new, антидетект)")
             return self._browser
+
+    @staticmethod
+    def _antidetect_js() -> str:
+        return r"""
+        // webdriver
+        try {
+            Object.defineProperty(navigator, 'webdriver', {
+                get: () => undefined
+            });
+        } catch (e) {}
+
+        // languages
+        try {
+            Object.defineProperty(navigator, 'languages', {
+                get: () => ['ru-RU', 'ru', 'en-US', 'en']
+            });
+        } catch (e) {}
+
+        // hardwareConcurrency / deviceMemory
+        try {
+            Object.defineProperty(navigator, 'hardwareConcurrency', {
+                get: () => 8
+            });
+        } catch (e) {}
+        try {
+            Object.defineProperty(navigator, 'deviceMemory', {
+                get: () => 8
+            });
+        } catch (e) {}
+
+        // plugins
+        try {
+            Object.defineProperty(navigator, 'plugins', {
+                get: () => [
+                    {name: 'Chrome PDF Plugin'},
+                    {name: 'Chrome PDF Viewer'},
+                    {name: 'Native Client'},
+                ]
+            });
+        } catch (e) {}
+
+        // chrome runtime
+        try {
+            if (!window.chrome) window.chrome = {};
+            if (!window.chrome.runtime) window.chrome.runtime = {};
+        } catch (e) {}
+
+        // WebGL vendor / renderer — Qrator собирает fingerprint
+        try {
+            const patchGL = (proto) => {
+                const orig = proto.getParameter;
+                proto.getParameter = function(p) {
+                    if (p === 37445) return 'Intel Inc.';
+                    if (p === 37446) return 'Intel Iris OpenGL Engine';
+                    return orig.call(this, p);
+                };
+            };
+            patchGL(WebGLRenderingContext.prototype);
+            patchGL(WebGL2RenderingContext.prototype);
+        } catch (e) {}
+
+        // permissions — Playwright ставит 'denied', Qrator видит
+        try {
+            const origQuery = navigator.permissions.query.bind(
+                navigator.permissions
+            );
+            navigator.permissions.query = (params) => {
+                if (params && params.name === 'notifications') {
+                    return Promise.resolve({ state: 'default' });
+                }
+                return origQuery(params);
+            };
+        } catch (e) {}
+        """
 
     @staticmethod
     async def _route_handler(route, request):
         """
-        Блокируем загрузку ресурсов, которые жрут память и трафик,
-        но не нужны для перехвата API: картинки, медиа, шрифты, стили
-        сторонних трекеров.
+        Блокируем только явную рекламу/трекеры.
+        image / font / media / css НЕ трогаем — Qrator использует их
+        в canvas/challenge.
         """
         try:
-            rtype = request.resource_type
-            if rtype in ("image", "media", "font"):
-                await route.abort()
-                return
-            # Блокируем явные рекламные/аналитические домены
             url = request.url
             block_markers = (
                 "mc.yandex.ru", "google-analytics", "googletagmanager",
@@ -116,7 +204,6 @@ class BrowserManager:
                 return
             await route.continue_()
         except Exception:
-            # Не валим запрос из-за ошибок фильтра
             try:
                 await route.continue_()
             except Exception:

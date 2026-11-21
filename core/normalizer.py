@@ -4,6 +4,8 @@ from typing import Dict, Tuple
 from difflib import SequenceMatcher
 
 class TableTennisNormalizer:
+    MAX_CACHE = 10_000
+
     def __init__(self):
         self._cache: Dict[str, str] = {}
         self._similarity_cache: Dict[Tuple[str, str], float] = {}
@@ -48,6 +50,12 @@ class TableTennisNormalizer:
         lastname = self.known_aliases.get(lastname, lastname)
 
         self._cache[cache_key] = lastname
+
+        if len(self._cache) > self.MAX_CACHE:
+            _cut = int(self.MAX_CACHE * 0.3)
+            for _k in list(self._cache.keys())[:_cut]:
+                self._cache.pop(_k, None)
+
         return lastname
 
     def normalize_tournament(self, tournament: str) -> str:
@@ -80,6 +88,12 @@ class TableTennisNormalizer:
                 score = 0.85
 
         self._similarity_cache[cache_key] = score
+
+        if len(self._similarity_cache) > self.MAX_CACHE:
+            _cut = int(self.MAX_CACHE * 0.3)
+            for _k in list(self._similarity_cache.keys())[:_cut]:
+                self._similarity_cache.pop(_k, None)
+
         return score
 
     def match_players(self, p1_a, p2_a, p1_b, p2_b, threshold=0.85):

@@ -14,6 +14,12 @@ Fonbet — HTTP-парсер через curl_cffi (без Playwright).
   - Comment используется только как fallback через звёздочку.
   - Исправлен баг: раньше sub1/sub2 брались из pairs[-1], что давало
     рассинхрон при смене партии (score уже новый, comment ещё старый).
+
+PATCH 1e (2026-10-28):
+  - Фильтр LIVE по полю `place`. Fonbet отдаёт "place": "live" для
+    live-событий и "place": "line" для прематча. Раньше фильтр шёл
+    по score1/score2, но у прематча score1=0 (не None) → has_data=True
+    → is_live=True → кэш рос до 6000 за счёт прематча.
 """
 import asyncio
 import logging
@@ -117,6 +123,15 @@ class FonbetApiParser:
         logger.info(f"[{self.bk_id}] 🚀 HTTP-парсер Fonbet запущен (без Playwright)")
 
         while self.is_running:
+            # ── ФИКС: если сессия была сброшена — пересоздаём ──
+            if self._session is None:
+                try:
+                    await self.start()
+                except Exception as e:
+                    logger.warning(f"[{self.bk_id}] Не удалось пересоздать сессию: {e}")
+                    await asyncio.sleep(3)
+                    continue
+
             t0 = time.monotonic()
 
             try:
@@ -131,12 +146,23 @@ class FonbetApiParser:
             except asyncio.CancelledError:
                 break
             except Exception as e:
-                logger.error(f"[{self.bk_id}] Ошибка опроса: {e}", exc_info=True)
+                logger.error(f"[{self.bk_id}] Ошибка опроса: {e}")
+                err_str = str(e).lower()
+                if any(x in err_str for x in (
+                    "ssl", "timeout", "connection", "curl", "nonetype",
+                )):
+                    try:
+                        if self._session:
+                            await self._session.close()
+                    except Exception:
+                        pass
+                    self._session = None
+                    logger.warning(f"[{self.bk_id}] 🔄 Сессия сброшена — пересоздаю")
+                    try:
+                        await self.start()
+                    except Exception as se:
+                        logger.warning(f"[{self.bk_id}] Не удалось пересоздать: {se}")
                 await asyncio.sleep(3)
-                try:
-                    await self._fetch_snapshot()
-                except Exception:
-                    pass
                 continue
 
             elapsed = time.monotonic() - t0
@@ -293,6 +319,20 @@ class FonbetApiParser:
             m.get("id"): m for m in data.get("eventMiscs", []) if m.get("id")
         }
 
+        # ═══════════════════════════════════════════════════════════
+        # PATCH 1e (2026-10-28): фильтр LIVE по полю `place`.
+        # Fonbet отдаёт "place": "live" для live-событий и
+        # "place": "line" для прематча. Это ровно тот признак,
+        # который нужен: событие с place="line" нам НЕ интересно
+        # (не ставим на прематч). Раньше фильтр шёл по score1/score2
+        # и пропускал прематч, потому что у него score1=0 (не None),
+        # но 0 != None → has_data=True → is_live=True. Кэш рос до 6000.
+        #
+        # Дополнительно: "applicability" содержит "sport-live"
+        # только у live-событий. Это второй признак (страховка).
+        # И третье: если событие уже в _live_cache — значит было live
+        # раньше, не теряем его даже без явного place (дельта).
+        # ═══════════════════════════════════════════════════════════
         events = data.get("events", [])
         for ev in events:
             sid = ev.get("sportId")
@@ -300,6 +340,17 @@ class FonbetApiParser:
                 continue
 
             eid = ev["id"]
+
+            _place = ev.get("place")
+            _applic = ev.get("applicability") or []
+            _is_live = (
+                _place == "live"
+                or "sport-live" in _applic
+                or eid in self._live_cache
+            )
+            if not _is_live:
+                continue
+
             if eid not in self._events_cache:
                 self._events_cache[eid] = {"_last_sent": None}
                 self._first_seen[eid] = time.time()
@@ -333,24 +384,36 @@ class FonbetApiParser:
                 or ""
             )
 
-            has_data = (s1 is not None) or (s2 is not None) or bool(comment_val)
-            is_live = ev.get("isLive") or has_data
-            if is_live:
-                if eid not in self._live_cache:
-                    self._live_cache[eid] = {}
-                    self._first_seen[eid] = time.time()
-                self._live_cache[eid]["score1"] = s1
-                self._live_cache[eid]["score2"] = s2
-                self._live_cache[eid]["comment"] = comment_val
-                self._live_cache[eid]["liveDelay"] = (
-                    live_misc.get("liveDelay", ev.get("liveDelay", 0)) or 0
-                )
+            if eid not in self._live_cache:
+                self._live_cache[eid] = {}
+                self._first_seen[eid] = time.time()
 
-            self._last_update_time[eid] = time.time()
+            _prev = self._live_cache[eid]
+            _prev_s1 = _prev.get("score1")
+            _prev_s2 = _prev.get("score2")
+            _prev_comment = _prev.get("comment")
 
+            _prev["score1"] = s1
+            _prev["score2"] = s2
+            _prev["comment"] = comment_val
+            _prev["liveDelay"] = (
+                live_misc.get("liveDelay", ev.get("liveDelay", 0)) or 0
+            )
+
+            # ── PATCH 1g: обновляем timestamp ТОЛЬКО если данные
+            # реально изменились. Иначе "висящее" live получает
+            # свежий upd каждые 5 мин (снапшот) и cleaner не может
+            # его удалить.
+            if (_prev_s1 != s1 or _prev_s2 != s2
+                    or _prev_comment != comment_val
+                    or eid not in self._last_update_time):
+                self._last_update_time[eid] = time.time()
+
+        # ── PATCH 1f: customFactors тоже приходят для ВСЕХ видов
+        # спорта (и прематч, и live). Фильтруем по нашим событиям. ──
         for item in data.get("customFactors", []):
             eid = item.get("e")
-            if eid:
+            if eid and eid in self._events_cache:
                 self._factors_cache[eid] = item.get("factors", [])
 
         if "eventMiscs" in data:
@@ -366,42 +429,43 @@ class FonbetApiParser:
             eid = m.get("id")
             if not eid:
                 continue
+            # ── PATCH 1f: только для событий уже прошедших _process_events
+            # (т.е. live И включённый спорт). eventMiscs в дельте
+            # содержит ВСЕ live-события ВСЕХ видов спорта — без этого
+            # фильтра _live_cache рос до 1000+ за счёт футбола, тенниса,
+            # хоккея и т.д. ──
+            if eid not in self._events_cache:
+                continue
             if eid not in self._live_cache:
                 self._live_cache[eid] = {}
                 self._first_seen[eid] = time.time()
             s1 = m.get("score1")
             s2 = m.get("score2")
-            if s1 is not None:
-                self._live_cache[eid]["score1"] = s1
-            if s2 is not None:
-                self._live_cache[eid]["score2"] = s2
-            if m.get("comment"):
-                self._live_cache[eid]["comment"] = m["comment"]
+            _prev_live = self._live_cache[eid]
+            _prev_live_s1 = _prev_live.get("score1")
+            _prev_live_s2 = _prev_live.get("score2")
+            _prev_live_comment = _prev_live.get("comment")
 
-            self._last_update_time[eid] = time.time()
+            if s1 is not None:
+                _prev_live["score1"] = s1
+            if s2 is not None:
+                _prev_live["score2"] = s2
+            if m.get("comment"):
+                _prev_live["comment"] = m["comment"]
+
+            if (s1 is not None and s1 != _prev_live_s1) \
+                    or (s2 is not None and s2 != _prev_live_s2) \
+                    or (m.get("comment") and m["comment"] != _prev_live_comment):
+                self._last_update_time[eid] = time.time()
 
     def _process_live_infos(self, infos: list):
-        """
-        Fonbet отдаёт активную партию в liveEventInfos.subscores:
-            {
-                "kindId": "100503",
-                "kindName": "3-й сет",
-                "c1": "4",
-                "c2": "0"
-            }
-
-        kindName уже содержит номер партии и название.
-        c1/c2 — точный счёт активной партии.
-
-        ВАЖНО: subscores — СТРУКТУРИРОВАННЫЕ данные, а не comment.
-        Они всегда синхронны с реальностью, потому что их отдаёт
-        сама Fonbet для каждой активной партии.
-        """
         for info in infos or []:
             eid = info.get("eventId")
             if not eid:
                 continue
-
+            # ── PATCH 1f: тот же фильтр — только для наших live-событий ──
+            if eid not in self._events_cache:
+                continue
             subs = info.get("subscores") or []
             if not subs:
                 continue

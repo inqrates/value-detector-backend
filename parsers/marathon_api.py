@@ -23,6 +23,16 @@ URL матча:
 сохраняются в self._bg_tasks и отменяются в stop(). Без этого
 при рестарте HealthMonitor'ом старые задачи продолжали работать
 с закрытым HTTP-клиентом и спамили "client has been closed".
+
+ФИКСЫ 2026-10-13 (рассинхрон фазы ↔ parts при смене партии):
+  - Marathon обновляет matchScore.parts РАНЬШЕ, чем phase.partNumber.
+  - Если брать phase.partNumber — получим старую фазу, а sub из
+    уже завершённой партии. Ставки уходили не на ту партию.
+  - ФИКС #1: в _upsert_event phase_num = len(parts), не phase.partNumber
+  - ФИКС #2: в _update_match_score обновляем phase_num при каждом
+    обновлении matchScore
+  - ФИКС #3: в _try_send_matches не отправляем snapshot с завершённой
+    партией (sub >= порог и разрыв >= 2) как с активной.
 """
 import asyncio
 import time
@@ -67,6 +77,38 @@ def _fraction_to_decimal(n: int, d: int) -> float:
     return round((n + d) / d, 3)
 
 
+def _is_set_done_for_sport(sport_code: str, p1: int, p2: int,
+                            set_num: int) -> bool:
+    """
+    ── ФИКС #3 (helper) ──
+    Проверяет, завершена ли партия, по виду спорта.
+
+    НТ:        11 очков + разрыв 2
+    Волейбол:  25 (5-я партия — 15) + разрыв 2
+    Баскетбол: не применимо (партия по времени) → False
+
+    Работает и для растянутых партий (12:10, 15:13, 27:25) — благодаря
+    '>=' и проверке разрыва >= 2.
+    """
+    sc = (sport_code or "").lower()
+
+    if "basket" in sc or "e-sport" in sc:
+        return False
+
+    if "volley" in sc:
+        threshold = 15 if set_num >= 5 else 25
+        return (
+            (p1 >= threshold and p1 - p2 >= 2) or
+            (p2 >= threshold and p2 - p1 >= 2)
+        )
+
+    # Дефолт — НТ, большой теннис
+    return (
+        (p1 >= 11 and p1 - p2 >= 2) or
+        (p2 >= 11 and p2 - p1 >= 2)
+    )
+
+
 class MarathonApiParser(BaseParser):
     # Интервалы SEO-enricher'а
     SEO_INTERVAL_FAST = 10.0    # когда есть матчи без slug'ов
@@ -90,7 +132,6 @@ class MarathonApiParser(BaseParser):
         self._needs_seo_fetch = False
 
         # Дочерние задачи (SSE-стримы, process_queues, seo_enricher).
-        # Нужны для корректной отмены при stop()/restart.
         self._bg_tasks: List[asyncio.Task] = []
 
     # ============================================================
@@ -100,7 +141,6 @@ class MarathonApiParser(BaseParser):
         if self._client is None:
             await self._init_client()
 
-        # Подчищаем ссылки на завершённые задачи
         self._bg_tasks = [t for t in self._bg_tasks if not t.done()]
 
         for sport_key in self.enabled_sports:
@@ -110,7 +150,6 @@ class MarathonApiParser(BaseParser):
             logger.info(f"[{self.bk_id}] SSE запущен для {sport_key}: {url}")
 
         self._bg_tasks.append(asyncio.create_task(self._process_queues()))
-        # Дополнительный поток: тянет SEO-slug'и для URL матчей
         self._bg_tasks.append(asyncio.create_task(self._seo_enricher_loop()))
 
     def _build_sse_url(self, sport_key: str) -> str:
@@ -121,14 +160,6 @@ class MarathonApiParser(BaseParser):
                 f"sports/by-slug/all-tournaments/live?sportSlug={slug}")
 
     async def _init_client(self):
-        """
-        Загружаем cookies из cookies/marathon.json (сняты скриптом
-        scripts/sniff_marathon_cookies.py один раз).
-        Playwright в горячем цикле не используется.
-
-        Если клиент уже есть и не закрыт — не пересоздаём.
-        """
-        # Если клиент уже живой — выходим
         if self._client is not None:
             try:
                 if not self._client.is_closed:
@@ -216,8 +247,6 @@ class MarathonApiParser(BaseParser):
             except asyncio.CancelledError:
                 break
 
-            # ── Клиент закрыт при stop() — выходим из цикла ──
-            # Иначе задача останется висеть и будет спамить в лог.
             except RuntimeError as e:
                 msg = str(e)
                 if "client has been closed" in msg or "client is closed" in msg:
@@ -232,8 +261,6 @@ class MarathonApiParser(BaseParser):
                 await asyncio.sleep(retry_delay)
                 retry_delay = min(retry_delay * 2, max_retry_delay)
 
-            # Marathon штатно закрывает SSE каждые 2–5 минут.
-            # Переподключаемся сразу, без backoff.
             except (httpx.RemoteProtocolError, httpx.ReadError,
                     httpx.ReadTimeout) as e:
                 logger.info(
@@ -244,7 +271,6 @@ class MarathonApiParser(BaseParser):
                 await asyncio.sleep(0.3)
                 continue
 
-            # Реальные ошибки (сеть, DNS, TLS) — с backoff
             except Exception as e:
                 logger.warning(
                     f"[{self.bk_id}] [{sport_key}] SSE ошибка "
@@ -277,18 +303,6 @@ class MarathonApiParser(BaseParser):
     # SEO-ENRICHER: тянет slug'и для URL
     # ============================================================
     async def _seo_enricher_loop(self):
-        """
-        Периодически тянет полный JSON-снапшот с Accept: application/json
-        и дополняет кэш slug'ами для URL.
-
-        Адаптивный интервал:
-          - Есть матчи без slug'ов → 10 сек (быстро подтягиваем новые)
-          - Все обогащены          → 60 сек (фоновое обновление)
-          - Новый матч появился    → срочный fetch вне расписания
-
-        НЕ трогает основную SSE-логику, только дописывает seo_* поля.
-        """
-        # Ждём, чтобы не стартовать одновременно с SSE
         await asyncio.sleep(15)
 
         while self.is_running:
@@ -297,16 +311,13 @@ class MarathonApiParser(BaseParser):
                     await asyncio.sleep(5)
                     continue
 
-                # Срочный fetch при появлении нового матча
                 urgent = self._needs_seo_fetch
                 if urgent:
                     self._needs_seo_fetch = False
 
-                # Основной проход
                 for sport_key in self.enabled_sports:
                     await self._fetch_seo_for_sport(sport_key)
 
-                # Определяем, есть ли матчи без slug'ов
                 has_unenriched = False
                 for m in self._matches_cache.values():
                     if m.get("player1") and not m.get("seo_match"):
@@ -314,7 +325,6 @@ class MarathonApiParser(BaseParser):
                         break
 
                 if urgent:
-                    # После срочного — короткая пауза, но не 10 сек
                     delay = 3.0
                 elif has_unenriched:
                     delay = self.SEO_INTERVAL_FAST
@@ -330,10 +340,6 @@ class MarathonApiParser(BaseParser):
             await asyncio.sleep(delay)
 
     async def _fetch_seo_for_sport(self, sport_key: str):
-        """
-        Один HTTP-запрос с Accept: application/json — получаем полный
-        снапшот с slug'ами. Обновляем только seo_* поля в кэше.
-        """
         slug = get_url_slug(self.bk_id, sport_key)
         if not slug:
             slug = sport_key.replace('_', '-')
@@ -341,8 +347,6 @@ class MarathonApiParser(BaseParser):
         url = (f"https://new.marathonbet.ru/eag/event-line/api/v1/"
                f"sports/by-slug/all-tournaments/live?sportSlug={slug}")
 
-        # Ключевое отличие от SSE — Accept: application/json.
-        # Per-request headers перекрывают клиентские.
         try:
             resp = await self._client.get(
                 url,
@@ -385,7 +389,6 @@ class MarathonApiParser(BaseParser):
                 new_champ = seo.get("champSlug") or ""
                 new_match = seo.get("matchSlug") or ""
 
-                # Пишем только если что-то новое
                 if (cache.get("seo_sport") != new_sport
                         or cache.get("seo_champ") != new_champ
                         or cache.get("seo_match") != new_match):
@@ -444,7 +447,6 @@ class MarathonApiParser(BaseParser):
         if SPORT_CODE_TO_KEY.get(event.get("sportCode")) != sport_key:
             return
 
-        # ── Новый матч? Ставим флаг для срочного SEO-fetch ──
         is_new = match_id not in self._matches_cache
 
         if is_new:
@@ -461,22 +463,29 @@ class MarathonApiParser(BaseParser):
                             .get("name", ""))
         cache["tournament"] = event.get("header", "")
 
-        # ── SEO slug'и: если в SSE-кадре случайно пришли — сохраняем ──
         seo = event.get("seo")
         if isinstance(seo, dict) and seo:
             cache["seo_sport"] = seo.get("sportSlug") or cache.get("seo_sport", "")
             cache["seo_champ"] = seo.get("champSlug") or cache.get("seo_champ", "")
             cache["seo_match"] = seo.get("matchSlug") or cache.get("seo_match", "")
 
-        phase = event.get("phase") or {}
-        cache["phase_num"] = phase.get("partNumber", 1)
-
         ms = event.get("matchScore") or {}
         main = ms.get("main") or {}
+        parts = ms.get("parts") or []
+
+        # ── ФИКС #1: phase_num = len(parts), не phase.partNumber ──
+        # В момент смены партии parts обновляется РАНЬШЕ, чем
+        # phase.partNumber. Если брать phase — получим старую фазу,
+        # а sub из уже завершённой партии. Ставки уходили не туда.
+        if parts:
+            cache["phase_num"] = len(parts)
+        else:
+            phase = event.get("phase") or {}
+            cache["phase_num"] = int(phase.get("partNumber") or 1)
+
         cache["score1"] = int(main.get("home", 0) or 0)
         cache["score2"] = int(main.get("away", 0) or 0)
 
-        parts = ms.get("parts") or []
         if parts:
             last = parts[-1]
             cache["sub1"] = int(last.get("home", 0) or 0)
@@ -493,11 +502,19 @@ class MarathonApiParser(BaseParser):
         cache = self._matches_cache.get(match_id)
         if not cache:
             return
+
         main = ms.get("main") or {}
+        parts = ms.get("parts") or []
+
         cache["score1"] = int(main.get("home", 0) or 0)
         cache["score2"] = int(main.get("away", 0) or 0)
-        parts = ms.get("parts") or []
+
         if parts:
+            # ── ФИКС #2: обновляем phase_num прямо здесь ──
+            # Раньше phase_num менялся только в _upsert_event, но там
+            # он берётся из phase.partNumber, который отстаёт на 200-500мс.
+            # parts.length актуален всегда.
+            cache["phase_num"] = len(parts)
             last = parts[-1]
             cache["sub1"] = int(last.get("home", 0) or 0)
             cache["sub2"] = int(last.get("away", 0) or 0)
@@ -627,6 +644,30 @@ class MarathonApiParser(BaseParser):
                 continue
 
             phase_num = m.get("phase_num", 1)
+
+            # ── ФИКС #3: не отправлять ЗАВЕРШЁННУЮ партию как активную ──
+            # Если sub >= порог и разрыв >= 2 — партия завершена,
+            # а phase_num ещё не переключился (окно 200-500мс).
+            # Пропускаем этот snapshot: следующее SSE-обновление
+            # принесёт данные с новой партией.
+            sport_code = ""
+            for sc_code, sc_key in SPORT_CODE_TO_KEY.items():
+                if sc_key == sport_key:
+                    sport_code = sc_code
+                    break
+
+            if sport_key not in (BASKETBALL, CYBER_BASKETBALL):
+                _sub1 = m.get("sub1", 0)
+                _sub2 = m.get("sub2", 0)
+                if _is_set_done_for_sport(
+                    sport_code, _sub1, _sub2, phase_num
+                ):
+                    logger.debug(
+                        f"[{self.bk_id}] skip: set {phase_num} завершён "
+                        f"{_sub1}:{_sub2} — ждём новую партию"
+                    )
+                    continue
+
             phase_name = format_phase(sport_key, phase_num)
 
             # ── URL из SEO-slug'ов ──
@@ -642,8 +683,6 @@ class MarathonApiParser(BaseParser):
                     f"{sport_slug}/{seo_champ}/{seo_match}"
                 )
             else:
-                # Slug'и ещё не подтянулись (новый матч).
-                # Фронт откроет матч кликом по live-разделу.
                 match_url = ""
 
             match = Match(
@@ -710,9 +749,6 @@ class MarathonApiParser(BaseParser):
     async def stop(self):
         self.is_running = False
 
-        # 1) Отменяем все дочерние задачи (SSE, queues, seo).
-        # Иначе они продолжат работать с закрытым клиентом
-        # и спамить "Cannot send a request, as the client has been closed".
         tasks = [t for t in self._bg_tasks if not t.done()]
         for t in tasks:
             t.cancel()
@@ -723,7 +759,6 @@ class MarathonApiParser(BaseParser):
                 pass
         self._bg_tasks.clear()
 
-        # 2) Закрываем HTTP-клиент
         if self._client:
             try:
                 await self._client.aclose()

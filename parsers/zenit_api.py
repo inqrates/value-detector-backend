@@ -148,29 +148,49 @@ class ZenitApiParser:
     async def run(self):
         self.is_running = True
         await self.start()
-        logger.info(f"[{self.bk_id}] 🚀 HTTP+WS парсер Zenit запущен (без Playwright)")
+        logger.info(f"[{self.bk_id}] 🚀 HTTP+WS парсер Zenit запущен")
 
-                # Zenit WS отдаёт полный снапшот через t=7, HTTP-снапшот не нужен.
-        # Оставлен как fallback — пробуем один раз, при ошибке больше не трогаем.
         try:
             await self._fetch_snapshot()
         except Exception as e:
             logger.info(f"[{self.bk_id}] HTTP-снапшот недоступен ({e}), работаем только через WS")
-        self._last_snapshot_at = time.time() + 99999   # отключаем повторные попытки
+        self._last_snapshot_at = time.time() + 99999
 
         ws_task = asyncio.create_task(self._ws_loop())
 
         try:
             while self.is_running:
+                if self._session is None:
+                    try:
+                        await self.start()
+                    except Exception as e:
+                        logger.warning(f"[{self.bk_id}] Не удалось пересоздать сессию: {e}")
+                        await asyncio.sleep(3)
+                        continue
+
                 t0 = time.monotonic()
                 try:
                     now = time.time()
-                    # HTTP-снапшот отключён — WS полностью покрывает задачу
                     if now - self._last_snapshot_at >= self.SNAPSHOT_INTERVAL:
                         await self._fetch_snapshot()
                     await self._try_send_matches()
                 except Exception as e:
-                    logger.error(f"[{self.bk_id}] цикл: {e}", exc_info=True)
+                    logger.error(f"[{self.bk_id}] цикл: {e}")
+                    err_str = str(e).lower()
+                    if any(x in err_str for x in (
+                        "ssl", "timeout", "connection", "curl", "nonetype",
+                    )):
+                        try:
+                            if self._session:
+                                await self._session.close()
+                        except Exception:
+                            pass
+                        self._session = None
+                        logger.warning(f"[{self.bk_id}] 🔄 Сессия сброшена — пересоздаю")
+                        try:
+                            await self.start()
+                        except Exception as se:
+                            logger.warning(f"[{self.bk_id}] Не удалось пересоздать: {se}")
                     await asyncio.sleep(3)
                     continue
 

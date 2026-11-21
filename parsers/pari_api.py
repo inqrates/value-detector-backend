@@ -18,9 +18,15 @@ Pari — HTTP-парсер через curl_cffi.
   - sportId 3088/9/3/29086 — как у Fonbet
   - Факторы 921/922/923/927/928/930/931 — как у Fonbet
   - eventMiscs: score1/score2/comment/liveDelay — как у Fonbet
+
+PATCH 1e (2026-10-28):
+  - Фильтр LIVE по полю `place`. Pari тоже отдаёт "place": "live"
+    для live-событий и "place": "line" для прематча, даже в
+    listLight?place=live (там почему-то прематч тоже есть).
 """
 import asyncio
 import logging
+import re
 import time
 from typing import Dict, Optional, Set, List
 
@@ -37,7 +43,7 @@ class PariApiParser:
 
     # У Fonbet было: line-lb54-w.bk6bba-resources.com
     # У Pari:         line-lb51-w.pb06e2-resources.com
-    CLUSTER = "line-lb51-w.pb06e2-resources.com"
+    CLUSTER = "line-vk02-w.pb06e2-resources.ru"
     BASE = f"https://{CLUSTER}"
 
     # Снапшот live (у Fonbet был /ma/events/listBase — прематч+лайв)
@@ -122,10 +128,20 @@ class PariApiParser:
     async def run(self):
         self.is_running = True
         await self.start()
-        logger.info(f"[{self.bk_id}] 🚀 HTTP-парсер Pari запущен")
+        logger.info(f"[{self.bk_id}] 🚀 HTTP-парсер Fonbet запущен (без Playwright)")
 
         while self.is_running:
+            # ── ФИКС: если сессия была сброшена — пересоздаём ──
+            if self._session is None:
+                try:
+                    await self.start()
+                except Exception as e:
+                    logger.warning(f"[{self.bk_id}] Не удалось пересоздать сессию: {e}")
+                    await asyncio.sleep(3)
+                    continue
+
             t0 = time.monotonic()
+
             try:
                 now = time.time()
                 if now - self._last_snapshot_at >= self.SNAPSHOT_INTERVAL:
@@ -138,12 +154,23 @@ class PariApiParser:
             except asyncio.CancelledError:
                 break
             except Exception as e:
-                logger.error(f"[{self.bk_id}] Ошибка опроса: {e}", exc_info=True)
+                logger.error(f"[{self.bk_id}] Ошибка опроса: {e}")
+                err_str = str(e).lower()
+                if any(x in err_str for x in (
+                    "ssl", "timeout", "connection", "curl", "nonetype",
+                )):
+                    try:
+                        if self._session:
+                            await self._session.close()
+                    except Exception:
+                        pass
+                    self._session = None
+                    logger.warning(f"[{self.bk_id}] 🔄 Сессия сброшена — пересоздаю")
+                    try:
+                        await self.start()
+                    except Exception as se:
+                        logger.warning(f"[{self.bk_id}] Не удалось пересоздать: {se}")
                 await asyncio.sleep(3)
-                try:
-                    await self._fetch_snapshot()
-                except Exception:
-                    pass
                 continue
 
             elapsed = time.monotonic() - t0
@@ -291,7 +318,7 @@ class PariApiParser:
         return None
 
     # ============================================================
-    # events/list — разбор (КОПИЯ ИЗ FONBET)
+    # events/list — разбор (КОПИЯ ИЗ FONBET + PATCH 1e)
     # ============================================================
     def _process_events(self, data: dict):
         sports = data.get("sports", [])
@@ -311,6 +338,13 @@ class PariApiParser:
             m.get("id"): m for m in data.get("eventMiscs", []) if m.get("id")
         }
 
+        # ═══════════════════════════════════════════════════════════
+        # PATCH 1e (2026-10-28): фильтр LIVE по полю `place`.
+        # Pari — клон Fonbet, отдаёт "place": "live" для live и
+        # "place": "line" для прематча. listLight?place=live, судя
+        # по тестам, отдаёт И ТО, И ДРУГОЕ (340 live + прематч).
+        # Прематч нам не нужен — фильтруем по place/applicability.
+        # ═══════════════════════════════════════════════════════════
         events = data.get("events", [])
         for ev in events:
             sid = ev.get("sportId")
@@ -318,6 +352,17 @@ class PariApiParser:
                 continue
 
             eid = ev["id"]
+
+            _place = ev.get("place")
+            _applic = ev.get("applicability") or []
+            _is_live = (
+                _place == "live"
+                or "sport-live" in _applic
+                or eid in self._live_cache
+            )
+            if not _is_live:
+                continue
+
             if eid not in self._events_cache:
                 self._events_cache[eid] = {"_last_sent": None}
                 self._first_seen[eid] = time.time()
@@ -345,24 +390,36 @@ class PariApiParser:
                 or ""
             )
 
-            has_data = (s1 is not None) or (s2 is not None) or bool(comment_val)
-            is_live = ev.get("isLive") or has_data
-            if is_live:
-                if eid not in self._live_cache:
-                    self._live_cache[eid] = {}
-                    self._first_seen[eid] = time.time()
-                self._live_cache[eid]["score1"] = s1
-                self._live_cache[eid]["score2"] = s2
-                self._live_cache[eid]["comment"] = comment_val
-                self._live_cache[eid]["liveDelay"] = (
-                    live_misc.get("liveDelay", ev.get("liveDelay", 0)) or 0
-                )
+            if eid not in self._live_cache:
+                self._live_cache[eid] = {}
+                self._first_seen[eid] = time.time()
 
-            self._last_update_time[eid] = time.time()
+            _prev = self._live_cache[eid]
+            _prev_s1 = _prev.get("score1")
+            _prev_s2 = _prev.get("score2")
+            _prev_comment = _prev.get("comment")
 
+            _prev["score1"] = s1
+            _prev["score2"] = s2
+            _prev["comment"] = comment_val
+            _prev["liveDelay"] = (
+                live_misc.get("liveDelay", ev.get("liveDelay", 0)) or 0
+            )
+
+            # ── PATCH 1g: обновляем timestamp ТОЛЬКО если данные
+            # реально изменились. Иначе "висящее" live получает
+            # свежий upd каждые 5 мин (снапшот) и cleaner не может
+            # его удалить.
+            if (_prev_s1 != s1 or _prev_s2 != s2
+                    or _prev_comment != comment_val
+                    or eid not in self._last_update_time):
+                self._last_update_time[eid] = time.time()
+
+        # ── PATCH 1f: customFactors тоже приходят для ВСЕХ видов
+        # спорта (и прематч, и live). Фильтруем по нашим событиям. ──
         for item in data.get("customFactors", []):
             eid = item.get("e")
-            if eid:
+            if eid and eid in self._events_cache:
                 self._factors_cache[eid] = item.get("factors", [])
 
         if "eventMiscs" in data:
@@ -374,19 +431,34 @@ class PariApiParser:
             eid = m.get("id")
             if not eid:
                 continue
+            # ── PATCH 1f: только для событий уже прошедших _process_events
+            # (т.е. live И включённый спорт). eventMiscs в дельте
+            # содержит ВСЕ live-события ВСЕХ видов спорта — без этого
+            # фильтра _live_cache рос до 1000+ за счёт футбола, тенниса,
+            # хоккея и т.д. ──
+            if eid not in self._events_cache:
+                continue
             if eid not in self._live_cache:
                 self._live_cache[eid] = {}
                 self._first_seen[eid] = time.time()
             s1 = m.get("score1")
             s2 = m.get("score2")
-            if s1 is not None:
-                self._live_cache[eid]["score1"] = s1
-            if s2 is not None:
-                self._live_cache[eid]["score2"] = s2
-            if m.get("comment"):
-                self._live_cache[eid]["comment"] = m["comment"]
+            _prev_live = self._live_cache[eid]
+            _prev_live_s1 = _prev_live.get("score1")
+            _prev_live_s2 = _prev_live.get("score2")
+            _prev_live_comment = _prev_live.get("comment")
 
-            self._last_update_time[eid] = time.time()
+            if s1 is not None:
+                _prev_live["score1"] = s1
+            if s2 is not None:
+                _prev_live["score2"] = s2
+            if m.get("comment"):
+                _prev_live["comment"] = m["comment"]
+
+            if (s1 is not None and s1 != _prev_live_s1) \
+                    or (s2 is not None and s2 != _prev_live_s2) \
+                    or (m.get("comment") and m["comment"] != _prev_live_comment):
+                self._last_update_time[eid] = time.time()
 
     # ============================================================
     # sport_key события (КОПИЯ)

@@ -190,13 +190,36 @@ class BetcityApiParser:
         logger.info(f"[{self.bk_id}] 🚀 HTTP-парсер Betcity запущен (без Playwright)")
 
         while self.is_running:
+            if self._session is None:
+                try:
+                    await self.start()
+                except Exception as e:
+                    logger.warning(f"[{self.bk_id}] Не удалось пересоздать сессию: {e}")
+                    await asyncio.sleep(3)
+                    continue
+
             t0 = time.monotonic()
             try:
                 await self._poll_once()
             except asyncio.CancelledError:
                 break
             except Exception as e:
-                logger.error(f"[{self.bk_id}] Ошибка опроса: {e}", exc_info=True)
+                logger.error(f"[{self.bk_id}] Ошибка опроса: {e}")
+                err_str = str(e).lower()
+                if any(x in err_str for x in (
+                    "ssl", "timeout", "connection", "curl", "nonetype",
+                )):
+                    try:
+                        if self._session:
+                            await self._session.close()
+                    except Exception:
+                        pass
+                    self._session = None
+                    logger.warning(f"[{self.bk_id}] 🔄 Сессия сброшена — пересоздаю")
+                    try:
+                        await self.start()
+                    except Exception as se:
+                        logger.warning(f"[{self.bk_id}] Не удалось пересоздать: {se}")
                 await asyncio.sleep(3)
                 continue
 
