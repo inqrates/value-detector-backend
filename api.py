@@ -8,6 +8,8 @@ from typing import List, Dict, Optional, Set
 
 from fastapi import FastAPI, Query, WebSocket, WebSocketDisconnect, HTTPException, Request, Header, Depends
 from fastapi.responses import HTMLResponse, JSONResponse
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.middleware.trustedhost import TrustedHostMiddleware
 
 from core.aggregator import OddsAggregator
 from core.auth import (
@@ -15,6 +17,10 @@ from core.auth import (
     list_users, delete_user, reset_user_hwid, set_user_active,
     set_user_tariff, extend_user, set_user_expiry, change_password,
     set_user_hwid,
+)
+from core.jwt_auth import (
+    create_access_token, create_refresh_token,
+    verify_access_token, jwt_optional,
 )
 from pydantic import BaseModel
 
@@ -26,6 +32,48 @@ logger = logging.getLogger(__name__)
 app = FastAPI(title="Odds Aggregator API", version="1.0")
 
 aggregator: Optional[OddsAggregator] = None
+
+
+# ============================================================
+# БЕЗОПАСНОСТЬ: Middleware
+# ============================================================
+
+# ── CORS: разрешаем только доверенные домены ──
+ALLOWED_ORIGINS = os.getenv("ALLOWED_ORIGINS", "").split(",")
+if ALLOWED_ORIGINS == [""]:
+    ALLOWED_ORIGINS = [
+        "http://localhost:8000",
+        "http://localhost:3000",
+        "https://respectfully-smiling-hake.cloudpub.ru",
+    ]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=ALLOWED_ORIGINS,
+    allow_credentials=True,
+    allow_methods=["GET", "POST", "PATCH", "DELETE"],
+    allow_headers=["Authorization", "Content-Type", "X-Admin-Token"],
+)
+
+# ── TrustedHost: разрешаем только доверенные хосты ──
+app.add_middleware(
+    TrustedHostMiddleware,
+    allowed_hosts=["*"],  # Можно сузить через ALLOWED_HOSTS
+)
+
+# ── Security headers ──
+@app.middleware("http")
+async def add_security_headers(request: Request, call_next):
+    response = await call_next(request)
+    response.headers["X-Content-Type-Options"] = "nosniff"
+    response.headers["X-Frame-Options"] = "DENY"
+    response.headers["X-XSS-Protection"] = "1; mode=block"
+    response.headers["Cache-Control"] = "no-store, no-cache, must-revalidate"
+    response.headers["Referrer-Policy"] = "strict-origin-when-cross-origin"
+    # HSTS (только если HTTPS)
+    if request.url.scheme == "https":
+        response.headers["Strict-Transport-Security"] = "max-age=31536000; includeSubDomains"
+    return response
 
 
 # ============================================================
@@ -101,7 +149,23 @@ def _check_rate_limit(ip: str):
 # WebSocket
 # ============================================================
 @app.websocket("/ws")
-async def websocket_endpoint(websocket: WebSocket):
+async def websocket_endpoint(websocket: WebSocket, token: Optional[str] = Query(None)):
+    """
+    WebSocket с поддержкой JWT-аутентификации.
+    Токен передаётся через query-параметр: ws://host/ws?token=JWT
+    """
+    # ── Проверка JWT токена (если передан) ──
+    if token:
+        from core.jwt_auth import verify_access_token
+        user = verify_access_token(token)
+        if not user:
+            # Токен невалиден — закрываем без accept
+            await websocket.close(code=4001, reason="Invalid or expired JWT token")
+            return
+        logger.info(f"🔐 WS подключился: {user['login']}")
+    else:
+        logger.info("🔓 WS подключился (без JWT — только для отладки)")
+
     await websocket.accept()
     client = WsClient(ws=websocket)
     websocket_clients[websocket] = client
@@ -244,8 +308,59 @@ async def health_parsers():
 # ============================================================
 # Match State (REST — оставлен для отладки и fallback)
 # ============================================================
+
+# ── Rate-limit для match_state ──
+# ВАЖНО: легитимный клиент опрашивает /match_state РАЗ В СЕКУНДУ
+# на каждый мониторимый матч (ui/after_goal_engine.py:
+# FAST_STATE_POLL_INTERVAL = 1.0). При 2-5 одновременных матчах
+# это 2-5 запросов/сек = 120-300 в минуту с одного IP.
+# Поэтому лимит 900/мин (15 сек/сек) — отсекает DDoS, но не мешает
+# работе. WS-пуш (push_match_state) — основной канал, REST это fallback.
+_match_state_attempts: Dict[str, list] = defaultdict(list)
+_MATCH_STATE_WINDOW = 60
+_MATCH_STATE_MAX = 900
+_MATCH_STATE_PRUNE_EVERY = 300   # раз в N запросов чистим пустые IP
+_match_state_counter = 0
+
+
+def _check_match_state_limit(ip: str):
+    """Ограничивает запросы к /match_state: 900 в минуту с одного IP."""
+    global _match_state_counter
+    now = time.time()
+    attempts = _match_state_attempts[ip]
+    _match_state_attempts[ip] = [t for t in attempts if now - t < _MATCH_STATE_WINDOW]
+    if len(_match_state_attempts[ip]) >= _MATCH_STATE_MAX:
+        raise HTTPException(
+            status_code=429,
+            detail=f"Слишком много запросов. Подожди {_MATCH_STATE_WINDOW} сек.",
+        )
+    _match_state_attempts[ip].append(now)
+
+    # Периодическая чистка: не даём словарю расти бесконечно
+    _match_state_counter += 1
+    if _match_state_counter >= _MATCH_STATE_PRUNE_EVERY:
+        _match_state_counter = 0
+        for stale_ip in [
+            k for k, v in _match_state_attempts.items()
+            if not any(now - t < _MATCH_STATE_WINDOW for t in v)
+        ]:
+            _match_state_attempts.pop(stale_ip, None)
+
+
 @app.get("/match_state")
-async def get_match_state(sport: str, player1: str, player2: str):
+async def get_match_state(
+    sport: str = Query(..., min_length=1, max_length=50),
+    player1: str = Query(..., min_length=2, max_length=100),
+    player2: str = Query(..., min_length=2, max_length=100),
+    request: Request = None,
+):
+    """
+    Возвращает состояние матча по именам игроков.
+    Защищён rate-limit (30 запросов/мин с одного IP).
+    """
+    client_ip = request.client.host if request.client else "unknown"
+    _check_match_state_limit(client_ip)
+
     if aggregator is None:
         return {"found": False, "reason": "aggregator not ready"}
 
@@ -310,7 +425,7 @@ async def login(req: LoginRequest, request: Request):
         logger.info(f"❌ Неудачный логин: {req.login} с {client_ip}")
         return {"success": False, "message": "Неверный логин или пароль (или подписка истекла)"}
 
-    logger.info(f"✅ Логин: {req.login}, HWID: {req.hwid}, IP: {client_ip}")
+    logger.info(f"✅ Логин: {req.login}, IP: {client_ip}")
 
     if req.hwid:
         if user["hwid"] is None:
@@ -320,9 +435,13 @@ async def login(req: LoginRequest, request: Request):
         elif user["hwid"] != req.hwid:
             logger.warning(
                 f"🚫 Попытка входа с чужого устройства: {req.login}, "
-                f"HWID={req.hwid}, ожидался={user['hwid']}"
+                f"HWID={req.hwid[:12]}…, ожидался={user['hwid'][:12]}…"
             )
             return {"success": False, "message": "Аккаунт привязан к другому устройству"}
+
+    # ── JWT токены ──
+    access_token = create_access_token(user)
+    refresh_token = create_refresh_token(user)
 
     return {
         "success": True,
@@ -334,6 +453,40 @@ async def login(req: LoginRequest, request: Request):
             "days_left": user["days_left"],
             "days_total": user["days_total"],
         },
+        "access_token": access_token,
+        "refresh_token": refresh_token,
+        "token_type": "Bearer",
+    }
+
+
+class RefreshRequest(BaseModel):
+    refresh_token: str
+
+
+@app.post("/auth/refresh")
+async def refresh(req: RefreshRequest):
+    """Обновляет access-токен по refresh-токену."""
+    from core.jwt_auth import verify_refresh_token
+    user_info = verify_refresh_token(req.refresh_token)
+    if not user_info:
+        return {"success": False, "message": "Refresh-токен недействителен или истёк"}
+
+    # Генерируем новый access
+    from core.auth import get_db
+    with get_db() as conn:
+        row = conn.execute(
+            "SELECT id, login, tariff FROM users WHERE login = ? AND is_active = 1",
+            (user_info["login"],),
+        ).fetchone()
+        if not row:
+            return {"success": False, "message": "Пользователь не найден или деактивирован"}
+        user_data = {"id": row["id"], "login": row["login"], "tariff": row["tariff"]}
+
+    access_token = create_access_token(user_data)
+    return {
+        "success": True,
+        "access_token": access_token,
+        "token_type": "Bearer",
     }
 
 

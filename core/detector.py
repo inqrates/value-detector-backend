@@ -94,14 +94,27 @@ class Detector:
         if not score_groups:
             return
 
-        sorted_groups = sorted(score_groups.items(), key=lambda x: len(x[1]), reverse=True)
-        majority_score, majority_bks = sorted_groups[0]
-
-        if len(majority_bks) < self.MIN_CONSENSUS_BKS and len(bk_states) >= 3:
+        # ── ФИКС P0.2: истина = самый продвинутый счёт
+        # среди групп с достаточной поддержкой ──
+        supported = [
+            (s, bks) for s, bks in score_groups.items()
+            if len(bks) >= self.MIN_CONSENSUS_BKS or len(bk_states) < 3
+        ]
+        if not supported:
             return
+        majority_score, majority_bks = max(
+            supported,
+            key=lambda x: (
+                x[0][0] + x[0][1],
+                x[0][2] + x[0][3],
+                max(x[0][2], x[0][3]),
+            ),
+        )
 
         lagging_bks = []
-        for score, bks in sorted_groups[1:]:
+        for score, bks in score_groups.items():
+            if score == majority_score:
+                continue
             if not bks:
                 continue
             if self._is_score_newer(majority_score, score):
@@ -146,26 +159,12 @@ class Detector:
                 ]
 
                 if active_lagging:
-                    max_delay = 0.0
-                    for bk_id in active_lagging:
-                        m = bk_states[bk_id]
-                        if m.timestamp > 0:
-                            delay = now - m.timestamp
-                            if delay > max_delay:
-                                max_delay = delay
-
-                    if max_delay > 60:
-                        max_delay = 60.0
-
-                    if max_delay < 0.1:
-                        max_delay = delay_since_detection
-
                     is_significant = self._is_significant_gap(majority_score, bk_states, active_lagging)
 
                     if is_significant:
                         await self._emit_signal(
                             key, majority_bks, active_lagging,
-                            majority_score, max_delay, is_first_signal
+                            majority_score, delay_since_detection, is_first_signal
                         )
                         self.last_signal_context[key] = current_context
                         self.last_signal_time[key] = now

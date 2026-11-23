@@ -397,10 +397,32 @@ async def main():
         ws_ping_timeout=None,
         ws_max_size=8 * 1024 * 1024,
     )
+
+    # ── HTTPS: если заданы SSL-сертификаты ──
+    ssl_certfile = os.getenv("SSL_CERTFILE", "").strip()
+    ssl_keyfile = os.getenv("SSL_KEYFILE", "").strip()
+    if ssl_certfile and ssl_keyfile:
+        config.ssl_certfile = ssl_certfile
+        config.ssl_keyfile = ssl_keyfile
+        logger.info(f"🔒 HTTPS: сертификат {ssl_certfile}")
+    elif ssl_certfile or ssl_keyfile:
+        logger.warning(
+            "⚠️ SSL задан частично: нужны и SSL_CERTFILE, и SSL_KEYFILE"
+        )
+    else:
+        logger.info(
+            "ℹ️  HTTPS не настроен. Для HTTPS задайте env:\n"
+            "     SSL_CERTFILE=/path/to/cert.pem\n"
+            "     SSL_KEYFILE=/path/to/key.pem"
+        )
+
     server = uvicorn.Server(config)
     asyncio.create_task(server.serve())
 
-    logger.info("🌐 API запущен на http://0.0.0.0:8000")
+    if ssl_certfile and ssl_keyfile:
+        logger.info("🌐 API запущен на https://0.0.0.0:8000")
+    else:
+        logger.warning("🌐 API запущен на http://0.0.0.0:8000 — БЕЗ шифрования!")
 
     # Задачи парсеров живут сами в фоне (в managed[k].task).
     # main НЕ должен ждать их через gather, иначе рестарт из health_monitor
