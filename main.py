@@ -25,6 +25,7 @@ from parsers.betcity_api import BetcityApiParser
 from parsers.marathon_api import MarathonApiParser
 from parsers.zenit_api import ZenitApiParser
 from parsers.sportbet_api import SportbetApiParser
+from parsers.onewin_api import OneWinApiParser
 
 from core.detector import Detector
 from core.aggregator import OddsAggregator
@@ -337,6 +338,7 @@ async def main():
     #LEON_SPORTS = ["table_tennis", "volleyball", "basketball", "cyber_basketball"]
     MARATHON_SPORTS = ["table_tennis", "volleyball", "basketball", "cyber_basketball"]
     WINLINE_SPORTS = ["table_tennis", "volleyball", "basketball", "cyber_basketball"]
+    ONEWIN_SPORTS = ["table_tennis", "volleyball", "basketball", "football"]
 
     parsers = [
         FonbetApiParser(detector=detector, aggregator=aggregator, enabled_sports=FONBET_SPORTS),
@@ -349,6 +351,7 @@ async def main():
         MarathonApiParser(detector=detector, aggregator=aggregator, enabled_sports=MARATHON_SPORTS),
         ZenitApiParser(detector=detector, aggregator=aggregator, enabled_sports=ZENIT_SPORTS),
         SportbetApiParser(detector=detector, aggregator=aggregator, enabled_sports=SPORTBET_SPORTS),
+        OneWinApiParser(detector=detector, aggregator=aggregator, enabled_sports=ONEWIN_SPORTS),
     ]
 
     logger.info(f"✅ Создано {len(parsers)} парсеров")
@@ -362,6 +365,9 @@ async def main():
             f"👁 Keep-alive для: {', '.join(PAGE_KEEP_FRONT)} "
             f"(раз в {PAGE_KEEP_FRONT_INTERVAL}с)"
         )
+
+    # OneWin — Playwright внутри парсера: тихо логируем шумный модуль
+    logging.getLogger("playwright").setLevel(logging.WARNING)
 
     asyncio.create_task(print_stats(aggregator))
     asyncio.create_task(global_cache_cleaner(parsers, ttl_seconds=900.0))

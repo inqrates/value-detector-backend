@@ -270,6 +270,17 @@ MARATHON = {
 
 
 # ============================================================
+# ONEWIN (1win)
+# ============================================================
+ONEWIN = {
+    TABLE_TENNIS: {"ids": [24], "name": "Настольный теннис", "url_slug": "table-tennis"},
+    VOLLEYBALL:   {"ids": [27], "name": "Волейбол",         "url_slug": "volleyball"},
+    BASKETBALL:   {"ids": [23], "name": "Баскетбол",        "url_slug": "basketball"},
+    FOOTBALL:     {"ids": [18], "name": "Футбол",           "url_slug": "football"},
+}
+
+
+# ============================================================
 # ОБЩАЯ КАРТА ПО БК
 # ============================================================
 SPORT_MAP = {
@@ -283,6 +294,7 @@ SPORT_MAP = {
     "winline": WINLINE,
     "marathon": MARATHON,
     "pari": PARI,
+    "onewin": ONEWIN,
 }
 
 

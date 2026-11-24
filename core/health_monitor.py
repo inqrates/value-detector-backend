@@ -48,6 +48,7 @@ DEAD_THRESHOLDS: Dict[str, tuple] = {
     "fonbet":     (120, 420),
     "leon":       (180, 600),   # Leon особенно редко шлёт изменения
     "olimp":      (120, 420),
+    "onewin":     (90, 300),    # Socket.IO push — как winline/zenit
 }
 DEFAULT_THRESHOLDS = (90, 300)
 WARMUP_SEC = 120        # первые 2 минуты после старта не считаем «мёртвым»

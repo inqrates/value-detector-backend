@@ -399,6 +399,7 @@ class Detector:
             "zenit":      "https://zenit.win/live/134/{id}",
             "sportbet":   "https://sportbet.ru/live/table-tennis/x--x/x-vs-x--{id}?isTime=1&h=all&page=main",
             "baltbet":    "https://baltbet.ru/event/{id}",
+            "onewin":     "https://one-vv7078.com/betting/live/event/{id}",
         }
         tpl = templates.get(bk_id)
         return tpl.format(id=match_id) if tpl else ""
